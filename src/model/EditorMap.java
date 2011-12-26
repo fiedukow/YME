@@ -2,7 +2,6 @@ package model;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
-import java.awt.geom.Point2D;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,9 +14,11 @@ import com.thoughtworks.xstream.XStream;
 
 /**
  * The map description for map Editor. Have some get/set function as interface.
+ * @author fiedukow
  */
 final class EditorMap
 {
+	/* TODO setter, getter, and make fields private */
 	String mapName;					/*Map name, for general proposes*/
 	String waterTexture;			/*The texture used as the background*/
 	Vector<MapPolygon> polygons;	/*List of polygons presented on the map*/
@@ -43,6 +44,26 @@ final class MapTranslator
 
 	public static final String xmlHeader = "<?xml version=\"1.0\"?>\n";
 	
+	
+	public MapTranslator()
+	{
+		this.polygons = new Vector<XMLPolygon>();
+		this.mapName = "Something";
+		this.waterTexture = "water.png";
+		MapPolygon a = new MapPolygon("sniezek.png");
+		a.addPoint(1, 1);
+		a.addPoint(2, 1);
+		a.addPoint(2, 2);
+		a.addPoint(1, 2);
+		polygons.add( new XMLPolygon(a) );
+		a = new MapPolygon("boja.png");
+		a.addPoint(1, 1);
+		a.addPoint(2, 1);
+		a.addPoint(2, 2);
+		a.addPoint(1, 2);
+		polygons.add( new XMLPolygon(a) );		
+	}
+	
 	/**
 	 * Load data from XML file using XStream.
 	 * @param fileName
@@ -53,7 +74,8 @@ final class MapTranslator
 		MapTranslator tmp;
 		XStream xstream = new XStream();		
 		xstream.alias("map", MapTranslator.class);
-		xstream.alias("polygon", XMLPolygon.class);				
+		xstream.alias("polygon", XMLPolygon.class);
+		xstream.alias("point", java.awt.Point.class);
 		tmp = (MapTranslator) xstream.fromXML( new File(fileName) );
 		this.mapName = tmp.mapName;
 		this.waterTexture = tmp.waterTexture;
@@ -64,11 +86,22 @@ final class MapTranslator
 	 * Use EditorMap object to create current map state
 	 * @param Map - map to create MapTranslator object
 	 */
-	public MapTranslator( EditorMap Map )
+	public MapTranslator( EditorMap map )
 	{	
-		/*FIXME*/				
+		/*TODO getters, setters?*/
+		this.mapName = map.mapName;
+		this.waterTexture = map.waterTexture;
+		this.polygons = new Vector<XMLPolygon>();
+		for( MapPolygon pol : map.polygons )
+		{	
+			this.polygons.add( new XMLPolygon(pol) );
+		}
 	}
 	
+	/**
+	 * Translate itself to the EditorMap format
+	 * @return Generated EditorMap - main model Object
+	 */
 	public EditorMap translate()
 	{		
 		Vector<MapPolygon> resultPolygons = new Vector<MapPolygon>();		
@@ -79,6 +112,7 @@ final class MapTranslator
 			{
 				current.addPoint((int)pt.getX(), (int)pt.getY());
 			}
+			resultPolygons.add(current);
 		}
 		EditorMap result = new EditorMap( mapName, waterTexture, resultPolygons );		
 		return result;
@@ -95,7 +129,7 @@ final class MapTranslator
 		XStream xstream = new XStream();
 		xstream.alias("map", MapTranslator.class);
 		xstream.alias("polygon", XMLPolygon.class);		
-		
+		xstream.alias("point", java.awt.Point.class);
 		FileWriter xmlMap = new FileWriter( fileName );
 		BufferedWriter writer = new BufferedWriter( xmlMap );
 		try 
@@ -122,16 +156,18 @@ final class MapTranslator
 class XMLPolygon
 {
 	String textureName; /* name of the texture */
-	Vector<Point> points;
+	Vector<Point> vertices = new Vector<Point>();
 	XMLPolygon( MapPolygon polygon )
 	{
 		for( int i = 0; i < polygon.xpoints.length; ++i )
-			points.add( new Point(polygon.xpoints[i], polygon.ypoints[i]) );
+		{
+			vertices.add( new Point(polygon.xpoints[i], polygon.ypoints[i]) );
+		}
 		textureName = polygon.textureName;		
 	}
 	Vector<Point> getPoints()
 	{
-		return points;
+		return vertices;
 	}
 	String getTextureName()
 	{
@@ -158,6 +194,7 @@ final class MapPolygon extends Polygon
 	}	
 	MapPolygon( String textureName )
 	{
+		super();
 		this.textureName = textureName;
 	}
 	/**
@@ -196,6 +233,11 @@ final class MapPolygon extends Polygon
 	}
 }
 
+/*
+ * 
+ * 		EXCEPTION CLASSES BELOW
+ *  
+ */
 
 class AttributeTypeMatchException extends Exception
 {	
@@ -206,3 +248,4 @@ class AttributeNotFoundException extends Exception
 class AttributeOverwriteException extends Exception
 {	
 }
+
