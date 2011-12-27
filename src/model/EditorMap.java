@@ -247,11 +247,6 @@ abstract class MapShape
 		return typeOfObject;
 	}
 
-	public HashMap<String, Object> getAttributesReadOnly()
-	{
-		return (HashMap<String, Object>) attributes.clone();
-	}
-	
 	/**
 	 * Sets typeOfMapObject
 	 * @param type - one of allowed types for the particular type
@@ -274,18 +269,44 @@ class XMLShape
 	private TypeOfMapObject typeOfObject; /** Current value type of map object */
 	/*TODO universal attribute collection?*/
 	
-	public MapShape translate( MapShape resultObject )
+	
+	public XMLShape ( MapShape shape )
+	{
+		this.textureName = shape.getTextureName();
+		this.typeOfObject = shape.getTypeOfObject();
+	}
+	
+	/**
+	 * Main method for translation between XMLShape and MapShape. Should be used AFTER resultObject initialization
+	 * @param resultObject already created object which need to be translated into shape
+	 * @return MapShape with textureName and typeOfMapObject set.
+	 * @throws  
+	 */
+	public MapShape translate( Class< ? extends MapShape> classToBeCreated )
 	{		
-		resultObject.setTextureName(textureName);
+		MapShape result = null;
 		try
 		{
-			resultObject.setTypeOfObject(typeOfObject);
+			result = classToBeCreated.newInstance();
+		}
+		catch ( Exception e )
+		{
+			System.err.println("Nie udalo sie stworzyc obiektu.");
+			return result;
+		}
+		
+		result.setTextureName(textureName);
+		
+		try
+		{
+			result.setTypeOfObject(typeOfObject);
 		}
 		catch ( InvalidTypeOfMapObjectException e )
 		{
 			System.err.println("Translacja ksztaltu o przypisanym niedozwolonym ksztalcie");
 		}
-		return resultObject;
+		
+		return result;
 	}
 	
 }
@@ -294,30 +315,27 @@ class XMLShape
  * XMLPolygon ready to serialize using XStream. Only for save/load proposes. 
  * @author fiedukow
  */
-class XMLPolygon
-{
-	private String textureName; /* name of the texture */
-	private Vector<Point> vertices = new Vector<Point>();
-	private HashMap<String, Object> attributes; /** Any other attributes */ 
-	
+class XMLPolygon extends XMLShape
+{ 	
 	/**
 	 * Main constructor - creates XMLPolygon using MapPolygon
 	 * @param polygon
 	 */
+	Vector<Point> vertices;
+	
 	public XMLPolygon( MapPolygon polygon )
 	{		
+		super(polygon);
+		vertices = new Vector<Point>();		
 		for( int i = 0; i < polygon.getXCoords().length; ++i )
 		{
 			vertices.add( new Point(polygon.getXCoords()[i], polygon.getYCoords()[i]) );
 		}
-		textureName = polygon.getTextureName();
-		attributes = polygon.getAttributesReadOnly();
 	}
 	
 	public MapPolygon translate()
 	{
-		MapPolygon result = new MapPolygon( getTextureName() );
-		
+		MapPolygon result = (MapPolygon) translate(MapPolygon.class);
 		for( Point pt : this.vertices )
 		{
 			result.addPoint((int)pt.getX(), (int)pt.getY());
