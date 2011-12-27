@@ -17,9 +17,7 @@ abstract class MapShape
 	private TypeOfMapObject typeOfObject; /** Current value type of map object */	
 	protected Shape shapeObject; /**The reference to the basic shape object (created in derived class constructor)*/
 	/*TODO universal attribute collection?*/
-	
-	protected static Vector<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
-	
+		
 	/**
 	 * Default constructor, set textureName
 	 * @param textureName
@@ -28,7 +26,6 @@ abstract class MapShape
 	{
 		this.textureName = textureName;
 		typeOfObject = TypeOfMapObject.NO_OBJECT;
-		allowedTypes = new Vector<TypeOfMapObject>();
 		shapeObject = null;
 	}
 	
@@ -53,8 +50,8 @@ abstract class MapShape
 	 * @throws InvalidTypeOfMapObjectException - throw when someone try to set type to the disallowed TOMO
 	 */
 	public void setTypeOfObject( TypeOfMapObject type ) throws InvalidTypeOfMapObjectException
-	{
-		if( ! allowedTypes.contains( type ) )
+	{		
+		if( ! isTypeAllowed( type ) )
 		{
 			throw new InvalidTypeOfMapObjectException();			
 		}
@@ -63,7 +60,7 @@ abstract class MapShape
 	
 	abstract public void resize(int w, int h);
 	abstract public void move(int x, int y);
-	abstract protected void loadAllowedTypes();
+	abstract protected boolean isTypeAllowed( TypeOfMapObject type );
 }
 
 
@@ -73,6 +70,8 @@ abstract class MapShape
  */
 final class MapPolygon extends MapShape
 {
+	
+	protected static Vector<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
 	/**
 	 * Initialize empty polygon with selected texture
 	 * @param textureName
@@ -168,9 +167,14 @@ final class MapPolygon extends MapShape
 	
 	protected void loadAllowedTypes()
 	{		
+		allowedTypes = new Vector<TypeOfMapObject>();
 		allowedTypes.add( TypeOfMapObject.DESTROY );
 		allowedTypes.add( TypeOfMapObject.STOP );
 		allowedTypes.add( TypeOfMapObject.BUMP );
+	}
+	
+	protected boolean isTypeAllowed( TypeOfMapObject type ){
+		return allowedTypes.contains( type );
 	}
 }
 
@@ -182,6 +186,9 @@ final class MapPolygon extends MapShape
  */
 final class MapRectangle extends MapShape
 {
+	protected static Vector<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
+	
+	
 	public MapRectangle()
 	{
 		super(""); /**FIXME*/
@@ -271,10 +278,14 @@ final class MapRectangle extends MapShape
 	
 	protected void loadAllowedTypes()
 	{		
+		allowedTypes = new Vector<TypeOfMapObject>();
 		allowedTypes.add( TypeOfMapObject.DESTROY );
 		allowedTypes.add( TypeOfMapObject.STOP );
 		allowedTypes.add( TypeOfMapObject.BUMP );
 		allowedTypes.add( TypeOfMapObject.QUAY );
+	}
+	protected boolean isTypeAllowed( TypeOfMapObject type ){
+		return allowedTypes.contains( type );
 	}
 }
 
@@ -287,6 +298,8 @@ final class MapRectangle extends MapShape
  */
 final class MapEllipse extends MapShape
 {
+	
+	protected static Vector<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
 	
 	public MapEllipse()
 	{
@@ -375,8 +388,12 @@ final class MapEllipse extends MapShape
 	}
 	protected void loadAllowedTypes()
 	{		
+		allowedTypes = new Vector<TypeOfMapObject>();
 		allowedTypes.add( TypeOfMapObject.DESTROY );
 		allowedTypes.add( TypeOfMapObject.STOP );
 		allowedTypes.add( TypeOfMapObject.BUMP );
+	}
+	protected boolean isTypeAllowed( TypeOfMapObject type ){
+		return allowedTypes.contains( type );
 	}
 }

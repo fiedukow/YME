@@ -43,7 +43,19 @@ final class MapTranslator
 		a.addPoint(2, 1);
 		a.addPoint(2, 2);
 		a.addPoint(1, 2);
-		shapes.add( new XMLPolygon(a) );		
+		MapRectangle r  = new MapRectangle("koala.png", 2, 4, 20, 30);
+		MapEllipse e  = new MapEllipse("koala.png", 20, 40, 21, 31);		
+		try {
+			e.setTypeOfObject(TypeOfMapObject.BUMP);
+			r.setTypeOfObject(TypeOfMapObject.QUAY);
+			a.setTypeOfObject(TypeOfMapObject.STOP);
+		} catch (InvalidTypeOfMapObjectException error ) {
+			error.printStackTrace();
+		}
+		shapes.add( new XMLPolygon(a) );
+		shapes.add( new XMLRectangle(r));
+		shapes.add( new XMLEllipse(e));		
+		
 	}
 	
 	/**

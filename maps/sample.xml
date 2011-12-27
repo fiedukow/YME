@@ -27,7 +27,7 @@
     </polygon>
     <polygon>
       <textureName>boja.png</textureName>
-      <typeOfObject>DESTROY</typeOfObject>
+      <typeOfObject>STOP</typeOfObject>
       <vertices>
         <point>
           <x>1</x>
@@ -47,5 +47,21 @@
         </point>
       </vertices>
     </polygon>
+    <rectangle>
+      <textureName>koala.png</textureName>
+      <typeOfObject>QUAY</typeOfObject>
+      <x>2</x>
+      <y>4</y>
+      <w>20</w>
+      <h>30</h>
+    </rectangle>
+    <ellipse>
+      <textureName>koala.png</textureName>
+      <typeOfObject>BUMP</typeOfObject>
+      <x>20</x>
+      <y>40</y>
+      <w>21</w>
+      <h>31</h>
+    </ellipse>
   </shapes>
 </map>
