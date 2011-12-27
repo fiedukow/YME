@@ -215,9 +215,9 @@ final class MapTranslator
 abstract class MapShape
 {
 	private String textureName;	
-	private TypeOfMapObject typeOfObject; /** Current value type of map object */
-	private HashMap<String, Object> attributes; /** Any other attributes */	
+	private TypeOfMapObject typeOfObject; /** Current value type of map object */	
 	protected Shape shapeObject; /**The reference to the basic shape object (created in derived class constructor)*/
+	/*TODO universal attribute collection?*/
 	
 	protected static Vector<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
 	
@@ -246,6 +246,11 @@ abstract class MapShape
 	{
 		return typeOfObject;
 	}
+
+	public HashMap<String, Object> getAttributesReadOnly()
+	{
+		return (HashMap<String, Object>) attributes.clone();
+	}
 	
 	/**
 	 * Sets typeOfMapObject
@@ -261,13 +266,15 @@ abstract class MapShape
 		this.typeOfObject = type;
 	}
 	
+	
+	/**
 	/**
 	 * Allow to change mapShape attribute (but not to create new one!). It check if the type of new object is the same then the old one.
 	 * @param key
 	 * @param value
 	 * @throws AttributeTypeMatchException throw when the type of new Object isn't same as the old one.
 	 * @throws AttributeNotFoundException throw when someone try to change unexisting value 
-	 */
+	 
 	void changeAttribute( String key, Object value ) throws AttributeTypeMatchException, AttributeNotFoundException
 	{
 		if( ! attributes.containsKey(key) )
@@ -286,13 +293,38 @@ abstract class MapShape
 	 * @param key
 	 * @param value
 	 * @throws AttributeOverwriteException throw when someone try to add value to the key with is already in use.
-	 */
+	 
 	void addAttribute( String key, Object value ) throws AttributeOverwriteException
 	{
 		if( attributes.containsKey(key) )
 			throw new AttributeOverwriteException();
 		attributes.put( key, value );
 	}
+	*/
+	
+}
+
+
+class XMLShape
+{
+	private String textureName;	
+	private TypeOfMapObject typeOfObject; /** Current value type of map object */
+	/*TODO universal attribute collection?*/
+	
+	public MapShape translate( MapShape resultObject )
+	{		
+		resultObject.setTextureName(textureName);
+		try
+		{
+			resultObject.setTypeOfObject(typeOfObject);
+		}
+		catch ( InvalidTypeOfMapObjectException e )
+		{
+			System.err.println("Translacja ksztaltu o przypisanym niedozwolonym ksztalcie");
+		}
+		return resultObject;
+	}
+	
 }
 
 /**
@@ -303,38 +335,32 @@ class XMLPolygon
 {
 	private String textureName; /* name of the texture */
 	private Vector<Point> vertices = new Vector<Point>();
+	private HashMap<String, Object> attributes; /** Any other attributes */ 
 	
 	/**
 	 * Main constructor - creates XMLPolygon using MapPolygon
 	 * @param polygon
 	 */
 	public XMLPolygon( MapPolygon polygon )
-	{
-		for( int i = 0; i < polygon.xpoints.length; ++i )
+	{		
+		for( int i = 0; i < polygon.getXCoords().length; ++i )
 		{
-			vertices.add( new Point(xpoints[i], ypoints[i]) );
+			vertices.add( new Point(polygon.getXCoords()[i], polygon.getYCoords()[i]) );
 		}
-		textureName = polygon.textureName;		
-	}
-	
-	/**
-	 * Simple setter
-	 * @return
-	 */
-	public String getTextureName()
-	{
-		return textureName;
+		textureName = polygon.getTextureName();
+		attributes = polygon.getAttributesReadOnly();
 	}
 	
 	public MapPolygon translate()
 	{
 		MapPolygon result = new MapPolygon( getTextureName() );
+		
 		for( Point pt : this.vertices )
 		{
 			result.addPoint((int)pt.getX(), (int)pt.getY());
 		}
 		return result;
-	}
+	}	
 }
 
 /**
