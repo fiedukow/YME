@@ -264,44 +264,7 @@ abstract class MapShape
 			throw new InvalidTypeOfMapObjectException();			
 		}
 		this.typeOfObject = type;
-	}
-	
-	
-	/**
-	/**
-	 * Allow to change mapShape attribute (but not to create new one!). It check if the type of new object is the same then the old one.
-	 * @param key
-	 * @param value
-	 * @throws AttributeTypeMatchException throw when the type of new Object isn't same as the old one.
-	 * @throws AttributeNotFoundException throw when someone try to change unexisting value 
-	 
-	void changeAttribute( String key, Object value ) throws AttributeTypeMatchException, AttributeNotFoundException
-	{
-		if( ! attributes.containsKey(key) )
-		{
-			throw new AttributeNotFoundException();
-		}
-		if( value.getClass() != attributes.get(key).getClass() )
-		{
-			throw new AttributeTypeMatchException();
-		}
-		attributes.put( key, value );						
-	}
-	
-	/**
-	 * Allow to add attribute (but not to overwrite old one!).
-	 * @param key
-	 * @param value
-	 * @throws AttributeOverwriteException throw when someone try to add value to the key with is already in use.
-	 
-	void addAttribute( String key, Object value ) throws AttributeOverwriteException
-	{
-		if( attributes.containsKey(key) )
-			throw new AttributeOverwriteException();
-		attributes.put( key, value );
-	}
-	*/
-	
+	}	
 }
 
 
