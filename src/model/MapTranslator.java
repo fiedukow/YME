@@ -57,6 +57,8 @@ final class MapTranslator
 		XStream xstream = new XStream();		
 		xstream.alias("map", MapTranslator.class);
 		xstream.alias("polygon", XMLPolygon.class);
+		xstream.alias("rectangle", XMLRectangle.class);
+		xstream.alias("ellipse", XMLEllipse.class);
 		xstream.alias("point", java.awt.Point.class);
 		tmp = (MapTranslator) xstream.fromXML( new File(fileName) ); /*rewrite whole object*/
 		this.mapName = tmp.mapName;
@@ -85,6 +87,7 @@ final class MapTranslator
 	 */
 	public EditorMap translate()
 	{		
+		/**FIXME*/
 		Vector<MapPolygon> resultPolygons = new Vector<MapPolygon>();		
 		for( XMLPolygon pol : polygons )
 		{
@@ -105,6 +108,8 @@ final class MapTranslator
 		XStream xstream = new XStream();
 		xstream.alias("map", MapTranslator.class);
 		xstream.alias("polygon", XMLPolygon.class);		
+		xstream.alias("rectangle", XMLRectangle.class);
+		xstream.alias("ellipse", XMLEllipse.class);
 		xstream.alias("point", java.awt.Point.class);
 		FileWriter xmlMap = new FileWriter( fileName );
 		BufferedWriter writer = new BufferedWriter( xmlMap );

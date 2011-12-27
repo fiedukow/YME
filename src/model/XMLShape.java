@@ -75,11 +75,73 @@ class XMLPolygon extends XMLShape
 	
 	public MapPolygon translate()
 	{
-		MapPolygon result = (MapPolygon) translate(MapPolygon.class);
+		MapPolygon result = (MapPolygon) translate(MapPolygon.class);		
 		for( Point pt : this.vertices )
 		{
 			result.addPoint((int)pt.getX(), (int)pt.getY());
 		}
+		return result;
+	}	
+}
+
+
+/*TODO Javadoc for the class below */
+/**
+ * XMLRectangle ready to serialize using XStream. Only for save/load proposes. 
+ * @author fiedukow
+ */
+class XMLRectangle extends XMLShape
+{ 	
+	/**
+	 * Main constructor - creates XMLPolygon using MapPolygon
+	 * @param polygon
+	 */
+	int x,y,w,h;
+	
+	public XMLRectangle( MapRectangle rectangle )
+	{		
+		super(rectangle);
+		x = rectangle.getX();
+		y = rectangle.getY();
+		w = rectangle.getW();
+		h = rectangle.getH();		
+	}
+	
+	public MapRectangle translate()
+	{
+		MapRectangle result = (MapRectangle) translate(MapRectangle.class);		
+		result.setRectangle(x, y, w, h);
+		return result;
+	}	
+}
+
+
+/*TODO Javadoc for the class below */
+/**
+ * XMLRectangle ready to serialize using XStream. Only for save/load proposes. 
+ * @author fiedukow
+ */
+class XMLEllipse extends XMLShape
+{ 	
+	/**
+	 * Main constructor - creates XMLPolygon using MapPolygon
+	 * @param polygon
+	 */
+	int x,y,w,h;
+	
+	public XMLEllipse( MapEllipse  ellipse )
+	{		
+		super(ellipse);
+		x = ellipse.getX();
+		y = ellipse.getY();
+		w = ellipse.getW();
+		h = ellipse.getH();		
+	}
+	
+	public MapEllipse translate()
+	{
+		MapEllipse result = (MapEllipse) translate(MapEllipse.class);		
+		result.setEllipse(x, y, w, h);
 		return result;
 	}	
 }
