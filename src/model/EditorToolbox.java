@@ -6,7 +6,7 @@ final class EditorToolbox {
 	CommandStack redo; /*Stack used for "redo" operation*/	
 	
 	/* invoke command and push on undo stack */
-	void doCommand( Command cmd )
+	void doCommand( Command cmd ) 
 	{
 		
 	}
