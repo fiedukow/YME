@@ -64,7 +64,7 @@ interface Command
 }
 
 class doDrawPolygon implements Command
-{
+{	
 	public void invoke() throws CommandInvokeException
 	{
 		/*FIXME*/

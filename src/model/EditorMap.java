@@ -2,6 +2,7 @@ package model;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -102,7 +103,7 @@ final class MapTranslator
 {
 	private String mapName;					/*Map name, for general proposes*/
 	private String waterTexture;			/*The texture used as the background*/
-	private Vector<XMLPolygon> polygons;	/*List of polygons presented on the map*/	
+	private Vector<XMLPolygon> polygons;	/*List of polygons presented on the map*/
 
 	public static final String xmlHeader = "<?xml version=\"1.0\"?>\n";
 	
@@ -152,7 +153,6 @@ final class MapTranslator
 	 */
 	public MapTranslator( EditorMap map )
 	{	
-		/*TODO getters, setters?*/
 		this.mapName = map.getMapName();
 		this.waterTexture = map.getWaterTexture();
 		this.polygons = new Vector<XMLPolygon>();
@@ -171,12 +171,7 @@ final class MapTranslator
 		Vector<MapPolygon> resultPolygons = new Vector<MapPolygon>();		
 		for( XMLPolygon pol : polygons )
 		{
-			MapPolygon current = new MapPolygon( pol.getTextureName() );
-			for( Point pt : pol.getPoints() )
-			{
-				current.addPoint((int)pt.getX(), (int)pt.getY());
-			}
-			resultPolygons.add(current);
+			resultPolygons.add(pol.translate());
 		}
 		EditorMap result = new EditorMap( mapName, waterTexture, resultPolygons );		
 		return result;
@@ -214,117 +209,60 @@ final class MapTranslator
 }
 
 /**
- * XMLPolygon ready to serialize using XStream. Only for save/load proposes. 
+ * Base class describing every single shape possible to represent on map.
  * @author fiedukow
  */
-class XMLPolygon
+abstract class MapShape
 {
-	private String textureName; /* name of the texture */
-	private Vector<Point> vertices = new Vector<Point>();
+	private String textureName;	
+	private TypeOfMapObject typeOfObject; /** Current value type of map object */
+	private HashMap<String, Object> attributes; /** Any other attributes */	
+	protected Shape shapeObject; /**The reference to the basic shape object (created in derived class constructor)*/
+	
+	protected static Vector<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
 	
 	/**
-	 * Main constructor - creates XMLPolygon using MapPolygon
-	 * @param polygon
+	 * Default constructor, set textureName
+	 * @param textureName
 	 */
-	public XMLPolygon( MapPolygon polygon )
+	public MapShape( String textureName )
 	{
-		for( int i = 0; i < polygon.xpoints.length; ++i )
+		this.textureName = textureName;
+		typeOfObject = TypeOfMapObject.NO_OBJECT;
+		shapeObject = null;
+	}
+	
+	public String getTextureName( )
+	{
+		return textureName;
+	}
+	
+	public void setTextureName( String textureName )
+	{
+		this.textureName = textureName;
+	}
+	
+	public TypeOfMapObject getTypeOfObject()
+	{
+		return typeOfObject;
+	}
+	
+	/**
+	 * Sets typeOfMapObject
+	 * @param type - one of allowed types for the particular type
+	 * @throws InvalidTypeOfMapObjectException - throw when someone try to set type to the disallowed TOMO
+	 */
+	public void setTypeOfObject( TypeOfMapObject type ) throws InvalidTypeOfMapObjectException
+	{
+		if( ! allowedTypes.contains( type ) )
 		{
-			vertices.add( new Point(polygon.xpoints[i], polygon.ypoints[i]) );
+			throw new InvalidTypeOfMapObjectException();			
 		}
-		textureName = polygon.textureName;		
+		this.typeOfObject = type;
 	}
 	
 	/**
-	 * Simple getter
-	 * @return
-	 */
-	public Vector<Point> getPoints()
-	{
-		return vertices;
-	}
-	
-	/**
-	 * Simple setter
-	 * @return
-	 */
-	public String getTextureName()
-	{
-		return textureName;
-	}
-}
-
-/**
- * MapPolygon - main (& atomic) element of EditorMap, using java.awt.Polygon as base 
- * @author fiedukow
- */
-final class MapPolygon extends Polygon
-{
-	String textureName; /* name of the texture file */
-	HashMap< String, Object > attributes;
-	/**
-	 * Initialize empty polygon with selected texture
-	 * @param textureName
-	 */
-	MapPolygon( String textureName )
-	{
-		super();
-		this.textureName = textureName;
-	}
-	
-	/**
-	 * Simple seter
-	 * @param textureName
-	 */
-	void setTextureName ( String textureName )
-	{
-		this.textureName = textureName;
-	}
-	
-	/**
-	 * Simple geter
-	 * @param textureName
-	 * @return
-	 */
-	String getTextureName ( String textureName )
-	{
-		return textureName;
-	}	
-	
-	/**
-	 * Resize polygon for the given Bounds size.
-	 * @param h - new height of polygon bounds
-	 * @param w - new width of polygon bounds
-	 */
-	void resizePolygon( int h, int w )
-	{
-		Rectangle bound = getBounds();
-		double widthFactor = w/bound.getWidth();
-		double heightFactor = h/bound.getHeight();
-		for( int i = 0; i < xpoints.length; ++i )
-			xpoints[i] *= widthFactor;
-		for( int i = 0; i < ypoints.length; ++i )
-			ypoints[i] *= heightFactor;
-	}
-	
-	/**
-	 * Move polygon to place where first (upper left) corner of it's bounds is in given place. 
-	 * @param x x coordinate for upper left corner of polygon bounds
-	 * @param y y coordinate for upper left corner of polygon bounds
-	 */
-	public void movePolygon( int x, int y )
-	{
-		Rectangle bound = getBounds();
-		int xmove = x - (int)bound.getMinX();
-		int ymove = y - (int)bound.getMinY();
-		for( int i = 0; i < xpoints.length; ++i )
-			xpoints[i] += xmove;
-		for( int i = 0; i < ypoints.length; ++i )
-			ypoints[i] += ymove;
-	}
-	
-	/**
-	 * Allow to change polygon attribute (but not to create new one!). It check if the type of new object is the same then the old one.
+	 * Allow to change mapShape attribute (but not to create new one!). It check if the type of new object is the same then the old one.
 	 * @param key
 	 * @param value
 	 * @throws AttributeTypeMatchException throw when the type of new Object isn't same as the old one.
@@ -357,6 +295,127 @@ final class MapPolygon extends Polygon
 	}
 }
 
+/**
+ * XMLPolygon ready to serialize using XStream. Only for save/load proposes. 
+ * @author fiedukow
+ */
+class XMLPolygon
+{
+	private String textureName; /* name of the texture */
+	private Vector<Point> vertices = new Vector<Point>();
+	
+	/**
+	 * Main constructor - creates XMLPolygon using MapPolygon
+	 * @param polygon
+	 */
+	public XMLPolygon( MapPolygon polygon )
+	{
+		for( int i = 0; i < polygon.xpoints.length; ++i )
+		{
+			vertices.add( new Point(xpoints[i], ypoints[i]) );
+		}
+		textureName = polygon.textureName;		
+	}
+	
+	/**
+	 * Simple setter
+	 * @return
+	 */
+	public String getTextureName()
+	{
+		return textureName;
+	}
+	
+	public MapPolygon translate()
+	{
+		MapPolygon result = new MapPolygon( getTextureName() );
+		for( Point pt : this.vertices )
+		{
+			result.addPoint((int)pt.getX(), (int)pt.getY());
+		}
+		return result;
+	}
+}
+
+/**
+ * MapPolygon - main (& atomic) element of EditorMap, using java.awt.Polygon as base 
+ * @author fiedukow
+ */
+final class MapPolygon extends MapShape
+{
+	/**
+	 * Initialize empty polygon with selected texture
+	 * @param textureName
+	 */
+	public MapPolygon( String textureName )
+	{
+		super( textureName );
+		this.shapeObject = new Polygon();
+		allowedTypes.add( TypeOfMapObject.DESTROY );
+		allowedTypes.add( TypeOfMapObject.STOP );
+		allowedTypes.add( TypeOfMapObject.BUMP );		
+	}
+	
+	public void addPoint( int x, int y )
+	{		
+		getPolygon().addPoint(x,y);
+	}
+	
+	public int[] getXCoords()
+	{
+		return getPolygon().xpoints;
+	}
+	
+	public int[] getYCoords()
+	{
+		return getPolygon().xpoints;
+	}
+	
+	
+	private Polygon getPolygon()
+	{
+		return (Polygon) shapeObject;
+	}
+	
+	/**
+	 * Resize polygon for the given Bounds size.
+	 * @param h - new height of polygon bounds
+	 * @param w - new width of polygon bounds
+	 */
+	public void resizePolygon( int h, int w )
+	{
+		Polygon poly = getPolygon();
+		Rectangle bound = poly.getBounds();
+		double widthFactor = w/bound.getWidth();
+		double heightFactor = h/bound.getHeight();
+		for( int i = 0; i < poly.xpoints.length; ++i )
+			poly.xpoints[i] *= widthFactor;
+		for( int i = 0; i < poly.ypoints.length; ++i )
+			poly.ypoints[i] *= heightFactor;
+	}
+	
+	/**
+	 * Move polygon to place where first (upper left) corner of it's bounds is in given place. 
+	 * @param x x coordinate for upper left corner of polygon bounds
+	 * @param y y coordinate for upper left corner of polygon bounds
+	 */
+	public void movePolygon( int x, int y )
+	{
+		Polygon poly = getPolygon();
+		Rectangle bound = poly.getBounds();
+		int xmove = x - (int)bound.getMinX();
+		int ymove = y - (int)bound.getMinY();
+		for( int i = 0; i < poly.xpoints.length; ++i )
+			poly.xpoints[i] += xmove;
+		for( int i = 0; i < poly.ypoints.length; ++i )
+			poly.ypoints[i] += ymove;
+	}		
+}
+
+enum TypeOfMapObject {
+    NO_OBJECT, QUAY, DESTROY, STOP, BUMP
+}
+
 /*
  * 
  * 		EXCEPTION CLASSES BELOW
@@ -373,3 +432,6 @@ class AttributeOverwriteException extends Exception
 {	
 }
 
+class InvalidTypeOfMapObjectException extends Exception
+{	
+}
