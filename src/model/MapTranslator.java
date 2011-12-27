@@ -20,7 +20,7 @@ final class MapTranslator
 {
 	private String mapName;					/*Map name, for general proposes*/
 	private String waterTexture;			/*The texture used as the background*/
-	private Vector<XMLPolygon> polygons;	/*List of polygons presented on the map*/
+	private Vector<XMLShape> shapes;	    /*List of polygons presented on the map*/
 
 	public static final String xmlHeader = "<?xml version=\"1.0\"?>\n";
 	
@@ -29,7 +29,7 @@ final class MapTranslator
 	 */
 	public MapTranslator()
 	{
-		this.polygons = new Vector<XMLPolygon>();
+		this.shapes = new Vector<XMLShape>();
 		this.mapName = "Something";
 		this.waterTexture = "water.png";
 		MapPolygon a = new MapPolygon("sniezek.png");
@@ -37,13 +37,13 @@ final class MapTranslator
 		a.addPoint(2, 1);
 		a.addPoint(2, 2);
 		a.addPoint(1, 2);
-		polygons.add( new XMLPolygon(a) );
+		shapes.add( new XMLPolygon(a) );
 		a = new MapPolygon("boja.png");
 		a.addPoint(1, 1);
 		a.addPoint(2, 1);
 		a.addPoint(2, 2);
 		a.addPoint(1, 2);
-		polygons.add( new XMLPolygon(a) );		
+		shapes.add( new XMLPolygon(a) );		
 	}
 	
 	/**
@@ -63,7 +63,7 @@ final class MapTranslator
 		tmp = (MapTranslator) xstream.fromXML( new File(fileName) ); /*rewrite whole object*/
 		this.mapName = tmp.mapName;
 		this.waterTexture = tmp.waterTexture;
-		this.polygons = tmp.polygons;		
+		this.shapes = tmp.shapes;		
 	}	
 
 	/**
@@ -74,10 +74,16 @@ final class MapTranslator
 	{	
 		this.mapName = map.getMapName();
 		this.waterTexture = map.getWaterTexture();
-		this.polygons = new Vector<XMLPolygon>();
-		for( MapPolygon pol : map.getPolygons() )
+		this.shapes = new Vector<XMLShape>();
+		for( MapShape sh : map.getShapes() )
 		{	
-			this.polygons.add( new XMLPolygon(pol) );
+			try{
+				this.shapes.add(XMLShape.create(sh));
+			}
+			catch ( UnrecognizedTypeOfMapShape e )
+			{
+				System.err.println("Nierozpoznany typ przy produkcji typow XMLShape");
+			}
 		}
 	}
 	
@@ -88,12 +94,12 @@ final class MapTranslator
 	public EditorMap translate()
 	{		
 		/**FIXME*/
-		Vector<MapPolygon> resultPolygons = new Vector<MapPolygon>();		
-		for( XMLPolygon pol : polygons )
+		Vector<MapShape> resultShapes = new Vector<MapShape>();		
+		for( XMLShape sh : shapes )
 		{
-			resultPolygons.add(pol.translate());
+			resultShapes.add( sh.translate() );
 		}
-		EditorMap result = new EditorMap( mapName, waterTexture, resultPolygons );		
+		EditorMap result = new EditorMap( mapName, waterTexture, resultShapes );		
 		return result;
 	}
 	

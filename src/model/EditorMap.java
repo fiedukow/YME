@@ -21,13 +21,13 @@ final class EditorMap
 {
 	private String mapName;					/*Map name, for general proposes*/
 	private String waterTexture;			/*The texture used as the background*/
-	private Vector<MapPolygon> polygons;	/*List of polygons presented on the map*/
+	private Vector<MapShape> shapes;	/*List of polygons presented on the map*/
 	
-	public EditorMap( String mapName, String waterTexture, Vector<MapPolygon> polygons )
+	public EditorMap( String mapName, String waterTexture, Vector<MapShape> polygons )
 	{
 		this.mapName = mapName;
 		this.waterTexture = waterTexture;
-		this.polygons = polygons;
+		this.shapes = polygons;
 	}
 	
 	/**
@@ -69,17 +69,17 @@ final class EditorMap
 	/**
 	 * @return the polygons
 	 */
-	public Vector<MapPolygon> getPolygons() {
-		return polygons;
+	public Vector<MapShape> getShapes() {
+		return shapes;
 	}
 
 	/**
 	 * Adds polygon to the map.
 	 * @param poly
 	 */
-	public void addMapPolygon( MapPolygon poly )
+	public void addMapShape( MapShape sh )
 	{
-		getPolygons().add(poly);
+		getShapes().add( sh );
 	}
 	
 	/**
@@ -88,7 +88,7 @@ final class EditorMap
 	 */
 	public void removeMapPolygon( int id )
 	{
-		getPolygons().remove(id);
+		getShapes().remove(id);
 	}
 
 }

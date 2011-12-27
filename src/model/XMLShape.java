@@ -3,10 +3,11 @@ package model;
 import java.awt.Point;
 import java.util.Vector;
 
-class XMLShape
+abstract class XMLShape
 {
 	private String textureName;	
 	private TypeOfMapObject typeOfObject; /** Current value type of map object */
+	private static Vector< Class< ?extends MapShape > > XMLShapes = new Vector < Class< ?extends MapShape > >();
 	/*TODO universal attribute collection?*/
 	
 	
@@ -14,6 +15,18 @@ class XMLShape
 	{
 		this.textureName = shape.getTextureName();
 		this.typeOfObject = shape.getTypeOfObject();
+	}
+	
+	public static XMLShape create( MapShape shape ) throws UnrecognizedTypeOfMapShape
+	{
+		/*TODO bf factory instead of this... ekhm...*/
+		if( shape instanceof MapPolygon )
+			return new XMLPolygon( (MapPolygon) shape);
+		if( shape instanceof MapRectangle )
+			return new XMLRectangle( (MapRectangle) shape);
+		if( shape instanceof MapEllipse )
+			return new XMLEllipse( (MapEllipse) shape);					
+		throw new UnrecognizedTypeOfMapShape();
 	}
 	
 	/**
@@ -48,6 +61,8 @@ class XMLShape
 		
 		return result;
 	}
+	
+	abstract MapShape translate();
 	
 }
 
@@ -144,4 +159,10 @@ class XMLEllipse extends XMLShape
 		result.setEllipse(x, y, w, h);
 		return result;
 	}	
+}
+
+
+class UnrecognizedTypeOfMapShape extends Exception
+{
+	
 }

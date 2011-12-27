@@ -2,7 +2,7 @@
 <map>
   <mapName>Something</mapName>
   <waterTexture>water.png</waterTexture>
-  <polygons>
+  <shapes>
     <polygon>
       <textureName>sniezek.png</textureName>
       <typeOfObject>DESTROY</typeOfObject>
@@ -47,5 +47,5 @@
         </point>
       </vertices>
     </polygon>
-  </polygons>
+  </shapes>
 </map>
