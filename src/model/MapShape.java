@@ -8,7 +8,7 @@ import java.util.Vector;
 
 
 /**
- * Base class describing every single shape possible to represent on map.
+ * Base class describing every single shape possible to represent on YME map.
  * @author fiedukow
  */
 abstract class MapShape
@@ -16,7 +16,6 @@ abstract class MapShape
 	private String textureName;	
 	private TypeOfMapObject typeOfObject; /** Current value type of map object */	
 	protected Shape shapeObject; /**The reference to the basic shape object (created in derived class constructor)*/
-	/*TODO universal attribute collection?*/
 		
 	/**
 	 * Default constructor, set textureName
@@ -29,16 +28,28 @@ abstract class MapShape
 		shapeObject = null;
 	}
 	
+	/**
+	 * Simple getter
+	 * @return
+	 */
 	public String getTextureName( )
 	{
 		return textureName;
 	}
 	
+	/**
+	 * Simple setter
+	 * @param textureName
+	 */
 	public void setTextureName( String textureName )
 	{
 		this.textureName = textureName;
 	}
 	
+	/**
+	 * Simple getter
+	 * @return
+	 */
 	public TypeOfMapObject getTypeOfObject()
 	{
 		return typeOfObject;
@@ -58,36 +69,66 @@ abstract class MapShape
 		this.typeOfObject = type;
 	}	
 	
+	/**
+	 * Resize MapShape to given bounds size
+	 * @param w - target width of bounds
+	 * @param h - target height of bounds
+	 */
 	abstract public void resize(int w, int h);
+	
+	/**
+	 * Move MapShape to given bounds coordinations
+	 * @param x - target X coordinate
+	 * @param y - target Y coordinate
+	 */
 	abstract public void move(int x, int y);
+	
+	/**
+	 * Check if given TypeOfMapObject is allowed for this particular MapShape
+	 * @param type
+	 * @return boolean
+	 */
 	abstract protected boolean isTypeAllowed( TypeOfMapObject type );
 }
 
 
 /**
- * MapPolygon - main (& atomic) element of EditorMap, using java.awt.Polygon as base 
+ * MapPolygon - based on java.awt.polygon as shape value 
  * @author fiedukow
  */
 final class MapPolygon extends MapShape
 {
 	
 	protected static Vector<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
+	
+	/**
+	 * List of allowed types
+	 */
+	static
+	{
+		allowedTypes = new Vector<TypeOfMapObject>();
+		allowedTypes.add( TypeOfMapObject.DESTROY );
+		allowedTypes.add( TypeOfMapObject.STOP );
+		allowedTypes.add( TypeOfMapObject.BUMP );
+	}
+	
+	
+	/**
+	 * argument-less constructor (not recommended to be used by end user) 
+	 */
+	public MapPolygon()
+	{
+		super("");
+		shapeObject = new Polygon();
+	}
+
 	/**
 	 * Initialize empty polygon with selected texture
 	 * @param textureName
-	 */
-	
-	public MapPolygon()
-	{
-		super(""); /**FIXME*/
-		shapeObject = new Polygon();
-		loadAllowedTypes();
-	}
-	
+	 */	
 	public MapPolygon( String textureName )
 	{
 		super( textureName );
-		loadAllowedTypes();
 		this.shapeObject = new Polygon();
 		try
 		{
@@ -98,21 +139,36 @@ final class MapPolygon extends MapShape
 			/*
 			 * Impossible statement
 			 */
-			System.err.println("Blad aplikacji :-(");
+			System.err.println("Sponsorem niemozliwego do wysapienia bledu jest programista, ktory najwyrazniej popelnil blad :-(");
 		}
 	}
 	
-	
+	/**
+	 * java.awt.Polygon object accessor which allow to add point to this Polygon
+	 * @param x
+	 * @param y
+	 * @see java.awt.Polygon#addPoint(int, int)
+	 */
 	public void addPoint( int x, int y )
 	{		
 		getPolygon().addPoint(x,y);
 	}
 	
+	/**
+	 * Give xpoints form java.awt.Polygon
+	 * @return int[]
+	 * @see java.awt.Polygon#xpoints
+	 */
 	public int[] getXCoords()
 	{
 		return getPolygon().xpoints;
 	}
 	
+	/**
+	 * Give ypoints form java.awt.Polygon
+	 * @return int[]
+	 * @see java.awt.Polygon#ypoints
+	 */
 	public int[] getYCoords()
 	{
 		return getPolygon().xpoints;
@@ -123,6 +179,7 @@ final class MapPolygon extends MapShape
 	 * Resize polygon for the given Bounds size.
 	 * @param h - new height of polygon bounds
 	 * @param w - new width of polygon bounds
+	 * @see java.awt.Polygon#getBounds()
 	 */
 	public void resize( int w, int h )
 	{
@@ -138,8 +195,9 @@ final class MapPolygon extends MapShape
 	
 	/**
 	 * Move polygon to place where first (upper left) corner of it's bounds is in given place. 
-	 * @param x x coordinate for upper left corner of polygon bounds
-	 * @param y y coordinate for upper left corner of polygon bounds
+	 * @param x new X coordinate for upper left corner of polygon bounds
+	 * @param y new Y coordinate for upper left corner of polygon bounds
+	 * @see java.awt.Polygon#getBounds()
 	 */
 	public void move( int x, int y )
 	{
@@ -165,14 +223,9 @@ final class MapPolygon extends MapShape
 		return (Polygon) shapeObject;
 	}
 	
-	protected void loadAllowedTypes()
-	{		
-		allowedTypes = new Vector<TypeOfMapObject>();
-		allowedTypes.add( TypeOfMapObject.DESTROY );
-		allowedTypes.add( TypeOfMapObject.STOP );
-		allowedTypes.add( TypeOfMapObject.BUMP );
-	}
-	
+	/**
+	 * @see MapShape#isTypeAllowed(TypeOfMapObject) 
+	 */
 	protected boolean isTypeAllowed( TypeOfMapObject type ){
 		return allowedTypes.contains( type );
 	}
@@ -188,7 +241,9 @@ final class MapRectangle extends MapShape
 {
 	protected static Vector<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
 	
-	
+	/**
+	 * argument-less constructor (not recommended to be used by end user) 
+	 */
 	public MapRectangle()
 	{
 		super(""); /**FIXME*/
@@ -198,9 +253,9 @@ final class MapRectangle extends MapShape
 	
 	
 	/**
-	 * Initialize empty polygon with selected texture
+	 * Initialize rectangle with selected texture, position and size
 	 * @param textureName
-	 */
+	 */	
 	public MapRectangle( String textureName, int x, int y, int w, int h )
 	{
 		super( textureName );

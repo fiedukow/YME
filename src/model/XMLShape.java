@@ -3,20 +3,32 @@ package model;
 import java.awt.Point;
 import java.util.Vector;
 
+/**
+ * Base class for all XML represented shapes allowed in program
+ * @author fiedukow
+ */
 abstract class XMLShape
-{
+{	
 	private String textureName;	
 	private TypeOfMapObject typeOfObject; /** Current value type of map object */
-	private static Vector< Class< ?extends MapShape > > XMLShapes = new Vector < Class< ?extends MapShape > >();
 	/*TODO universal attribute collection?*/
 	
-	
+	/**
+	 * Main constructor - do default action for all derived classes
+	 * @param shape - MapShape with informations to convert into XML format
+	 */
 	public XMLShape ( MapShape shape )
 	{
 		this.textureName = shape.getTextureName();
 		this.typeOfObject = shape.getTypeOfObject();
 	}
 	
+	/**
+	 * Factory of XML objects. For now its really ugly, but works. It should be rewritten in future.
+	 * @param shape - MapShape used to recognize type of XMLShape, which should be converted into XML format.
+	 * @return - new object with XML representation of given shape
+	 * @throws UnrecognizedTypeOfMapShape - when the derived type of MapShape isn't known by XMLShape
+	 */
 	public static XMLShape create( MapShape shape ) throws UnrecognizedTypeOfMapShape
 	{
 		/*TODO bf factory instead of this... ekhm...*/
@@ -30,10 +42,10 @@ abstract class XMLShape
 	}
 	
 	/**
-	 * Main method for translation between XMLShape and MapShape. Should be used AFTER resultObject initialization
-	 * @param resultObject already created object which need to be translated into shape
+	 * Method which make the part of translation which is same for every XMLShape to MapShape conversion.
+	 * This method CREATE object using argument-less construction.
+	 * @param classToBeCreated class object of item that should be created
 	 * @return MapShape with textureName and typeOfMapObject set.
-	 * @throws  
 	 */
 	public MapShape translate( Class< ? extends MapShape> classToBeCreated )
 	{		
@@ -62,6 +74,11 @@ abstract class XMLShape
 		return result;
 	}
 	
+	/**
+	 * Used to convert this XMLShape object into MapShape object. It probably should call super.translate(XMLClassName.class)
+	 * at the beginning. 
+	 * @return MapShape object ready to use.
+	 */
 	abstract MapShape translate();
 	
 }
@@ -72,12 +89,12 @@ abstract class XMLShape
  */
 class XMLPolygon extends XMLShape
 { 	
-	/**
-	 * Main constructor - creates XMLPolygon using MapPolygon
-	 * @param polygon
-	 */
 	Vector<Point> vertices;
 	
+	/**
+	 * Main constructor - creates XMLPolygon using MapPolygon
+	 * @param polygon - 
+	 */
 	public XMLPolygon( MapPolygon polygon )
 	{		
 		super(polygon);
@@ -88,6 +105,10 @@ class XMLPolygon extends XMLShape
 		}
 	}
 	
+	/**
+	 * Convert this XMLShape object into MapShape element
+	 * @return MapPolygon - ready to use MapShape element
+	 */
 	public MapPolygon translate()
 	{
 		MapPolygon result = (MapPolygon) translate(MapPolygon.class);		
@@ -100,19 +121,18 @@ class XMLPolygon extends XMLShape
 }
 
 
-/*TODO Javadoc for the class below */
 /**
  * XMLRectangle ready to serialize using XStream. Only for save/load proposes. 
  * @author fiedukow
  */
 class XMLRectangle extends XMLShape
 { 	
-	/**
-	 * Main constructor - creates XMLPolygon using MapPolygon
-	 * @param polygon
-	 */
 	int x,y,w,h;
 	
+	/**
+	 * Main constructor - creates XMLRectagle using MapRectangle
+	 * @param rectangle
+	 */
 	public XMLRectangle( MapRectangle rectangle )
 	{		
 		super(rectangle);
@@ -122,6 +142,10 @@ class XMLRectangle extends XMLShape
 		h = rectangle.getH();		
 	}
 	
+	/**
+	 * Convert this XMLShape object into MapShape element
+	 * @return MapRectangle - ready to use MapShape element
+	 */
 	public MapRectangle translate()
 	{
 		MapRectangle result = (MapRectangle) translate(MapRectangle.class);		
@@ -131,19 +155,18 @@ class XMLRectangle extends XMLShape
 }
 
 
-/*TODO Javadoc for the class below */
 /**
- * XMLRectangle ready to serialize using XStream. Only for save/load proposes. 
+ * XMLEllipse ready to serialize using XStream. Only for save/load proposes. 
  * @author fiedukow
  */
 class XMLEllipse extends XMLShape
 { 	
-	/**
-	 * Main constructor - creates XMLPolygon using MapPolygon
-	 * @param polygon
-	 */
 	int x,y,w,h;
 	
+	/**
+	 * Main constructor - creates XMLElllipse using MapEllipse
+	 * @param ellipse
+	 */
 	public XMLEllipse( MapEllipse  ellipse )
 	{		
 		super(ellipse);
@@ -153,6 +176,10 @@ class XMLEllipse extends XMLShape
 		h = ellipse.getH();		
 	}
 	
+	/**
+	 * Convert this XMLShape object into MapShape element
+	 * @return MapEllipse - ready to use MapShape element
+	 */
 	public MapEllipse translate()
 	{
 		MapEllipse result = (MapEllipse) translate(MapEllipse.class);		
@@ -161,7 +188,11 @@ class XMLEllipse extends XMLShape
 	}	
 }
 
-
+/**
+ * Exception object to use when XMLShape factory didn't recognize derived MapShape type 
+ * @author fiedukow
+ *
+ */
 class UnrecognizedTypeOfMapShape extends Exception
 {
 	

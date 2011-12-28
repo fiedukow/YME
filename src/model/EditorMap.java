@@ -1,17 +1,5 @@
 package model;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
-import java.awt.Shape;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Vector;
-
-import com.thoughtworks.xstream.XStream;
 
 /**
  * The map description for map Editor. Have some get/set function as interface.
@@ -19,10 +7,16 @@ import com.thoughtworks.xstream.XStream;
  */
 final class EditorMap
 {
-	private String mapName;					/*Map name, for general proposes*/
-	private String waterTexture;			/*The texture used as the background*/
-	private Vector<MapShape> shapes;	/*List of polygons presented on the map*/
+	private String mapName;					/**Map name, for general proposes*/
+	private String waterTexture;		    /**The texture used as the background*/
+	private Vector<MapShape> shapes;		/**List of polygons presented on the map*/
 	
+	/**
+	 * Main constructor of Map
+	 * @param mapName
+	 * @param waterTexture
+	 * @param polygons
+	 */
 	public EditorMap( String mapName, String waterTexture, Vector<MapShape> polygons )
 	{
 		this.mapName = mapName;
@@ -59,7 +53,7 @@ final class EditorMap
 
 	/**
 	 * Simple getter
-	 * @return
+	 * @return 
 	 */
 	public String getWaterTexture( )
 	{
@@ -67,7 +61,7 @@ final class EditorMap
 	}
 	
 	/**
-	 * @return the polygons
+	 * @return the shapes
 	 */
 	public Vector<MapShape> getShapes() {
 		return shapes;

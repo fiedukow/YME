@@ -18,9 +18,9 @@ import com.thoughtworks.xstream.XStream;
  */
 final class MapTranslator
 {
-	private String mapName;					/*Map name, for general proposes*/
-	private String waterTexture;			/*The texture used as the background*/
-	private Vector<XMLShape> shapes;	    /*List of polygons presented on the map*/
+	private String mapName;					/** Map name, for general proposes */
+	private String waterTexture;			/** The texture used as the background */
+	private Vector<XMLShape> shapes;	    /** List of polygons presented on the map */
 
 	public static final String xmlHeader = "<?xml version=\"1.0\"?>\n";
 	
@@ -67,11 +67,7 @@ final class MapTranslator
 	{
 		MapTranslator tmp;
 		XStream xstream = new XStream();		
-		xstream.alias("map", MapTranslator.class);
-		xstream.alias("polygon", XMLPolygon.class);
-		xstream.alias("rectangle", XMLRectangle.class);
-		xstream.alias("ellipse", XMLEllipse.class);
-		xstream.alias("point", java.awt.Point.class);
+		applyAliases(xstream);
 		tmp = (MapTranslator) xstream.fromXML( new File(fileName) ); /*rewrite whole object*/
 		this.mapName = tmp.mapName;
 		this.waterTexture = tmp.waterTexture;
@@ -105,7 +101,6 @@ final class MapTranslator
 	 */
 	public EditorMap translate()
 	{		
-		/**FIXME*/
 		Vector<MapShape> resultShapes = new Vector<MapShape>();		
 		for( XMLShape sh : shapes )
 		{
@@ -124,12 +119,8 @@ final class MapTranslator
 	public final void save( String fileName ) throws IOException
 	{
 		XStream xstream = new XStream();
-		xstream.alias("map", MapTranslator.class);
-		xstream.alias("polygon", XMLPolygon.class);		
-		xstream.alias("rectangle", XMLRectangle.class);
-		xstream.alias("ellipse", XMLEllipse.class);
-		xstream.alias("point", java.awt.Point.class);
-		FileWriter xmlMap = new FileWriter( fileName );
+		applyAliases(xstream);
+		FileWriter xmlMap = new FileWriter( fileName );		
 		BufferedWriter writer = new BufferedWriter( xmlMap );
 		try 
 		{
@@ -146,4 +137,16 @@ final class MapTranslator
 		    writer.close();
 		}
 	} 
+	
+	/**
+	 * Created to hide all aliases in one place
+	 * @param xstream - stream which want to know MapTranslator aliases 
+	 */
+	static private void applyAliases( XStream xstream ){
+		xstream.alias("map", MapTranslator.class);
+		xstream.alias("polygon", XMLPolygon.class);		
+		xstream.alias("rectangle", XMLRectangle.class);
+		xstream.alias("ellipse", XMLEllipse.class);
+		xstream.alias("point", java.awt.Point.class);
+	}
 }
