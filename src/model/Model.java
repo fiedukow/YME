@@ -45,5 +45,10 @@ public final class Model
 		MapTranslator XMLMap = new MapTranslator( map );
 		XMLMap.save(fileName);
 	}
+	
+	public EditorMap getEditorMap()
+	{
+		return map;
+	}
 	/*FIXME - i need some interface ;( */
 }

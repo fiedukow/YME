@@ -21,7 +21,10 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 
+import model.EditorMap;
+
 public class View {
+	EditorMap currentState;
 	JFrame mainFrame;
 	JPanel mapPanel;
 	JPanel leftMenu;	
@@ -150,5 +153,11 @@ public class View {
 	{
 		statusText.append(toShow);
 		statusText.setCaretPosition( statusText.getText().length() );
+	}
+	
+	public void setCurrentState( EditorMap map )
+	{
+		this.currentState = map;
+		showInfo("Zaladowano mape o nazwie: "+currentState.getMapName()+"\n");
 	}
 }
