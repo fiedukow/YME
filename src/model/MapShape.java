@@ -10,6 +10,7 @@ import java.util.Vector;
 /**
  * Base class describing every single shape possible to represent on YME map.
  * @author fiedukow
+ * @see java.awt.Shape
  */
 abstract class MapShape
 {
@@ -95,6 +96,8 @@ abstract class MapShape
 /**
  * MapPolygon - based on java.awt.polygon as shape value 
  * @author fiedukow
+ * @see java.awt.Polygon
+ * @see MapShape
  */
 final class MapPolygon extends MapShape
 {
@@ -125,6 +128,7 @@ final class MapPolygon extends MapShape
 	/**
 	 * Initialize empty polygon with selected texture
 	 * @param textureName
+	 * @see java.awt.Polygon
 	 */	
 	public MapPolygon( String textureName )
 	{
@@ -176,7 +180,7 @@ final class MapPolygon extends MapShape
 
 	
 	/**
-	 * Resize polygon for the given Bounds size.
+	 * Resize polygon to the given Bounds size.
 	 * @param h - new height of polygon bounds
 	 * @param w - new width of polygon bounds
 	 * @see java.awt.Polygon#getBounds()
@@ -211,6 +215,16 @@ final class MapPolygon extends MapShape
 			poly.ypoints[i] += ymove;
 	}
 	
+	/*
+	 * PROTECTED SECTION
+	 */
+	/**
+	 * @see MapShape#isTypeAllowed(TypeOfMapObject) 
+	 */
+	protected boolean isTypeAllowed( TypeOfMapObject type ){
+		return allowedTypes.contains( type );
+	}
+
 	
 	/*
 	 * PRIVATE SECTION
@@ -222,33 +236,38 @@ final class MapPolygon extends MapShape
 	{
 		return (Polygon) shapeObject;
 	}
-	
-	/**
-	 * @see MapShape#isTypeAllowed(TypeOfMapObject) 
-	 */
-	protected boolean isTypeAllowed( TypeOfMapObject type ){
-		return allowedTypes.contains( type );
-	}
 }
 
 
-/*TODO Javadoc for the class below */
 /**
- * MapPolygon - main (& atomic) element of EditorMap, using java.awt.Polygon as base 
+ * MapRectangle - based on java.awt.Rectangle as shape value 
  * @author fiedukow
+ * @see java.awt.Rectangle
+ * @see MapShape
  */
 final class MapRectangle extends MapShape
 {
 	protected static Vector<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
 	
 	/**
+	 * List of allowed types
+	 */
+	static
+	{
+		allowedTypes = new Vector<TypeOfMapObject>();
+		allowedTypes.add( TypeOfMapObject.DESTROY );
+		allowedTypes.add( TypeOfMapObject.STOP );
+		allowedTypes.add( TypeOfMapObject.BUMP );
+		allowedTypes.add( TypeOfMapObject.QUAY );
+	}
+	
+	/**
 	 * argument-less constructor (not recommended to be used by end user) 
 	 */
 	public MapRectangle()
 	{
-		super(""); /**FIXME*/
+		super("");
 		shapeObject = new Rectangle();
-		loadAllowedTypes();
 	}
 	
 	
@@ -259,8 +278,7 @@ final class MapRectangle extends MapShape
 	public MapRectangle( String textureName, int x, int y, int w, int h )
 	{
 		super( textureName );
-		this.shapeObject = new Rectangle(x,y,w,h);
-		loadAllowedTypes();		
+		this.shapeObject = new Rectangle(x,y,w,h);	
 		try
 		{
 			this.setTypeOfObject( allowedTypes.get(0));
@@ -275,9 +293,10 @@ final class MapRectangle extends MapShape
 	}
 	
 	/**
-	 * Resize polygon for the given Bounds size.
-	 * @param h - new height of polygon bounds
-	 * @param w - new width of polygon bounds
+	 * Resize rectangle to the given size.
+	 * @param h - new height of rectangle
+	 * @param w - new width of rectangle
+	 * @see java.awt.Rectangle#setSize(int, int)
 	 */
 	public void resize( int w, int h )
 	{
@@ -285,38 +304,79 @@ final class MapRectangle extends MapShape
 	}
 	
 	/**
-	 * Move polygon to place where first (upper left) corner of it's bounds is in given place. 
-	 * @param x x coordinate for upper left corner of polygon bounds
-	 * @param y y coordinate for upper left corner of polygon bounds
+	 * Move rectangle to place where first (upper left) corner of it is in given place. 
+	 * @param x x coordinate for upper left corner of rectangle
+	 * @param y y coordinate for upper left corner of rectangle
+	 * @see java.awt.Rectangle#setLocation(int, int)
 	 */
 	public void move( int x, int y )
 	{
 		getRectangle().setLocation(x, y);
 	}
 	
+	/**
+	 * Shape (java.awt.Rectangle) getX accessor
+	 * @return int
+	 * @see java.awt.Rectangle#getX()
+	 */
 	public int getX()
 	{
 		return (int) getRectangle().getX();
 	}
 	
+	/**
+	 * Shape (java.awt.Rectangle) getY accessor
+	 * @return int
+	 * @see java.awt.Rectangle#getX()
+	 */
 	public int getY()
 	{
 		return (int) getRectangle().getY();
 	}
 	
+	
+	/**
+	 * Shape (java.awt.Rectangle) getWidth accessor
+	 * @return int
+	 * @see java.awt.Rectangle#getWidth()
+	 */
 	public int getW()
 	{
 		return (int) getRectangle().getWidth();
 	}
 	
+	/**
+	 * Shape (java.awt.Rectangle) getHeight accessor
+	 * @return int
+	 * @see java.awt.Rectangle#getHeight()
+	 */
 	public int getH()
 	{
 		return (int) getRectangle().getHeight();
 	}
 	
+	/**
+	 * Shape (java.awt.Rectangle) setRect accessor
+	 * @param x
+	 * @param y
+	 * @param w
+	 * @param h
+	 * @see java.awt.Rectangle#setRect(double, double, double, double)
+	 */
 	public void setRectangle( int x, int y, int w, int h )
 	{
 		getRectangle().setRect(x, y, w, h);
+	}
+	
+	
+	/*
+	 * PROTECTED SECTION
+	 */
+	/**
+	 * @see MapShape#isTypeAllowed(TypeOfMapObject) 
+	 */
+	protected boolean isTypeAllowed( TypeOfMapObject type ){
+		return allowedTypes.contains( type );
 	}
 	
 	
@@ -330,47 +390,52 @@ final class MapRectangle extends MapShape
 	{
 		return (Rectangle) shapeObject;
 	}
-	
-	protected void loadAllowedTypes()
-	{		
-		allowedTypes = new Vector<TypeOfMapObject>();
-		allowedTypes.add( TypeOfMapObject.DESTROY );
-		allowedTypes.add( TypeOfMapObject.STOP );
-		allowedTypes.add( TypeOfMapObject.BUMP );
-		allowedTypes.add( TypeOfMapObject.QUAY );
-	}
-	protected boolean isTypeAllowed( TypeOfMapObject type ){
-		return allowedTypes.contains( type );
-	}
 }
 
 
 
-/*TODO Javadoc for the class below */
 /**
- * MapPolygon - main (& atomic) element of EditorMap, using java.awt.Polygon as base 
+ * MapEllipse - based on java.awt.Rectangle as shape value 
  * @author fiedukow
+ * @see java.awt.geom.Ellipse2D.Double
+ * @see MapShape
  */
 final class MapEllipse extends MapShape
 {
 	
 	protected static Vector<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
 	
-	public MapEllipse()
-	{
-		super(""); /**FIXME*/
-		shapeObject = new Ellipse2D.Double();
-		loadAllowedTypes();
+	/**
+	 * List of allowed types
+	 */
+	static
+	{		
+		allowedTypes = new Vector<TypeOfMapObject>();
+		allowedTypes.add( TypeOfMapObject.DESTROY );
+		allowedTypes.add( TypeOfMapObject.STOP );
+		allowedTypes.add( TypeOfMapObject.BUMP );
 	}
 	
 	/**
-	 * Initialize empty polygon with selected texture
+	 * argument-less constructor (not recommended to be used by end user) 
+	 */
+	public MapEllipse()
+	{
+		super("");
+		shapeObject = new Ellipse2D.Double();
+	}
+	
+	/**
+	 * Initialize Ellipse with selected texture, position and size
 	 * @param textureName
+	 * @param x - x possition of bound
+	 * @param y - y possition of bound
+	 * @param w - width of bound
+	 * @param h - height of bound
 	 */
 	public MapEllipse( String textureName, int x, int y, int w, int h )
 	{
 		super( textureName );
-		loadAllowedTypes();
 		this.shapeObject = new Ellipse2D.Double(x,y,w,h);
 		try
 		{
@@ -386,9 +451,10 @@ final class MapEllipse extends MapShape
 	}
 	
 	/**
-	 * Resize polygon for the given Bounds size.
-	 * @param h - new height of polygon bounds
-	 * @param w - new width of polygon bounds
+	 * Resize Ellipse to the given bound size.
+	 * @param h - new height of ellipse
+	 * @param w - new width of ellipse
+	 * @see java.awt.geom.Ellipse2D.Double#setFrame(double,double,double,double)
 	 */
 	public void resize( int w, int h )
 	{
@@ -396,40 +462,80 @@ final class MapEllipse extends MapShape
 	}
 	
 	/**
-	 * Move polygon to place where first (upper left) corner of it's bounds is in given place. 
-	 * @param x x coordinate for upper left corner of polygon bounds
-	 * @param y y coordinate for upper left corner of polygon bounds
+	 * Move ellipse to place where first (upper left) corner of it bound is in given place. 
+	 * @param x x coordinate for upper left corner of ellipse bound
+	 * @param y y coordinate for upper left corner of ellipse bound
+	 * @see java.awt.geom.Ellipse2D.Double#setFrame(double,double,double,double)
 	 */
 	public void move( int x, int y )
 	{
 		getEllipse().setFrame(x, y, getW(), getH());
 	}
 	
+	
+	/**
+	 * Shape (java.awt.geom.Ellipse2D.Double) getX accessor
+	 * @return int
+	 * @see java.awt.geom.Ellipse2D.Double#getX()
+	 */
 	public int getX()
 	{
 		return (int) getEllipse().getX();
 	}
 	
+	/**
+	 * Shape (java.awt.geom.Ellipse2D.Double) getY accessor
+	 * @return int
+	 * @see java.awt.geom.Ellipse2D.Double#getY()
+	 */
 	public int getY()
 	{
 		return (int) getEllipse().getY();
 	}
 	
+	/**
+	 * Shape (java.awt.geom.Ellipse2D.Double) getWidth accessor
+	 * @return int
+	 * @see java.awt.geom.Ellipse2D.Double#getWidth()
+	 */
 	public int getW()
 	{
 		return (int) getEllipse().getWidth();
 	}
 	
+	/**
+	 * Shape (java.awt.geom.Ellipse2D.Double) getHeight accessor
+	 * @return int
+	 * @see java.awt.geom.Ellipse2D.Double#getHeight()
+	 */
 	public int getH()
 	{
 		return (int) getEllipse().getHeight();
 	}
 	
+	/**
+	 * Shape (java.awt.geom.Ellipse2D.Double) setFrame accessor
+	 * @param x
+	 * @param y
+	 * @param w
+	 * @param h
+	 * @see java.awt.geom.Ellipse2D.Double#setFame(int,int,int,int)
+	 */
 	public void setEllipse( int x, int y, int w, int h )
 	{
 		getEllipse().setFrame(x, y, w, h);
 	}
 	
+	
+	/*
+	 * PROTECTED SECTION
+	 */
+	/**
+	 * @see MapShape#isTypeAllowed(TypeOfMapObject) 
+	 */
+	protected boolean isTypeAllowed( TypeOfMapObject type ){
+		return allowedTypes.contains( type );
+	}
 	
 	/*
 	 * PRIVATE SECTION
@@ -440,15 +546,5 @@ final class MapEllipse extends MapShape
 	private Ellipse2D.Double getEllipse()
 	{
 		return (Ellipse2D.Double) shapeObject;
-	}
-	protected void loadAllowedTypes()
-	{		
-		allowedTypes = new Vector<TypeOfMapObject>();
-		allowedTypes.add( TypeOfMapObject.DESTROY );
-		allowedTypes.add( TypeOfMapObject.STOP );
-		allowedTypes.add( TypeOfMapObject.BUMP );
-	}
-	protected boolean isTypeAllowed( TypeOfMapObject type ){
-		return allowedTypes.contains( type );
-	}
+	}	
 }
