@@ -15,13 +15,13 @@ final class EditorMap
 	 * Main constructor of Map
 	 * @param mapName
 	 * @param waterTexture
-	 * @param polygons
+	 * @param shapes
 	 */
-	public EditorMap( String mapName, String waterTexture, Vector<MapShape> polygons )
+	public EditorMap( String mapName, String waterTexture, Vector<MapShape> shapes )
 	{
 		this.mapName = mapName;
 		this.waterTexture = waterTexture;
-		this.shapes = polygons;
+		this.shapes = shapes;
 	}
 	
 	/**
