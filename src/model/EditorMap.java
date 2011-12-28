@@ -5,7 +5,7 @@ import java.util.Vector;
  * The map description for map Editor. Have some get/set function as interface.
  * @author fiedukow
  */
-final class EditorMap
+public final class EditorMap
 {
 	private String mapName;					/**Map name, for general proposes*/
 	private String waterTexture;		    /**The texture used as the background*/
@@ -28,7 +28,7 @@ final class EditorMap
 	 * Simple setter
 	 * @param mapName
 	 */
-	public void setMapName( String mapName )
+	/*package*/ void setMapName( String mapName )
 	{
 		this.mapName = mapName;
 	}
@@ -46,7 +46,7 @@ final class EditorMap
 	 * Simple setter
 	 * @param waterTexture
 	 */
-	public void setWaterTexture( String waterTexture )
+	/*package*/ void setWaterTexture( String waterTexture )
 	{
 	    this.waterTexture = waterTexture;
 	}
@@ -71,7 +71,7 @@ final class EditorMap
 	 * Adds polygon to the map.
 	 * @param poly
 	 */
-	public void addMapShape( MapShape sh )
+	/*package*/ void addMapShape( MapShape sh )
 	{
 		getShapes().add( sh );
 	}
@@ -80,12 +80,12 @@ final class EditorMap
 	 * Removes polygon from map.
 	 * @param id index of the one that should be removed
 	 */
-	public void removeMapShape( int id )
+	/*package*/ void removeMapShape( int id )
 	{
 		getShapes().remove(id);
 	}
 	
-	public void removeMapShape( MapShape shape )
+	/*package*/ void removeMapShape( MapShape shape )
 	{
 		getShapes().remove( shape );
 	}

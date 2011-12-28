@@ -33,7 +33,7 @@ abstract class MapShape
 	 * Simple getter
 	 * @return
 	 */
-	public String getTextureName( )
+	/*package*/ String getTextureName( )
 	{
 		return textureName;
 	}
@@ -61,7 +61,7 @@ abstract class MapShape
 	 * @param type - one of allowed types for the particular type
 	 * @throws InvalidTypeOfMapObjectException - throw when someone try to set type to the disallowed TOMO
 	 */
-	public void setTypeOfObject( TypeOfMapObject type ) throws InvalidTypeOfMapObjectException
+	/*package*/ void setTypeOfObject( TypeOfMapObject type ) throws InvalidTypeOfMapObjectException
 	{		
 		if( ! isTypeAllowed( type ) )
 		{
@@ -75,14 +75,14 @@ abstract class MapShape
 	 * @param w - target width of bounds
 	 * @param h - target height of bounds
 	 */
-	abstract public void resize(int w, int h);
+	abstract /*package*/ void resize(int w, int h);
 	
 	/**
 	 * Move MapShape to given bounds coordinations
 	 * @param x - target X coordinate
 	 * @param y - target Y coordinate
 	 */
-	abstract public void move(int x, int y);
+	abstract /*package*/ void move(int x, int y);
 	
 	/**
 	 * Check if given TypeOfMapObject is allowed for this particular MapShape
@@ -119,7 +119,7 @@ final class MapPolygon extends MapShape
 	/**
 	 * argument-less constructor (not recommended to be used by end user) 
 	 */
-	public MapPolygon()
+	/*package*/ MapPolygon()
 	{
 		super("");
 		shapeObject = new Polygon();
@@ -153,7 +153,7 @@ final class MapPolygon extends MapShape
 	 * @param y
 	 * @see java.awt.Polygon#addPoint(int, int)
 	 */
-	public void addPoint( int x, int y )
+	/*package*/ void addPoint( int x, int y )
 	{		
 		getPolygon().addPoint(x,y);
 	}
@@ -165,6 +165,7 @@ final class MapPolygon extends MapShape
 	 */
 	public int[] getXCoords()
 	{
+		/*TODO - return copy*/
 		return getPolygon().xpoints;
 	}
 	
@@ -175,6 +176,7 @@ final class MapPolygon extends MapShape
 	 */
 	public int[] getYCoords()
 	{
+		/*TODO - return copy*/
 		return getPolygon().xpoints;
 	}
 
@@ -185,7 +187,7 @@ final class MapPolygon extends MapShape
 	 * @param w - new width of polygon bounds
 	 * @see java.awt.Polygon#getBounds()
 	 */
-	public void resize( int w, int h )
+	/*package*/ void resize( int w, int h )
 	{
 		Polygon poly = getPolygon();
 		Rectangle bound = poly.getBounds();
@@ -203,7 +205,7 @@ final class MapPolygon extends MapShape
 	 * @param y new Y coordinate for upper left corner of polygon bounds
 	 * @see java.awt.Polygon#getBounds()
 	 */
-	public void move( int x, int y )
+	/*package*/ void move( int x, int y )
 	{
 		Polygon poly = getPolygon();
 		Rectangle bound = poly.getBounds();
@@ -264,7 +266,7 @@ final class MapRectangle extends MapShape
 	/**
 	 * argument-less constructor (not recommended to be used by end user) 
 	 */
-	public MapRectangle()
+	/*package*/ MapRectangle()
 	{
 		super("");
 		shapeObject = new Rectangle();
@@ -297,7 +299,7 @@ final class MapRectangle extends MapShape
 	 * @param w - new width of rectangle
 	 * @see java.awt.Rectangle#setSize(int, int)
 	 */
-	public void resize( int w, int h )
+	/*package*/ void resize( int w, int h )
 	{
 		getRectangle().setSize(w, h);
 	}
@@ -308,7 +310,7 @@ final class MapRectangle extends MapShape
 	 * @param y y coordinate for upper left corner of rectangle
 	 * @see java.awt.Rectangle#setLocation(int, int)
 	 */
-	public void move( int x, int y )
+	/*package*/ void move( int x, int y )
 	{
 		getRectangle().setLocation(x, y);
 	}
@@ -362,7 +364,7 @@ final class MapRectangle extends MapShape
 	 * @param h
 	 * @see java.awt.Rectangle#setRect(double, double, double, double)
 	 */
-	public void setRectangle( int x, int y, int w, int h )
+	/*package*/ void setRectangle( int x, int y, int w, int h )
 	{
 		getRectangle().setRect(x, y, w, h);
 	}
@@ -418,7 +420,7 @@ final class MapEllipse extends MapShape
 	/**
 	 * argument-less constructor (not recommended to be used by end user) 
 	 */
-	public MapEllipse()
+	/*package*/ MapEllipse()
 	{
 		super("");
 		shapeObject = new Ellipse2D.Double();
@@ -455,7 +457,7 @@ final class MapEllipse extends MapShape
 	 * @param w - new width of ellipse
 	 * @see java.awt.geom.Ellipse2D.Double#setFrame(double,double,double,double)
 	 */
-	public void resize( int w, int h )
+	/*package*/ void resize( int w, int h )
 	{
 		getEllipse().setFrame(getX(), getY(), w, h);
 	}
@@ -466,7 +468,7 @@ final class MapEllipse extends MapShape
 	 * @param y y coordinate for upper left corner of ellipse bound
 	 * @see java.awt.geom.Ellipse2D.Double#setFrame(double,double,double,double)
 	 */
-	public void move( int x, int y )
+	/*package*/ void move( int x, int y )
 	{
 		getEllipse().setFrame(x, y, getW(), getH());
 	}
