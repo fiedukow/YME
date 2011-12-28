@@ -270,7 +270,6 @@ final class MapRectangle extends MapShape
 		shapeObject = new Rectangle();
 	}
 	
-	
 	/**
 	 * Initialize rectangle with selected texture, position and size
 	 * @param textureName

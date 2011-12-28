@@ -9,7 +9,6 @@ import java.util.Vector;
 
 import com.thoughtworks.xstream.XStream;
 
-
 /**
  * Universal YahtMapFormat container. 
  * Have only objects with attributes saved in XML file. 

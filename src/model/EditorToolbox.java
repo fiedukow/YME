@@ -1,142 +1,253 @@
 package model;
+import java.util.Stack;
 import java.util.Vector;
+import java.awt.Point;
 
+/**
+ * Main class used to change EditorMap state.
+ * @author fiedukow
+ */
 final class EditorToolbox {	
-	CommandStack undo; /*Stack of commands invoked - user for "undo" operation*/
-	CommandStack redo; /*Stack used for "redo" operation*/	
+	private Stack<Command> undo; /*Stack of commands invoked - user for "undo" operation*/
+	private Stack<Command> redo; /*Stack used for "redo" operation*/
+	private EditorMap map;
 	
-	/* invoke command and push on undo stack */
+	public EditorToolbox( EditorMap map )
+	{
+		undo = new Stack<Command>();
+		redo = new Stack<Command>();	
+		this.map = map;
+	}
+	
+	/**
+	 * Invoke command and then push it on undo stack
+	 * @param cmd - command to invoke
+	 */
 	void doCommand( Command cmd ) 
 	{
-		
+		try {
+			cmd.invoke( map );
+		} catch (CommandInvokeException e) {
+			System.err.println("Nie udalo sie wykonac komendy");
+			return;
+		}
+		undo.push(cmd);
 	}
+	
+	/**
+	 * Pop some command from undo stack and undo them.
+	 * @param howMany - how many command do you want to undo
+	 * @throws CommandStackEmptyException When someone tries to pop more then it's available
+	 */
 	void undo( int howMany ) throws CommandStackEmptyException
 	{
-		/*FIXME*/
+		Command cmd;
+		for(int i = 0; i < howMany; ++i )
+		{
+			cmd  = undo.pop();
+			try {
+				cmd.undo( map );
+			} catch (CommandUndoException e) {
+				System.err.println("Nie udalo sie wycofać komendy");
+				undo.push(cmd); /* put it back where it was */
+				return;
+			}
+		}
 	}
+	
+	/**
+	 * Pop one command from undo stack and undo it.
+	 * @throws CommandStackEmptyException
+	 * @see EditorToolbox#undo(int)
+	 */
 	void undo( ) throws CommandStackEmptyException
 	{
 		undo(1);
 	}
+	
+	/**
+	 * Pop some command from redo stack and ivoke them.
+	 * @param howMany - how many command do you want to invoke
+	 * @throws CommandStackEmptyException When someone tries to pop more then it's available
+	 */
 	void redo( int howMany ) throws CommandStackEmptyException
 	{
-		/*FIXME*/
+		Command cmd;
+		for(int i = 0; i < howMany; ++i )
+		{
+			cmd  = redo.pop();
+			try {
+				cmd.invoke( map );
+			} catch (CommandInvokeException e) {
+				System.err.println("Nie udalo sie wykonac ponownie komendy");
+				redo.push(cmd); /* put it back where it was */
+				return;
+			}
+		}
 	}
+	
+	/**
+	 * Pop one command from redo stack and invoke it.
+	 * @throws CommandStackEmptyException
+	 * @see EditorToolbox#redo(int)
+	 */
 	void redo( ) throws CommandStackEmptyException
 	{
 		redo(1);
 	}
 }
 
-/*
- * Collects all Commands used by user in order to let user undo their operations
- * It's a stack of commands already invoken. 
- */
-final class CommandStack
-{	
-	int push( Command cmd)
-	{
-		/*FIXME*/
-		return 0;
-	}
-	Command pop( )
-	{
-		/*FIXME*/
-		return new doDrawPolygon();
-	}
-	int push( Vector<Command> cmds )
-	{
-		/*FIXME*/
-		return 0;
-	}
-	Vector<Command> pop( int howMany )
-	{
-		/*FIXME*/
-		return new Vector<Command>();
-	}
-}
 
-/*base class for all commands*/
+/**
+ * Base class for all commands. (Command design pattern).
+ * Warning: UNDO command will work only if the map state is the same as just after using invoke!
+ * @author fiedukow
+ */
 interface Command
 {	
-	abstract void invoke() throws CommandInvokeException;
-	abstract void undo() throws CommandUndoException;
+	abstract void invoke( EditorMap map ) throws CommandInvokeException;
+	abstract void undo( EditorMap map ) throws CommandUndoException;
 }
 
+/**
+ * 
+ * @author fiedukow
+ */
 class doDrawPolygon implements Command
 {	
-	public void invoke() throws CommandInvokeException
+	MapPolygon polygon;
+	doDrawPolygon( String textureName, Vector<Point> points )
+	{
+		polygon = new MapPolygon( textureName );
+		for( Point point : points )
+			polygon.addPoint((int)point.getX(), (int)point.getY());			
+	}
+	
+	public void invoke( EditorMap map ) throws CommandInvokeException
+	{
+		map.addMapShape( polygon );
+	}
+	public void undo( EditorMap map ) throws CommandUndoException
+	{
+		map.removeMapShape( polygon );
+	}
+}
+
+/**
+ * 
+ * @author fiedukow
+ */
+class doDrawRectangle implements Command
+{	
+	doDrawRectangle( String textureName, TypeOfMapObject type, Vector<Point> points )
+	{
+		
+	}
+	
+	public void invoke( EditorMap map ) throws CommandInvokeException
 	{
 		/*FIXME*/
 	}
-	public void undo() throws CommandUndoException
+	public void undo( EditorMap map ) throws CommandUndoException
 	{
 		/*FIXME*/
 	}
 }
 
-class doResizePolygon implements Command
-{
-	public void invoke() throws CommandInvokeException
+/**
+ * 
+ * @author fiedukow
+ */
+class doDrawEllipse implements Command
+{	
+	doDrawEllipse( MapShape shape )
+	{
+		
+	}	
+	public void invoke( EditorMap map ) throws CommandInvokeException
 	{
 		/*FIXME*/
 	}
-	public void undo() throws CommandUndoException
+	public void undo( EditorMap map ) throws CommandUndoException
+	{
+		/*FIXME*/
+	}
+}
+
+
+class doResizeShape implements Command
+{
+	public void invoke( EditorMap map ) throws CommandInvokeException
+	{
+		/*FIXME*/
+	}
+	public void undo( EditorMap map ) throws CommandUndoException
 	{
 		/*FIXME*/
 	}	
 }
 
-class doRemovePolygon implements Command
+class doMoveShape implements Command
 {
-	public void invoke() throws CommandInvokeException
+	public void invoke( EditorMap map ) throws CommandInvokeException
 	{
 		/*FIXME*/
 	}
-	public void undo() throws CommandUndoException
+	public void undo( EditorMap map ) throws CommandUndoException
 	{
 		/*FIXME*/
 	}	
 }
 
-class doChangePolygonAttribute implements Command
+class doChangeMapName implements Command
 {
-	public void invoke() throws CommandInvokeException
+	public void invoke( EditorMap map ) throws CommandInvokeException
 	{
 		/*FIXME*/
 	}
-	public void undo() throws CommandUndoException
+	public void undo( EditorMap map ) throws CommandUndoException
 	{
 		/*FIXME*/
 	}	
 }
 
-class doChangeMapAttribute implements Command
+class doChangeWaterTexutre implements Command
 {
-	public void invoke() throws CommandInvokeException
+	public void invoke( EditorMap map ) throws CommandInvokeException
 	{
 		/*FIXME*/
 	}
-	public void undo() throws CommandUndoException
+	public void undo( EditorMap map ) throws CommandUndoException
+	{
+		/*FIXME*/
+	}	
+}
+
+class doChangeTypeOfMapObject implements Command
+{
+	public void invoke( EditorMap map ) throws CommandInvokeException
+	{
+		/*FIXME*/
+	}
+	public void undo( EditorMap map ) throws CommandUndoException
+	{
+		/*FIXME*/
+	}	
+}
+
+class doRemoveShape implements Command
+{
+	public void invoke( EditorMap map ) throws CommandInvokeException
+	{
+		/*FIXME*/
+	}
+	public void undo( EditorMap map ) throws CommandUndoException
 	{
 		/*FIXME*/
 	}	
 }
 
 
-
-
-class doShift implements Command
-{
-	public void invoke() throws CommandInvokeException
-	{
-		/*FIXME*/
-	}
-	public void undo() throws CommandUndoException
-	{
-		/*FIXME*/
-	}	
-}
 
 
 

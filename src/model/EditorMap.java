@@ -80,9 +80,14 @@ final class EditorMap
 	 * Removes polygon from map.
 	 * @param id index of the one that should be removed
 	 */
-	public void removeMapPolygon( int id )
+	public void removeMapShape( int id )
 	{
 		getShapes().remove(id);
+	}
+	
+	public void removeMapShape( MapShape shape )
+	{
+		getShapes().remove( shape );
 	}
 
 }
