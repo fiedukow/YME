@@ -15,20 +15,7 @@ public final class Model
 	{		
 		newMap("New map", "water.png");
 		box = new EditorToolbox(map);
-		/*try
-		{
-			MapTranslator mapa = new MapTranslator();
-			mapa.save("maps/sample.xml");
-			mapa = new MapTranslator(mapa.translate());
-			mapa.save("maps/sample1.xml");
-		}
-		catch ( IOException e )
-		{
-			System.err.println("BLAD ZAPISU!");
-		}
-		box = new EditorToolbox(map);
-		System.out.println("Model created!");
-		*/
+		System.out.println("Model created.");
 	}
 	
 	public EditorToolbox getToolbox()
@@ -51,6 +38,12 @@ public final class Model
 			return;
 		}
 		map = XMLMap.translate();
+	}
+	
+	public void saveMap( String fileName ) throws IOException 
+	{
+		MapTranslator XMLMap = new MapTranslator( map );
+		XMLMap.save(fileName);
 	}
 	/*FIXME - i need some interface ;( */
 }

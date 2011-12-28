@@ -4,7 +4,8 @@ package model;
  * Represent the type of object in final game.
  * @author fiedukow
  */
-public enum TypeOfMapObject {
+public enum TypeOfMapObject 
+{
 	 NO_OBJECT	, /*only for early initialization*/
 	 QUAY		, /*quay, allowed for rectangle only*/
 	 DESTROY	, /*object which destroy the boat in the case of collision */
