@@ -7,12 +7,14 @@ public class ViewState
 	EditorMap map;
 	FocusType focusType;
 	Integer focusId;
+	Tool selectedTool;	
 	
 	public ViewState( EditorMap map )
 	{
 		this.map = map;
-		focusType = FocusType.MAP; 
-		focusId = null;
+		focusType = FocusType.MAP;
+		selectedTool = Tool.SELECTOR;
+		focusId = null;		
 	}
 
 	/**

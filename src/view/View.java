@@ -21,6 +21,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 
 import controller.ViewState;
@@ -39,8 +41,7 @@ public class View {
 	JTextArea statusText;
 	JComboBox objectSelected;
 	public View( ViewState state, BlockingQueue<EventObject> events )
-	{		
-		eventQueue   = events;
+	{			
 		currentState = state;
 		mainFrame 	 = new JFrame("YME :: new map");
 		mapPanel  	 = new MapPanel( this );
@@ -49,6 +50,7 @@ public class View {
 		attributes 	 = new JPanel();
 		statusBar 	 = new JPanel();
 		Container cp = mainFrame.getContentPane();
+		
 		
 		mainFrame.setPreferredSize(new Dimension(1024,768));
 		

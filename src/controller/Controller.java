@@ -1,5 +1,6 @@
 package controller;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.EventObject;
@@ -46,7 +47,7 @@ public class Controller extends Thread
 		while( true )
 		{
 			try {
-				doEvent(events.take());
+				doEvent( events.take() );			
 			} catch (InterruptedException e) {
 				/*
 				 * something goes terribly horribly wrong (or its program end?)
@@ -58,8 +59,25 @@ public class Controller extends Thread
 		}
 	}
 	
+	private void doEvent( MouseEvent event )
+	{
+		view.showInfo("I co kutasie chcesz?\n");
+	}
+	
+	
 	private void doEvent( EventObject event )
 	{
+		if( event instanceof MouseEvent )
+		{
+			doEvent( (MouseEvent) event );
+		}
+		if( event instanceof ActionEvent )
+		{
+			doEvent( (ActionEvent) event );
+		}
+		
+		
+		
 		MouseEvent me = ((MouseEvent) event);
 		int x,y;
 		x = me.getX();
@@ -70,8 +88,8 @@ public class Controller extends Thread
 			if( shape.getShapeObject().contains(x, y) )
 			{
 				viewState.setFocus(FocusType.SHAPE, i);
-				/*TODO maybe backward and brake?*/
-			}
+				//TODO maybe backward and brake?
+			} 
 			++i;
 		}
 		view.setCurrentState( viewState );
