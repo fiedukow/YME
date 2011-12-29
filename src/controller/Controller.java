@@ -7,6 +7,10 @@ import java.util.EventObject;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import controller.event.Event;
+import controller.event.EventPointSelect;
+import controller.event.EventType;
+
 import model.MapShape;
 import model.Model;
 import view.View;
@@ -17,9 +21,9 @@ public class Controller extends Thread
 	Model model;
 	View view;
 	ViewState viewState;
-	BlockingQueue<EventObject> events;
+	BlockingQueue<Event> events;
 	
-	public Controller ( Model model, View view, BlockingQueue<EventObject> events)
+	public Controller ( Model model, View view, BlockingQueue<Event> events)
 	{
 		this.model = model;
 		this.view = view;
@@ -55,33 +59,14 @@ public class Controller extends Thread
 				view.showInfo("Kontroler umarl :-(");
 				return;
 			}
-			view.showInfo("Pobralem event!\n");
 		}
 	}
 	
-	private void doEvent( MouseEvent event )
+	private void doEvent( EventPointSelect event )
 	{
-		view.showInfo("I co kutasie chcesz?\n");
-	}
-	
-	
-	private void doEvent( EventObject event )
-	{
-		if( event instanceof MouseEvent )
-		{
-			doEvent( (MouseEvent) event );
-		}
-		if( event instanceof ActionEvent )
-		{
-			doEvent( (ActionEvent) event );
-		}
-		
-		
-		
-		MouseEvent me = ((MouseEvent) event);
 		int x,y;
-		x = me.getX();
-		y = me.getY();
+		x = event.getX();
+		y = event.getY();
 		int i = 0;
 		for( MapShape shape : model.getEditorMap().getShapes())
 		{
@@ -92,6 +77,20 @@ public class Controller extends Thread
 			} 
 			++i;
 		}
+	}
+	
+	
+	
+	private void doEvent( Event event )
+	{
+		switch( event.getEventType() )
+		{
+			case MAP_POINT_SELECT:
+				doEvent( (EventPointSelect) event  );
+				break;
+			default:
+				break;
+		}		
 		view.setCurrentState( viewState );
 	}
 }

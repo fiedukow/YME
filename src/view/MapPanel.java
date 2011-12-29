@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 
 import controller.FocusType;
 import controller.ViewState;
+import controller.event.EventPointSelect;
 
 import model.EditorMap;
 import model.MapShape;
@@ -33,7 +34,7 @@ public class MapPanel extends JPanel
         { 
             public void mousePressed(final MouseEvent me)
             { 
-            	father.pushEvent( me );
+            	father.pushEvent( new EventPointSelect(me) );
             } 
         }); 
 	}

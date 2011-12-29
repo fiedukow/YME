@@ -26,12 +26,13 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 
 import controller.ViewState;
+import controller.event.Event;
 
 import model.EditorMap;
 
 public class View {
 	ViewState currentState;
-	BlockingQueue<EventObject> eventQueue;
+	BlockingQueue<Event> eventQueue;
 	JFrame mainFrame;
 	MapPanel mapPanel;
 	JPanel leftMenu;	
@@ -40,7 +41,7 @@ public class View {
 	JPanel statusBar;
 	JTextArea statusText;
 	JComboBox objectSelected;
-	public View( ViewState state, BlockingQueue<EventObject> events )
+	public View( ViewState state, BlockingQueue<Event> events )
 	{			
 		currentState = state;
 		mainFrame 	 = new JFrame("YME :: new map");
@@ -49,6 +50,7 @@ public class View {
 		toolbox  	 = new JPanel();
 		attributes 	 = new JPanel();
 		statusBar 	 = new JPanel();
+		eventQueue	 = events;
 		Container cp = mainFrame.getContentPane();
 		
 		
@@ -166,12 +168,11 @@ public class View {
 	
 	public void setCurrentState( ViewState map )
 	{
-		this.currentState = map;
-		showInfo("Zaladowano mape o nazwie: "+currentState.getMap().getMapName()+"\n");
+		this.currentState = map;	
 		mapPanel.repaint( );		
 	}
 	
-	public void pushEvent( EventObject event )
+	public void pushEvent( Event event )
 	{
 		try
 		{

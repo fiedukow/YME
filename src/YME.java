@@ -6,6 +6,7 @@ import view.View;
 
 import controller.Controller;
 import controller.ViewState;
+import controller.event.Event;
 import model.Model;
 
 /*Main class*/
@@ -14,7 +15,7 @@ public class YME {
 	{		
 		System.out.println("Witaj w YME :-)");		
 		Model md = new Model();
-		ArrayBlockingQueue<EventObject> bq = new ArrayBlockingQueue<EventObject>(128); 
+		ArrayBlockingQueue<Event> bq = new ArrayBlockingQueue<Event>(128); 
 		View v = new View( new ViewState(md.getEditorMap()), bq );
 		new Controller(md,v,bq);
 	}
