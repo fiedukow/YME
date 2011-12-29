@@ -3,6 +3,7 @@ import java.io.IOException;
 import view.View;
 
 import controller.Controller;
+import controller.ViewState;
 import model.Model;
 
 /*Main class*/
@@ -11,7 +12,7 @@ public class YME {
 	{		
 		System.out.println("Witaj w YME :-)");		
 		Model md = new Model();
-		View v = new View();
+		View v = new View( new ViewState(md.getEditorMap()) );
 		new Controller(md,v);
 	}
 }

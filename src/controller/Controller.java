@@ -11,6 +11,7 @@ public class Controller extends Thread
 {
 	Model model;
 	View view;
+	ViewState viewState;
 	BlockingQueue<Integer> events;
 	
 	public Controller ( Model model, View view )
@@ -28,21 +29,34 @@ public class Controller extends Thread
 			System.err.println("Nie udalo sie zapisac mapy!");
 		}
 		
-		view.setCurrentState( model.getEditorMap() );
-		
+		viewState = new ViewState(model.getEditorMap());		
+		start();
 		
 		view.showInfo("Kontroler wita widok :-)\n");
+		
 	}
 	public void run()
 	{
+		viewState.setFocus(FocusType.SHAPE, 2);
+		view.setCurrentState( viewState );
+		try{
+			sleep(3000);
+		}
+		catch( Exception e )
+		{			
+			System.err.println(e.getMessage());
+		}
+		viewState.setFocus(FocusType.SHAPE, 3);
+		view.setCurrentState( viewState );
+		/*
 		while( true )
 		{
 			try {
 				doEvent( events.take() );
 			} catch (InterruptedException e) {
-				/*Just try again*/				
+								
 			}			
-		}
+		}*/
 	}
 	
 	private void doEvent( Integer i /*TODO should be event type*/)

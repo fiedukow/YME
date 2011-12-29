@@ -12,7 +12,7 @@ import java.util.Vector;
  * @author fiedukow
  * @see java.awt.Shape
  */
-abstract class MapShape
+public abstract class MapShape
 {
 	private String textureName;	
 	private TypeOfMapObject typeOfObject; /** Current value type of map object */	
@@ -33,7 +33,7 @@ abstract class MapShape
 	 * Simple getter
 	 * @return
 	 */
-	/*package*/ String getTextureName( )
+	public String getTextureName( )
 	{
 		return textureName;
 	}
@@ -42,7 +42,7 @@ abstract class MapShape
 	 * Simple setter
 	 * @param textureName
 	 */
-	public void setTextureName( String textureName )
+	/*package*/ void setTextureName( String textureName )
 	{
 		this.textureName = textureName;
 	}
@@ -90,6 +90,8 @@ abstract class MapShape
 	 * @return boolean
 	 */
 	abstract protected boolean isTypeAllowed( TypeOfMapObject type );
+	
+	abstract public Shape getShapeObject();
 }
 
 
@@ -155,7 +157,7 @@ final class MapPolygon extends MapShape
 	 */
 	/*package*/ void addPoint( int x, int y )
 	{		
-		getPolygon().addPoint(x,y);
+		getShapeObject().addPoint(x,y);
 	}
 	
 	/**
@@ -166,7 +168,7 @@ final class MapPolygon extends MapShape
 	public int[] getXCoords()
 	{
 		/*TODO - return copy*/
-		return getPolygon().xpoints;
+		return getShapeObject().xpoints;
 	}
 	
 	/**
@@ -177,7 +179,7 @@ final class MapPolygon extends MapShape
 	public int[] getYCoords()
 	{
 		/*TODO - return copy*/
-		return getPolygon().xpoints;
+		return getShapeObject().xpoints;
 	}
 
 	
@@ -189,7 +191,7 @@ final class MapPolygon extends MapShape
 	 */
 	/*package*/ void resize( int w, int h )
 	{
-		Polygon poly = getPolygon();
+		Polygon poly = getShapeObject();
 		Rectangle bound = poly.getBounds();
 		double widthFactor = w/bound.getWidth();
 		double heightFactor = h/bound.getHeight();
@@ -207,7 +209,7 @@ final class MapPolygon extends MapShape
 	 */
 	/*package*/ void move( int x, int y )
 	{
-		Polygon poly = getPolygon();
+		Polygon poly = getShapeObject();
 		Rectangle bound = poly.getBounds();
 		int xmove = x - (int)bound.getMinX();
 		int ymove = y - (int)bound.getMinY();
@@ -216,10 +218,19 @@ final class MapPolygon extends MapShape
 		for( int i = 0; i < poly.ypoints.length; ++i )
 			poly.ypoints[i] += ymove;
 	}
+		
+	/**
+	 * @return Self shape object in proper type
+	 */
+	public Polygon getShapeObject()
+	{
+		return (Polygon) shapeObject;
+	}
 	
 	/*
 	 * PROTECTED SECTION
 	 */
+	
 	/**
 	 * @see MapShape#isTypeAllowed(TypeOfMapObject) 
 	 */
@@ -227,17 +238,6 @@ final class MapPolygon extends MapShape
 		return allowedTypes.contains( type );
 	}
 
-	
-	/*
-	 * PRIVATE SECTION
-	 */
-	/**
-	 * @return Self shape object in proper type
-	 */
-	private Polygon getPolygon()
-	{
-		return (Polygon) shapeObject;
-	}
 }
 
 
@@ -301,7 +301,7 @@ final class MapRectangle extends MapShape
 	 */
 	/*package*/ void resize( int w, int h )
 	{
-		getRectangle().setSize(w, h);
+		getShapeObject().setSize(w, h);
 	}
 	
 	/**
@@ -312,7 +312,7 @@ final class MapRectangle extends MapShape
 	 */
 	/*package*/ void move( int x, int y )
 	{
-		getRectangle().setLocation(x, y);
+		getShapeObject().setLocation(x, y);
 	}
 	
 	/**
@@ -322,7 +322,7 @@ final class MapRectangle extends MapShape
 	 */
 	public int getX()
 	{
-		return (int) getRectangle().getX();
+		return (int) getShapeObject().getX();
 	}
 	
 	/**
@@ -332,7 +332,7 @@ final class MapRectangle extends MapShape
 	 */
 	public int getY()
 	{
-		return (int) getRectangle().getY();
+		return (int) getShapeObject().getY();
 	}
 	
 	
@@ -343,7 +343,7 @@ final class MapRectangle extends MapShape
 	 */
 	public int getW()
 	{
-		return (int) getRectangle().getWidth();
+		return (int) getShapeObject().getWidth();
 	}
 	
 	/**
@@ -353,7 +353,7 @@ final class MapRectangle extends MapShape
 	 */
 	public int getH()
 	{
-		return (int) getRectangle().getHeight();
+		return (int) getShapeObject().getHeight();
 	}
 	
 	/**
@@ -366,7 +366,7 @@ final class MapRectangle extends MapShape
 	 */
 	/*package*/ void setRectangle( int x, int y, int w, int h )
 	{
-		getRectangle().setRect(x, y, w, h);
+		getShapeObject().setRect(x, y, w, h);
 	}
 	
 	
@@ -381,13 +381,10 @@ final class MapRectangle extends MapShape
 	}
 	
 	
-	/*
-	 * PRIVATE SECTION
-	 */
 	/**
 	 * @return Self shape object in proper type
 	 */
-	private Rectangle getRectangle()
+	public Rectangle getShapeObject()
 	{
 		return (Rectangle) shapeObject;
 	}
@@ -459,7 +456,7 @@ final class MapEllipse extends MapShape
 	 */
 	/*package*/ void resize( int w, int h )
 	{
-		getEllipse().setFrame(getX(), getY(), w, h);
+		getShapeObject().setFrame(getX(), getY(), w, h);
 	}
 	
 	/**
@@ -470,7 +467,7 @@ final class MapEllipse extends MapShape
 	 */
 	/*package*/ void move( int x, int y )
 	{
-		getEllipse().setFrame(x, y, getW(), getH());
+		getShapeObject().setFrame(x, y, getW(), getH());
 	}
 	
 	
@@ -481,7 +478,7 @@ final class MapEllipse extends MapShape
 	 */
 	public int getX()
 	{
-		return (int) getEllipse().getX();
+		return (int) getShapeObject().getX();
 	}
 	
 	/**
@@ -491,7 +488,7 @@ final class MapEllipse extends MapShape
 	 */
 	public int getY()
 	{
-		return (int) getEllipse().getY();
+		return (int) getShapeObject().getY();
 	}
 	
 	/**
@@ -501,7 +498,7 @@ final class MapEllipse extends MapShape
 	 */
 	public int getW()
 	{
-		return (int) getEllipse().getWidth();
+		return (int) getShapeObject().getWidth();
 	}
 	
 	/**
@@ -511,7 +508,7 @@ final class MapEllipse extends MapShape
 	 */
 	public int getH()
 	{
-		return (int) getEllipse().getHeight();
+		return (int) getShapeObject().getHeight();
 	}
 	
 	/**
@@ -524,9 +521,16 @@ final class MapEllipse extends MapShape
 	 */
 	public void setEllipse( int x, int y, int w, int h )
 	{
-		getEllipse().setFrame(x, y, w, h);
+		getShapeObject().setFrame(x, y, w, h);
 	}
 	
+	/**
+	 * @return Self shape object in proper type
+	 */
+	public Ellipse2D.Double getShapeObject()
+	{
+		return (Ellipse2D.Double) shapeObject;
+	}	
 	
 	/*
 	 * PROTECTED SECTION
@@ -537,15 +541,6 @@ final class MapEllipse extends MapShape
 	protected boolean isTypeAllowed( TypeOfMapObject type ){
 		return allowedTypes.contains( type );
 	}
+
 	
-	/*
-	 * PRIVATE SECTION
-	 */
-	/**
-	 * @return Self shape object in proper type
-	 */
-	private Ellipse2D.Double getEllipse()
-	{
-		return (Ellipse2D.Double) shapeObject;
-	}	
 }

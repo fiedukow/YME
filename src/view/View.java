@@ -21,22 +21,25 @@ import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 
+import controller.ViewState;
+
 import model.EditorMap;
 
 public class View {
-	EditorMap currentState;
+	ViewState currentState;
 	JFrame mainFrame;
-	JPanel mapPanel;
+	MapPanel mapPanel;
 	JPanel leftMenu;	
 	JPanel toolbox;
 	JPanel attributes;
 	JPanel statusBar;
 	JTextArea statusText;
 	JComboBox objectSelected;
-	public View()
+	public View( ViewState state )
 	{		
+		currentState = state;
 		mainFrame 	 = new JFrame("YME :: new map");
-		mapPanel  	 = new JPanel();
+		mapPanel  	 = new MapPanel( this );
 		leftMenu  	 = new JPanel();
 		toolbox  	 = new JPanel();
 		attributes 	 = new JPanel();
@@ -77,7 +80,7 @@ public class View {
 		mainFrame.setJMenuBar(menuBar);		
 		
 
-		mapPanel.setBorder(new TitledBorder("Mapa") );		
+		/*mapPanel.setBorder(new TitledBorder("Mapa") );*/		
 		toolbox.setBorder(new TitledBorder("Narzedzia") );
 		attributes.setBorder(new TitledBorder("Wlasciwosci"));
 		
@@ -155,9 +158,20 @@ public class View {
 		statusText.setCaretPosition( statusText.getText().length() );
 	}
 	
-	public void setCurrentState( EditorMap map )
+	public void setCurrentState( ViewState map )
 	{
 		this.currentState = map;
-		showInfo("Zaladowano mape o nazwie: "+currentState.getMapName()+"\n");
+		showInfo("Zaladowano mape o nazwie: "+currentState.getMap().getMapName()+"\n");
+		mapPanel.repaint( );		
+	}
+	
+	public void pushEvent( ViewEvent event )
+	{
+		
+	}
+	
+	ViewState getState()
+	{
+		return currentState;
 	}
 }

@@ -1,67 +1,63 @@
 <?xml version="1.0"?>
 <map>
   <mapName>Something</mapName>
-  <waterTexture>water.png</waterTexture>
+  <waterTexture>water.jpg</waterTexture>
   <shapes>
     <polygon>
-      <textureName>sniezek.png</textureName>
+      <textureName>wood.jpg</textureName>
       <typeOfObject>DESTROY</typeOfObject>
       <vertices>
         <point>
-          <x>1</x>
-          <y>1</y>
+          <x>20</x>
+          <y>21</y>
         </point>
         <point>
-          <x>2</x>
-          <y>2</y>
+          <x>30</x>
+          <y>20</y>
         </point>
         <point>
-          <x>2</x>
-          <y>2</y>
-        </point>
-        <point>
-          <x>1</x>
-          <y>1</y>
+          <x>103</x>
+          <y>104</y>
         </point>
       </vertices>
     </polygon>
     <polygon>
-      <textureName>boja.png</textureName>
+      <textureName>brick.jpg</textureName>
       <typeOfObject>STOP</typeOfObject>
       <vertices>
         <point>
-          <x>1</x>
-          <y>1</y>
+          <x>20</x>
+          <y>12</y>
         </point>
         <point>
-          <x>2</x>
-          <y>2</y>
+          <x>40</x>
+          <y>40</y>
         </point>
         <point>
-          <x>2</x>
-          <y>2</y>
+          <x>28</x>
+          <y>20</y>
         </point>
         <point>
-          <x>1</x>
+          <x>12</x>
           <y>1</y>
         </point>
       </vertices>
     </polygon>
     <rectangle>
-      <textureName>koala.png</textureName>
+      <textureName>metal.jpg</textureName>
       <typeOfObject>QUAY</typeOfObject>
-      <x>2</x>
-      <y>4</y>
-      <w>20</w>
-      <h>30</h>
+      <x>20</x>
+      <y>20</y>
+      <w>100</w>
+      <h>40</h>
     </rectangle>
     <ellipse>
-      <textureName>koala.png</textureName>
+      <textureName>brick.jpg</textureName>
       <typeOfObject>BUMP</typeOfObject>
-      <x>20</x>
-      <y>40</y>
-      <w>21</w>
-      <h>31</h>
+      <x>70</x>
+      <y>60</y>
+      <w>35</w>
+      <h>35</h>
     </ellipse>
   </shapes>
 </map>

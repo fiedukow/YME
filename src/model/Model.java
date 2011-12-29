@@ -13,7 +13,7 @@ public final class Model
 	private EditorToolbox box;
 	public Model()
 	{		
-		newMap("New map", "water.png");
+		newMap("New map", "water.jpg");
 		box = new EditorToolbox(map);
 		System.out.println("Model created.");
 	}
