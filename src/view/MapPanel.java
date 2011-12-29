@@ -22,18 +22,18 @@ import model.MapShape;
 
 public class MapPanel extends JPanel
 {
-	View father; 
+	private View father; 
 	
-	public MapPanel( View father )
+	public MapPanel( View father_ )
 	{
-		this.father = father;
+		this.father = father_;
 		
 		addMouseListener(
 		new MouseAdapter() 
         { 
             public void mousePressed(final MouseEvent me)
             { 
-                father.pushEvent( new ChooseMapPointEvent(me) );
+            	father.pushEvent( me );
             } 
         }); 
 	}

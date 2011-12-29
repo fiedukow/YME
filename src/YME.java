@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.util.EventObject;
+import java.util.concurrent.ArrayBlockingQueue;
 
 import view.View;
 
@@ -12,7 +14,8 @@ public class YME {
 	{		
 		System.out.println("Witaj w YME :-)");		
 		Model md = new Model();
-		View v = new View( new ViewState(md.getEditorMap()) );
-		new Controller(md,v);
+		ArrayBlockingQueue<EventObject> bq = new ArrayBlockingQueue<EventObject>(128); 
+		View v = new View( new ViewState(md.getEditorMap()), bq );
+		new Controller(md,v,bq);
 	}
 }

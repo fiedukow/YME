@@ -5,6 +5,8 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.util.EventObject;
+import java.util.concurrent.BlockingQueue;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -27,6 +29,7 @@ import model.EditorMap;
 
 public class View {
 	ViewState currentState;
+	BlockingQueue<EventObject> eventQueue;
 	JFrame mainFrame;
 	MapPanel mapPanel;
 	JPanel leftMenu;	
@@ -35,8 +38,9 @@ public class View {
 	JPanel statusBar;
 	JTextArea statusText;
 	JComboBox objectSelected;
-	public View( ViewState state )
+	public View( ViewState state, BlockingQueue<EventObject> events )
 	{		
+		eventQueue   = events;
 		currentState = state;
 		mainFrame 	 = new JFrame("YME :: new map");
 		mapPanel  	 = new MapPanel( this );
@@ -165,9 +169,16 @@ public class View {
 		mapPanel.repaint( );		
 	}
 	
-	public void pushEvent( ViewEvent event )
+	public void pushEvent( EventObject event )
 	{
-		
+		try
+		{
+			this.eventQueue.put(event);
+		}
+		catch ( InterruptedException e )
+		{
+			this.showInfo( e.getMessage() );
+		}
 	}
 	
 	ViewState getState()
