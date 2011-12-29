@@ -10,6 +10,7 @@ import controller.event.EventToolSelect;
 
 import model.MapShape;
 import model.Model;
+import model.doDrawRectangle;
 import view.View;
 
 /*Controller in MVC meaning*/
@@ -62,18 +63,26 @@ public class Controller extends Thread
 	
 	private void doEvent( EventPointSelect event )
 	{
+		
 		int x,y;
 		x = event.getX();
 		y = event.getY();
-		int i = 0;
-		for( MapShape shape : model.getEditorMap().getShapes())
+		
+		if( viewState.getSelectedTool() == Tool.RECTANGLE )
 		{
-			if( shape.getShapeObject().contains(x, y) )
+			model.getToolbox().doCommand(new doDrawRectangle("wood.jpg", x,y,100,100));
+		}
+		else{
+			int i = 0;
+			for( MapShape shape : model.getEditorMap().getShapes())
 			{
-				viewState.setFocus(FocusType.SHAPE, i);
-				//TODO maybe backward and brake?
-			} 
-			++i;
+				if( shape.getShapeObject().contains(x, y) )
+				{
+					viewState.setFocus(FocusType.SHAPE, i);
+					//TODO maybe backward and brake?
+				} 
+				++i;
+			}
 		}
 	}
 	

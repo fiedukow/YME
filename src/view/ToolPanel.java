@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import javax.swing.BorderFactory;
@@ -44,6 +43,7 @@ public class ToolPanel extends JPanel
 		}
 	}
 	
+	/*choose tool*/
 	public void setSelected( Tool tool )
 	{
 		for( ToolButton tb : buttons.values() )
@@ -52,17 +52,17 @@ public class ToolPanel extends JPanel
 		}
 		ToolButton tmp = buttons.get(tool);
 		if( tmp != null )
-			tmp.setBorder(BorderFactory.createLineBorder(Color.red));
-			
+			tmp.setBorder(BorderFactory.createLineBorder(Color.red));			
 	}
 	
 	public void paintComponent( Graphics g )
 	{
 		/*it can be called in super()*/									
 		setSelected( father.getState().getSelectedTool() );
-		super.paintComponent(g);
+		super.paintComponent(g); 
 	}
 }
+
 
 class ToolButton extends JButton
 {

@@ -38,6 +38,7 @@ public final class Model
 			return;
 		}
 		map = XMLMap.translate();
+		box = new EditorToolbox(map);
 	}
 	
 	public void saveMap( String fileName ) throws IOException 

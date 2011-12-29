@@ -2,12 +2,13 @@ package model;
 import java.util.Stack;
 import java.util.Vector;
 import java.awt.Point;
+import java.awt.Rectangle;
 
 /**
  * Main class used to change EditorMap state.
  * @author fiedukow
  */
-final class EditorToolbox {	
+public final class EditorToolbox {	
 	private Stack<Command> undo; /*Stack of commands invoked - user for "undo" operation*/
 	private Stack<Command> redo; /*Stack used for "redo" operation*/
 	private EditorMap map;
@@ -23,7 +24,7 @@ final class EditorToolbox {
 	 * Invoke command and then push it on undo stack
 	 * @param cmd - command to invoke
 	 */
-	void doCommand( Command cmd ) 
+	public void doCommand( Command cmd ) 
 	{
 		try {
 			cmd.invoke( map );
@@ -39,7 +40,7 @@ final class EditorToolbox {
 	 * @param howMany - how many command do you want to undo
 	 * @throws CommandStackEmptyException When someone tries to pop more then it's available
 	 */
-	void undo( int howMany ) throws CommandStackEmptyException
+	public void undo( int howMany ) throws CommandStackEmptyException
 	{
 		Command cmd;
 		for(int i = 0; i < howMany; ++i )
@@ -60,7 +61,7 @@ final class EditorToolbox {
 	 * @throws CommandStackEmptyException
 	 * @see EditorToolbox#undo(int)
 	 */
-	void undo( ) throws CommandStackEmptyException
+	public void undo( ) throws CommandStackEmptyException
 	{
 		undo(1);
 	}
@@ -70,7 +71,7 @@ final class EditorToolbox {
 	 * @param howMany - how many command do you want to invoke
 	 * @throws CommandStackEmptyException When someone tries to pop more then it's available
 	 */
-	void redo( int howMany ) throws CommandStackEmptyException
+	public void redo( int howMany ) throws CommandStackEmptyException
 	{
 		Command cmd;
 		for(int i = 0; i < howMany; ++i )
@@ -91,7 +92,7 @@ final class EditorToolbox {
 	 * @throws CommandStackEmptyException
 	 * @see EditorToolbox#redo(int)
 	 */
-	void redo( ) throws CommandStackEmptyException
+	public void redo( ) throws CommandStackEmptyException
 	{
 		redo(1);
 	}
@@ -133,26 +134,7 @@ class doDrawPolygon implements Command
 	}
 }
 
-/**
- * 
- * @author fiedukow
- */
-class doDrawRectangle implements Command
-{	
-	doDrawRectangle( String textureName, TypeOfMapObject type, Vector<Point> points )
-	{
-		
-	}
-	
-	public void invoke( EditorMap map ) throws CommandInvokeException
-	{
-		/*FIXME*/
-	}
-	public void undo( EditorMap map ) throws CommandUndoException
-	{
-		/*FIXME*/
-	}
-}
+
 
 /**
  * 

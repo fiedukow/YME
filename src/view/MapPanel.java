@@ -54,7 +54,7 @@ public class MapPanel extends JPanel
         {        
         	drawShape(shape, g2, getState().getFocusType() == FocusType.SHAPE && getState().getFocusId() == i);
         	++i;
-        }        
+        }       
 	}
 	
 	void drawShape( MapShape sh, Graphics2D g2, boolean focus )
