@@ -25,6 +25,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 
+import controller.Tool;
 import controller.ViewState;
 import controller.event.Event;
 
@@ -36,7 +37,7 @@ public class View {
 	JFrame mainFrame;
 	MapPanel mapPanel;
 	JPanel leftMenu;	
-	JPanel toolbox;
+	ToolPanel toolbox;
 	JPanel attributes;
 	JPanel statusBar;
 	JTextArea statusText;
@@ -46,8 +47,9 @@ public class View {
 		currentState = state;
 		mainFrame 	 = new JFrame("YME :: new map");
 		mapPanel  	 = new MapPanel( this );
-		leftMenu  	 = new JPanel();
-		toolbox  	 = new JPanel();
+		toolbox  	 = new ToolPanel( this );
+		
+		leftMenu  	 = new JPanel();		
 		attributes 	 = new JPanel();
 		statusBar 	 = new JPanel();
 		eventQueue	 = events;
@@ -97,31 +99,6 @@ public class View {
 		leftMenu.add(toolbox, BorderLayout.NORTH);
 		leftMenu.add(attributes, BorderLayout.CENTER);
 		
-		toolbox.setLayout(new GridLayout(2,4));
-		toolbox.setPreferredSize( new Dimension(192,128) );
-		
-		JButton ButtonChooser = new JButton(new ImageIcon("icons/arrow.png"));
-		ButtonChooser.setToolTipText("Zaznacz obiekt na mapie");
-		JButton ButtonStartPoint = new JButton(new ImageIcon("icons/compass.png"));
-		ButtonStartPoint.setToolTipText("Zaznacz punkt startowy lodzi");
-		JButton ButtonPolygon = new JButton(new ImageIcon("icons/polygon.png"));
-		ButtonPolygon.setToolTipText("Rysuj dowolny poligon");
-		JButton ButtonRectangle = new JButton(new ImageIcon("icons/rectangle.png"));
-		ButtonRectangle.setToolTipText("Rysuj prostokat");
-		JButton ButtonEllipse = new JButton(new ImageIcon("icons/ellipse.png"));
-		ButtonEllipse.setToolTipText("Rysuj elipse");
-		JButton ButtonQuey = new JButton(new ImageIcon("icons/quey.png"));
-		ButtonQuey.setToolTipText("Rysuj keje");
-		
-		
-		
-		toolbox.add(ButtonChooser);
-		toolbox.add(ButtonStartPoint);
-		toolbox.add(ButtonPolygon);		
-		toolbox.add(ButtonRectangle);
-		toolbox.add(ButtonEllipse);
-		toolbox.add(ButtonQuey);
-		
 		JButton buttonPrev = new JButton("<");
 		JButton buttonNext = new JButton(">");
 		
@@ -170,6 +147,7 @@ public class View {
 	{
 		this.currentState = map;	
 		mapPanel.repaint( );		
+		toolbox.repaint( );
 	}
 	
 	public void pushEvent( Event event )

@@ -1,15 +1,12 @@
 package controller;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
-import java.util.EventObject;
-import java.util.concurrent.ArrayBlockingQueue;
+
 import java.util.concurrent.BlockingQueue;
 
 import controller.event.Event;
 import controller.event.EventPointSelect;
-import controller.event.EventType;
+import controller.event.EventToolSelect;
 
 import model.MapShape;
 import model.Model;
@@ -59,6 +56,7 @@ public class Controller extends Thread
 				view.showInfo("Kontroler umarl :-(");
 				return;
 			}
+			view.showInfo("Event handled\n");
 		}
 	}
 	
@@ -79,6 +77,11 @@ public class Controller extends Thread
 		}
 	}
 	
+	private void doEvent( EventToolSelect event )
+	{		
+		viewState.setSelectedTool(event.getTool());
+		view.setCurrentState( viewState );
+	}
 	
 	
 	private void doEvent( Event event )
@@ -87,6 +90,9 @@ public class Controller extends Thread
 		{
 			case MAP_POINT_SELECT:
 				doEvent( (EventPointSelect) event  );
+				break;
+			case TOOL_SELECT:
+				doEvent( (EventToolSelect) event);
 				break;
 			default:
 				break;

@@ -30,7 +30,7 @@ public class ViewState
 	void setMap(EditorMap map) {
 		this.map = map;
 	}
-
+	
 	/**
 	 * @return the focusType
 	 */
@@ -43,6 +43,20 @@ public class ViewState
 	 */
 	void setFocusType(FocusType focusType) {
 		this.focusType = focusType;
+	}
+
+	/**
+	 * @return the selectedTool
+	 */
+	public Tool getSelectedTool() {
+		return selectedTool;
+	}
+
+	/**
+	 * @param selectedTool the selectedTool to set
+	 */
+	void setSelectedTool(Tool selectedTool) {
+		this.selectedTool = selectedTool;
 	}
 
 	/**
