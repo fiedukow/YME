@@ -1,10 +1,12 @@
 package controller;
 
+import java.awt.Point;
 import java.io.IOException;
 
 import java.util.concurrent.BlockingQueue;
 
 import controller.event.Event;
+import controller.event.EventPointAccept;
 import controller.event.EventPointSelect;
 import controller.event.EventRedo;
 import controller.event.EventToolSelect;
@@ -14,6 +16,7 @@ import model.MapShape;
 import model.Model;
 import model.TypeOfMapObject;
 import model.doDrawEllipse;
+import model.doDrawPolygon;
 import model.doDrawRectangle;
 import model.doSetStartPoint;
 import view.View;
@@ -25,12 +28,14 @@ public class Controller extends Thread
 	View view;
 	ViewState viewState;
 	BlockingQueue<Event> events;
+	PolygonBuffer polygonBuffer;
 	
 	public Controller ( Model model, View view, BlockingQueue<Event> events)
 	{
 		this.model = model;
 		this.view = view;
 		this.events = events;
+		this.polygonBuffer = new PolygonBuffer();
 		System.out.println("Controller created!");
 		model.loadMap("maps/sample.xml");
 		try 
@@ -66,13 +71,36 @@ public class Controller extends Thread
 		}
 	}
 	
+	private void doEvent( EventPointAccept event )
+	{
+		if( viewState.getSelectedTool() == Tool.POLYGON )
+			try {
+				model.getToolbox().doCommand( new doDrawPolygon("brick.jpg", polygonBuffer.getVerticles(), null) );
+				polygonBuffer.reset();
+				doAfterDraw();
+			} catch (ToFewVerticlesException e) {
+				view.showInfo("Zaznaczono zbyt malo punktow by utworzyc polygon\n");
+			}
+	}
+	
+	void doAfterDraw()
+	{
+		viewState.setFocus( 
+				viewState.getSelectedTool()==Tool.STARTPOINT ? FocusType.START_POINT : FocusType.SHAPE, 
+				viewState.getMap().getShapes().size()-1
+				);
+		viewState.setSelectedTool(Tool.SELECTOR);
+	}
+	
 	private void doEvent( EventPointSelect event )
 	{
 		
 		int x,y;
 		x = event.getX();
 		y = event.getY();
-		if( ! (viewState.getSelectedTool() == Tool.SELECTOR) )
+		if( viewState.getSelectedTool() == Tool.POLYGON )
+			polygonBuffer.addPoint( new Point(x, y) );
+		else if( ! (viewState.getSelectedTool() == Tool.SELECTOR) )			
 		{
 			if( viewState.getSelectedTool() == Tool.RECTANGLE )
 				model.getToolbox().doCommand(new doDrawRectangle("wood.jpg", x,y,40,40,null));			
@@ -81,17 +109,14 @@ public class Controller extends Thread
 			if( viewState.getSelectedTool() == Tool.QUEY )
 				model.getToolbox().doCommand(new doDrawRectangle("metal.jpg", x,y,200,30,TypeOfMapObject.QUAY));						
 			if( viewState.getSelectedTool() == Tool.STARTPOINT )
-				model.getToolbox().doCommand(new doSetStartPoint(x,y));									
+				model.getToolbox().doCommand(new doSetStartPoint(x,y));
 
-			viewState.setFocus( 
-					viewState.getSelectedTool()==Tool.STARTPOINT ? FocusType.START_POINT : FocusType.SHAPE, 
-					viewState.getMap().getShapes().size()-1
-					);
-			viewState.setSelectedTool(Tool.SELECTOR);
+			doAfterDraw();
 			return;
 			
 
 		}
+		
 		else
 		{
 			int i = 0;
@@ -129,6 +154,8 @@ public class Controller extends Thread
 	private void doEvent( EventToolSelect event )
 	{		
 		viewState.setSelectedTool(event.getTool());
+		if( event.getTool() == Tool.POLYGON )
+			polygonBuffer.reset();
 		view.setCurrentState( viewState );
 	}
 	
@@ -159,6 +186,9 @@ public class Controller extends Thread
 		{
 			case MAP_POINT_SELECT:
 				doEvent( (EventPointSelect) event  );
+				break;
+			case MAP_POINT_ACCEPT:
+				doEvent( (EventPointAccept) event );
 				break;
 			case TOOL_SELECT:
 				doEvent( (EventToolSelect) event );
