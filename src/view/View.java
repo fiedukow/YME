@@ -36,9 +36,11 @@ public class View {
 	BlockingQueue<Event> eventQueue;
 	JFrame mainFrame;
 	MapPanel mapPanel;
-	JPanel leftMenu;	
 	ToolPanel toolbox;
 	NavigatePanel navigatePanel;
+	MainMenu menuBar;
+	JPanel leftMenu;	
+	
 	JPanel attributes;
 	
 	JPanel questions;
@@ -52,6 +54,7 @@ public class View {
 		mapPanel  	 = new MapPanel( this );
 		toolbox  	 = new ToolPanel( this );
 		navigatePanel= new NavigatePanel( this );
+		menuBar		 = new MainMenu( this );
 				
 		leftMenu  	 = new JPanel();		
 		attributes 	 = new JPanel();
@@ -62,27 +65,7 @@ public class View {
 		
 		
 		mainFrame.setPreferredSize(new Dimension(1024,768));
-		
-		JMenuBar menuBar = new JMenuBar();
-
-		JMenu menu = new JMenu("Plik");
-		menuBar.add(menu);
-
-		JMenuItem item = new JMenuItem("Nowy");
-		menu.add(item);
-		item = new JMenuItem("Otwórz");
-		menu.add(item);
-		item = new JMenuItem("Zapisz jako..");
-		menu.add(item);
-		item = new JMenuItem("Zamknij");
-		menu.add(item);
-		
-		menu = new JMenu("Pomoc");
-		menuBar.add(menu);
-		item = new JMenuItem("O programie...");
-		menu.add(item);
-		item = new JMenuItem("Podręcznik użytkownika");
-		menu.add(item);
+		mainFrame.setJMenuBar(menuBar);	
 		
 		
 		
@@ -92,14 +75,7 @@ public class View {
 		statusTextScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		statusBar.add( statusTextScroll );	
 		statusBar.setLayout(new GridLayout(1,1));
-		mainFrame.setJMenuBar(menuBar);		
-		
-
-		/*mapPanel.setBorder(new TitledBorder("Mapa") );*/		
-		toolbox.setBorder(new TitledBorder("Narzedzia") );
-		attributes.setBorder(new TitledBorder("Nawigacja"));
-		questions.setBorder(new TitledBorder("Wlasciwosci"));
-		
+					
 		leftMenu.setLayout(new BorderLayout());
 		leftMenu.add(toolbox, BorderLayout.NORTH);
 		//leftMenu.add(attributes, BorderLayout.CENTER);
@@ -107,23 +83,7 @@ public class View {
 		questions.setPreferredSize(new Dimension(200, 200));
 		leftMenu.add(questions, BorderLayout.SOUTH);
 		
-		
-		JButton buttonPrev = new JButton("<");
-		JButton buttonNext = new JButton(">");
-		
-		objectSelected = new JComboBox();	
-		objectSelected.setFont( new Font("Courier", Font.PLAIN, 12) );
-		objectSelected.addItem("Cała mapa");
-		objectSelected.addItem("Start łodzi");
-		objectSelected.addItem("Polygon   #1");
-		objectSelected.addItem("Rectangle #2");
-		objectSelected.addItem("Ellipse   #3");
-		attributes.add(buttonPrev);
-		attributes.add(objectSelected);
-		attributes.add(buttonNext);
-		attributes.setPreferredSize(new Dimension(250, 200));
-		
-		
+				
 		JLabel textureNameLabel = new JLabel("Tekstura: ");
 		JTextField textureName = new JTextField(10);
 		JButton textureFind = new JButton("...");

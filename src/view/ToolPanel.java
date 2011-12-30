@@ -27,7 +27,7 @@ public class ToolPanel extends JPanel
 		this.setLayout(new GridLayout(2,3));
 		this.setPreferredSize( new Dimension(192,128) );
 		this.setBorder(new TitledBorder("Narzedzia") );
-		this.buttons = new LinkedHashMap<Tool, ToolButton>();
+		buttons = new LinkedHashMap<Tool, ToolButton>();
 		this.father = father;
 		
 		buttons.put(Tool.SELECTOR, new ToolButton("Wybierz obiekt na mapie", "icons/arrow.png", Tool.SELECTOR, father));
