@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 
 import controller.event.Event;
+import controller.event.EventChangeFocus;
 import controller.event.EventPointAccept;
 import controller.event.EventPointSelect;
 import controller.event.EventRedo;
@@ -28,14 +29,12 @@ public class Controller extends Thread
 	View view;
 	ViewState viewState;
 	BlockingQueue<Event> events;
-	PolygonBuffer polygonBuffer;
 	
 	public Controller ( Model model, View view, BlockingQueue<Event> events)
 	{
 		this.model = model;
 		this.view = view;
 		this.events = events;
-		this.polygonBuffer = new PolygonBuffer();
 		System.out.println("Controller created!");
 		model.loadMap("maps/sample.xml");
 		try 
@@ -48,7 +47,6 @@ public class Controller extends Thread
 		}
 		
 		viewState = new ViewState(model.getEditorMap(), model.getToolbox());
-		viewState.setPolygonBuffer(polygonBuffer);
 		view.setCurrentState( viewState );
 		start();
 		
@@ -76,12 +74,12 @@ public class Controller extends Thread
 	{
 		if( viewState.getSelectedTool() == Tool.POLYGON )
 			try {
-				model.getToolbox().doCommand( new doDrawPolygon("brick.jpg", polygonBuffer.getPolygonVerticles(), null) );
-				polygonBuffer.reset();
+				model.getToolbox().doCommand( new doDrawPolygon("brick.jpg", viewState.getPolygonBuffer().getPolygonVerticles(), null) );
+				viewState.getPolygonBuffer().reset();			
 				doAfterDraw();
 			} catch (ToFewVerticlesException e) {
 				view.showInfo("Zaznaczono zbyt malo punktow by utworzyc polygon\n");
-				polygonBuffer.reset();
+				viewState.getPolygonBuffer().reset();
 			}
 	}
 	
@@ -101,7 +99,7 @@ public class Controller extends Thread
 		x = event.getX();
 		y = event.getY();
 		if( viewState.getSelectedTool() == Tool.POLYGON )
-			polygonBuffer.addPoint( new Point(x, y) );
+			viewState.getPolygonBuffer().addPoint( new Point(x, y) );
 		else if( ! (viewState.getSelectedTool() == Tool.SELECTOR) )			
 		{
 			if( viewState.getSelectedTool() == Tool.RECTANGLE )
@@ -179,6 +177,20 @@ public class Controller extends Thread
 		}
 	}
 	
+	private void doEvent( EventChangeFocus event )
+	{
+		Integer idFocus = event.getFocusId();
+		if( idFocus!=null )
+		{
+		idFocus = idFocus%viewState.getMap().getShapes().size();
+		if( idFocus < 0 )
+			idFocus = event.getFocusId()%viewState.getMap().getShapes().size() + idFocus;
+		
+		}
+		viewState.setFocus(event.getFocusType(), event.getFocusId());
+		
+	}
+	
 	private void doEvent( Event event )
 	{
 		switch( event.getEventType() )
@@ -198,12 +210,15 @@ public class Controller extends Thread
 			case REDO:
 				doEvent( (EventRedo) event );
 				break;
+			case CHANGE_FOCUS:
+				doEvent( (EventChangeFocus) event );
+				break;
 			default:
 				break;
 		}		
 		//TODO italian solution?
 		if( viewState.getSelectedTool() != Tool.POLYGON )
-			polygonBuffer.reset();
+			viewState.getPolygonBuffer().reset();
 		view.setCurrentState( viewState );
 	}
 }

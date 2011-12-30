@@ -19,6 +19,7 @@ public class ViewState
 		this.box = box;
 		focusType = FocusType.MAP;
 		selectedTool = Tool.SELECTOR;
+		polygonBuffer = new PolygonBuffer();
 		focusId = null;		
 	}
 

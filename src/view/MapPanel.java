@@ -71,7 +71,7 @@ public class MapPanel extends JPanel
 	void drawBufferedPolygon( Graphics2D g2 )
 	{
 		Vector<Point> bufferedVerticles = getState().getPolygonBuffer().getVerticles();
-	        
+    
 	    if( bufferedVerticles.size() > 0 )
 	    {
 	    	g2.setPaint(Color.RED);
