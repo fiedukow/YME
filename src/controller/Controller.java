@@ -1,6 +1,7 @@
 package controller;
 
 import java.awt.Point;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import java.util.concurrent.BlockingQueue;
@@ -11,6 +12,7 @@ import controller.event.EventLoadMap;
 import controller.event.EventPointAccept;
 import controller.event.EventPointSelect;
 import controller.event.EventRedo;
+import controller.event.EventSaveMap;
 import controller.event.EventToolSelect;
 import controller.event.EventUndo;
 
@@ -37,7 +39,12 @@ public class Controller extends Thread
 		this.view = view;
 		this.events = events;
 		System.out.println("Controller created!");
-		model.loadMap("maps/sample.xml");
+		try {
+			model.loadMap("maps/sample.xml");
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		try 
 		{
 			model.saveMap("maps/sample1.xml");
@@ -194,9 +201,24 @@ public class Controller extends Thread
 	
 	private void doEvent( EventLoadMap event )
 	{
-		model.loadMap(event.getFilePath());
-		viewState = new ViewState( model.getEditorMap(), model.getToolbox() );
-		view.setCurrentState(viewState);		
+		try
+		{
+			model.loadMap(event.getFilePath());
+			viewState = new ViewState( model.getEditorMap(), model.getToolbox() );
+			view.setCurrentState(viewState);	
+		} catch ( FileNotFoundException e ) {
+			view.showInfo("Nie udalo sie otworzyc pliku... Szczegoly: "+ e.getMessage() +"\n");			
+		}
+		
+	}
+	
+	private void doEvent( EventSaveMap event )
+	{
+		try {
+			model.saveMap(event.getFilePath());
+		} catch (IOException e) {
+			view.showInfo("Nie udalo sie zapisac pliku... Szczegoly: "+ e.getMessage() +"\n");
+		}		
 	}
 	
 	private void doEvent( Event event )
@@ -223,6 +245,9 @@ public class Controller extends Thread
 				break;
 			case LOAD_MAP:
 				doEvent( (EventLoadMap) event );
+				break;
+			case SAVE_MAP:
+				doEvent( (EventSaveMap) event );
 				break;
 			default:
 				break;

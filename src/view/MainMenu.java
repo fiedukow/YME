@@ -13,6 +13,7 @@ import javax.swing.JMenuItem;
 
 
 import controller.event.EventLoadMap;
+import controller.event.EventSaveMap;
 import controller.event.EventToolSelect;
 
 public class MainMenu extends JMenuBar 
@@ -36,8 +37,10 @@ public class MainMenu extends JMenuBar
 		loadFC 	 = new JFileChooser();
 		loadFC.setCurrentDirectory(new File("."));
 		loadFC.setFileFilter( new XMLFilter() );
+		loadFC.setApproveButtonText("Otwórz");
 		saveFC.setCurrentDirectory(new File("."));
 		saveFC.setFileFilter( new XMLFilter() );
+		saveFC.setApproveButtonText("Zapisz");
 		
 		options.put("Plik/Nowy", new JMenuItem("Nowy")	);
 		options.put("Plik/Otwórz", new JMenuItem("Otwórz")	);
@@ -87,12 +90,12 @@ public class MainMenu extends JMenuBar
 				{ 
 					public void actionPerformed(ActionEvent e)
 					{
-						int FCOption = loadFC.showOpenDialog((JMenuItem)e.getSource());
+						int FCOption = saveFC.showOpenDialog((JMenuItem)e.getSource());
 						if (FCOption == JFileChooser.APPROVE_OPTION) {
-				            File file = loadFC.getSelectedFile();
+				            File file = saveFC.getSelectedFile();
 				            //This is where a real application would open the file.
-				            father.showInfo("Otwieram: "+file.getName()+"\n");
-				            father.pushEvent(new EventLoadMap(file.getPath()));
+				            father.showInfo("Zapisuje do: "+file.getName()+"\n");
+				            father.pushEvent(new EventSaveMap(file.getPath()));
 				        }
 					}
 				}

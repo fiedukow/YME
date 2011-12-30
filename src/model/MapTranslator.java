@@ -35,7 +35,9 @@ final class MapTranslator
 		MapTranslator tmp;
 		XStream xstream = new XStream();		
 		applyAliases(xstream);
-		tmp = (MapTranslator) xstream.fromXML( new File(fileName) ); /*rewrite whole object*/
+		File file = new File(fileName);
+		if( !file.isFile() ) throw new FileNotFoundException();
+		tmp = (MapTranslator) xstream.fromXML( file ); /*rewrite whole object*/
 		this.mapName = tmp.mapName;
 		this.waterTexture = tmp.waterTexture;
 		this.shapes = tmp.shapes;

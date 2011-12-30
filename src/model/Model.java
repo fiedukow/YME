@@ -29,15 +29,10 @@ public final class Model
 		map = new EditorMap( mapName, textureName, new Vector<MapShape>(), startPoint );		
 	}
 	
-	public void loadMap( String fileName )
+	public void loadMap( String fileName ) throws FileNotFoundException
 	{
 		MapTranslator XMLMap;
-		try {
-			XMLMap = new MapTranslator( fileName );
-		} catch (FileNotFoundException e) {
-			System.err.println("File not found.");
-			return;
-		}
+		XMLMap = new MapTranslator( fileName );
 		map = XMLMap.translate();
 		box = new EditorToolbox(map);
 	}
