@@ -4,11 +4,13 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Paint;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.TexturePaint;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -47,6 +49,8 @@ public class MapPanel extends JPanel
         int h = this.getHeight();    
         setTexturePaint("textures/"+getState().getMap().getWaterTexture(), g2); //FIXME myGraphics2D        
         g2.fill(new Rectangle(0,0,w,h));                
+        
+        drawStartPoint( g2 );
 
         int i = 0;
         
@@ -68,6 +72,33 @@ public class MapPanel extends JPanel
 		
 		g2.draw(sh.getShapeObject());
 	}		
+	
+	void drawStartPoint( Graphics2D g2 )
+	{
+		Point startPoint = getState().getMap().getStartPoint();
+	    int range = getState().getStartPointRange();
+	    setTexturePaint("textures/start.jpg", g2); //FIXME myGraphics2D 
+      
+	    Ellipse2D.Double startPointShape =  
+	    		new Ellipse2D.Double
+	    			(
+	    				(int)startPoint.getX()-range,
+	        			(int)startPoint.getY()-range, 
+	        			range*2,
+	        			range*2
+	        		);
+	        
+	    g2.fill(startPointShape);        
+	    g2.setPaint(Color.YELLOW);
+	        
+	    if( getState().getFocusType() == FocusType.START_POINT )
+	    	g2.setPaint(Color.YELLOW);
+	    else
+	    	g2.setPaint(Color.BLACK);
+	        
+	    g2.draw(startPointShape);        
+	}
+	
 	
     private void setTexturePaint(String fileName, Graphics2D g2)
     {

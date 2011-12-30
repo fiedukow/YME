@@ -15,6 +15,7 @@ import model.Model;
 import model.TypeOfMapObject;
 import model.doDrawEllipse;
 import model.doDrawRectangle;
+import model.doSetStartPoint;
 import view.View;
 
 /*Controller in MVC meaning*/
@@ -74,22 +75,41 @@ public class Controller extends Thread
 		if( ! (viewState.getSelectedTool() == Tool.SELECTOR) )
 		{
 			if( viewState.getSelectedTool() == Tool.RECTANGLE )
-				model.getToolbox().doCommand(new doDrawRectangle("wood.jpg", x,y,40,40,null));
-			
+				model.getToolbox().doCommand(new doDrawRectangle("wood.jpg", x,y,40,40,null));			
 			if( viewState.getSelectedTool() == Tool.ELLIPSE )
-				model.getToolbox().doCommand(new doDrawEllipse("red.jpg", x,y,40,40,null));
-		
+				model.getToolbox().doCommand(new doDrawEllipse("red.jpg", x,y,40,40,null));		
 			if( viewState.getSelectedTool() == Tool.QUEY )
-				model.getToolbox().doCommand(new doDrawRectangle("metal.jpg", x,y,200,30,TypeOfMapObject.QUAY));									
-			
-			viewState.setFocus(FocusType.SHAPE, viewState.getMap().getShapes().size()-1);
+				model.getToolbox().doCommand(new doDrawRectangle("metal.jpg", x,y,200,30,TypeOfMapObject.QUAY));						
+			if( viewState.getSelectedTool() == Tool.STARTPOINT )
+				model.getToolbox().doCommand(new doSetStartPoint(x,y));									
+
+			viewState.setFocus( 
+					viewState.getSelectedTool()==Tool.STARTPOINT ? FocusType.START_POINT : FocusType.SHAPE, 
+					viewState.getMap().getShapes().size()-1
+					);
 			viewState.setSelectedTool(Tool.SELECTOR);
 			return;
+			
+
 		}
 		else
 		{
 			int i = 0;
 			boolean focusFound = false;
+			int distanceFromStart = 
+					(int) (
+						Math.sqrt(
+								Math.pow(x-viewState.getMap().getStartPoint().getX(),2) +
+								Math.pow(y-viewState.getMap().getStartPoint().getY(),2)
+						)
+					);
+			view.showInfo(distanceFromStart+"\n");
+			if( distanceFromStart <= viewState.getStartPointRange() )
+			{
+				viewState.setFocus(FocusType.START_POINT);
+				focusFound = true;
+			}
+			if( !focusFound )
 			for( MapShape shape : model.getEditorMap().getShapes())
 			{
 				if( shape.getShapeObject().contains(x, y) )

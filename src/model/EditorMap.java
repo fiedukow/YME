@@ -1,4 +1,5 @@
 package model;
+import java.awt.Point;
 import java.util.Vector;
 
 /**
@@ -10,6 +11,7 @@ public final class EditorMap
 	private String mapName;					/**Map name, for general proposes*/
 	private String waterTexture;		    /**The texture used as the background*/
 	private Vector<MapShape> shapes;		/**List of polygons presented on the map*/
+	private Point startPoint;
 	
 	/**
 	 * Main constructor of Map
@@ -17,13 +19,28 @@ public final class EditorMap
 	 * @param waterTexture
 	 * @param shapes
 	 */
-	public EditorMap( String mapName, String waterTexture, Vector<MapShape> shapes )
+	public EditorMap( String mapName, String waterTexture, Vector<MapShape> shapes, Point startPoint )
 	{
 		this.mapName = mapName;
 		this.waterTexture = waterTexture;
 		this.shapes = shapes;
+		this.startPoint = startPoint;
 	}
 	
+	/**
+	 * @return the startPoint
+	 */
+	public Point getStartPoint() {
+		return startPoint;
+	}
+
+	/**
+	 * @param startPoint the startPoint to set
+	 */
+	/*package*/ void setStartPoint(Point startPoint) {
+		this.startPoint = startPoint;
+	}
+
 	/**
 	 * Simple setter
 	 * @param mapName

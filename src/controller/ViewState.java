@@ -100,6 +100,10 @@ public class ViewState
 		setFocusId( -1 );
 	}
 	
+	public int getStartPointRange()
+	{
+		return 25;
+	}
 
 	
 }

@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Point;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,6 +20,7 @@ final class MapTranslator
 {
 	private String mapName;					/** Map name, for general proposes */
 	private String waterTexture;			/** The texture used as the background */
+	private Point  startPoint;
 	private Vector<XMLShape> shapes;	    /** List of polygons presented on the map */
 
 	public static final String xmlHeader = "<?xml version=\"1.0\"?>\n";
@@ -36,7 +38,8 @@ final class MapTranslator
 		tmp = (MapTranslator) xstream.fromXML( new File(fileName) ); /*rewrite whole object*/
 		this.mapName = tmp.mapName;
 		this.waterTexture = tmp.waterTexture;
-		this.shapes = tmp.shapes;		
+		this.shapes = tmp.shapes;
+		this.startPoint = tmp.startPoint;
 	}	
 
 	/**
@@ -47,7 +50,9 @@ final class MapTranslator
 	{	
 		this.mapName = map.getMapName();
 		this.waterTexture = map.getWaterTexture();
+		this.startPoint = map.getStartPoint();
 		this.shapes = new Vector<XMLShape>();
+		
 		for( MapShape sh : map.getShapes() )
 		{	
 			try{
@@ -71,7 +76,7 @@ final class MapTranslator
 		{
 			resultShapes.add( sh.translate() );
 		}
-		EditorMap result = new EditorMap( mapName, waterTexture, resultShapes );		
+		EditorMap result = new EditorMap( mapName, waterTexture, resultShapes, startPoint );		
 		return result;
 	}
 	

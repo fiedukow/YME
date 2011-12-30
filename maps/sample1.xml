@@ -2,6 +2,10 @@
 <map>
   <mapName>Something</mapName>
   <waterTexture>water.jpg</waterTexture>
+  <startPoint>
+    <x>40</x>
+    <y>320</y>
+  </startPoint>
   <shapes>
     <polygon>
       <textureName>wood.jpg</textureName>
