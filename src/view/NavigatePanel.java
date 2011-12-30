@@ -13,8 +13,10 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
 
 import controller.FocusType;
+import controller.event.EventRedo;
 import controller.event.EventToolSelect;
 import controller.event.EventUndo;
 
@@ -32,8 +34,10 @@ public class NavigatePanel extends JPanel
 		father = father_;
 		nextFocus = new JButton(">");
 		prevFocus = new JButton("<");
-		undo = new JButton("<-");		
-		redo = new JButton("->");
+		undo = new JButton("< Cofnij");		
+		redo = new JButton("Ponow  >");
+		
+		this.setBorder(new TitledBorder("Nawigacja"));
 		
 		undo.setEnabled( father.getState().isUndoNotEmpty() );		
 		redo.setEnabled( father.getState().isRedoNotEmpty() );	
@@ -56,10 +60,17 @@ public class NavigatePanel extends JPanel
             {
             	father.pushEvent( new EventUndo( ) );
             }
-        }); 
+        });
 		
-		
-		
+		redo.addActionListener(
+				new ActionListener()
+		        { 
+		            public void actionPerformed(ActionEvent e)
+		            {
+		            	father.pushEvent( new EventRedo( ) );
+		            }
+		});
+				
 		
 		this.add(prevFocus);
 		this.add(shapeList);

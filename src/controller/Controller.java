@@ -6,6 +6,7 @@ import java.util.concurrent.BlockingQueue;
 
 import controller.event.Event;
 import controller.event.EventPointSelect;
+import controller.event.EventRedo;
 import controller.event.EventToolSelect;
 import controller.event.EventUndo;
 
@@ -125,6 +126,16 @@ public class Controller extends Thread
 		}
 	}
 	
+	private void doEvent( EventRedo event )
+	{
+		try {
+			model.getToolbox().redo();
+		} catch (Exception e) {
+			// TODO should be CommandStackEmptyException
+			view.showInfo("Nie ma juz operacji do ponownienia");
+		}
+	}
+	
 	private void doEvent( Event event )
 	{
 		switch( event.getEventType() )
@@ -137,6 +148,9 @@ public class Controller extends Thread
 				break;
 			case UNDO:
 				doEvent( (EventUndo) event );
+				break;
+			case REDO:
+				doEvent( (EventRedo) event );
 				break;
 			default:
 				break;

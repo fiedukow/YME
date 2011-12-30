@@ -33,6 +33,7 @@ public final class EditorToolbox {
 			return;
 		}
 		undo.push(cmd);
+		redo.clear();
 	}
 	
 	/**
@@ -47,12 +48,13 @@ public final class EditorToolbox {
 		{
 			cmd  = undo.pop();
 			try {
-				cmd.undo( map );
+				cmd.undo( map );				
 			} catch (CommandUndoException e) {
 				System.err.println("Nie udalo sie wycofać komendy");
 				undo.push(cmd); /* put it back where it was */
 				return;
 			}
+			redo.push(cmd);
 		}
 	}
 	
@@ -84,6 +86,7 @@ public final class EditorToolbox {
 				redo.push(cmd); /* put it back where it was */
 				return;
 			}
+			undo.push(cmd);
 		}
 	}
 	
