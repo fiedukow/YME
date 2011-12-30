@@ -134,29 +134,6 @@ class doDrawPolygon implements Command
 	}
 }
 
-
-
-/**
- * 
- * @author fiedukow
- */
-class doDrawEllipse implements Command
-{	
-	doDrawEllipse( MapShape shape )
-	{
-		
-	}	
-	public void invoke( EditorMap map ) throws CommandInvokeException
-	{
-		/*FIXME*/
-	}
-	public void undo( EditorMap map ) throws CommandUndoException
-	{
-		/*FIXME*/
-	}
-}
-
-
 class doResizeShape implements Command
 {
 	public void invoke( EditorMap map ) throws CommandInvokeException

@@ -10,6 +10,7 @@ import controller.event.EventToolSelect;
 
 import model.MapShape;
 import model.Model;
+import model.doDrawEllipse;
 import model.doDrawRectangle;
 import view.View;
 
@@ -70,19 +71,39 @@ public class Controller extends Thread
 		
 		if( viewState.getSelectedTool() == Tool.RECTANGLE )
 		{
-			model.getToolbox().doCommand(new doDrawRectangle("wood.jpg", x,y,100,100));
+			/*default rectangle*/
+			model.getToolbox().doCommand(new doDrawRectangle("wood.jpg", x,y,40,40));
+			viewState.setFocus(FocusType.SHAPE, viewState.getMap().getShapes().size()-1);
+			viewState.setSelectedTool(Tool.SELECTOR);
+			return;
 		}
-		else{
+		
+		if( viewState.getSelectedTool() == Tool.ELLIPSE )
+		{
+			/*default rectangle*/
+			model.getToolbox().doCommand(new doDrawEllipse("red.jpg", x,y,40,40));
+			viewState.setFocus(FocusType.SHAPE, viewState.getMap().getShapes().size()-1);
+			viewState.setSelectedTool(Tool.SELECTOR);
+			return;
+		}
+		
+		if( viewState.getSelectedTool() == Tool.SELECTOR )
+		{
 			int i = 0;
+			boolean focusFound = false;
 			for( MapShape shape : model.getEditorMap().getShapes())
 			{
 				if( shape.getShapeObject().contains(x, y) )
 				{
 					viewState.setFocus(FocusType.SHAPE, i);
+					focusFound = true;
 					//TODO maybe backward and brake?
-				} 
+				} 				
 				++i;
 			}
+			if( !focusFound ) viewState.setFocus(FocusType.MAP);			
+			
+			return;
 		}
 	}
 	

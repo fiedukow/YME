@@ -38,7 +38,10 @@ public class View {
 	MapPanel mapPanel;
 	JPanel leftMenu;	
 	ToolPanel toolbox;
+	NavigatePanel navigatePanel;
 	JPanel attributes;
+	
+	JPanel questions;
 	JPanel statusBar;
 	JTextArea statusText;
 	JComboBox objectSelected;
@@ -48,11 +51,13 @@ public class View {
 		mainFrame 	 = new JFrame("YME :: new map");
 		mapPanel  	 = new MapPanel( this );
 		toolbox  	 = new ToolPanel( this );
-		
+		navigatePanel= new NavigatePanel( this );
+				
 		leftMenu  	 = new JPanel();		
 		attributes 	 = new JPanel();
 		statusBar 	 = new JPanel();
 		eventQueue	 = events;
+		questions 	 = new JPanel();
 		Container cp = mainFrame.getContentPane();
 		
 		
@@ -92,12 +97,16 @@ public class View {
 
 		/*mapPanel.setBorder(new TitledBorder("Mapa") );*/		
 		toolbox.setBorder(new TitledBorder("Narzedzia") );
-		attributes.setBorder(new TitledBorder("Wlasciwosci"));
-		
+		attributes.setBorder(new TitledBorder("Nawigacja"));
+		questions.setBorder(new TitledBorder("Wlasciwosci"));
 		
 		leftMenu.setLayout(new BorderLayout());
 		leftMenu.add(toolbox, BorderLayout.NORTH);
-		leftMenu.add(attributes, BorderLayout.CENTER);
+		//leftMenu.add(attributes, BorderLayout.CENTER);
+		leftMenu.add(navigatePanel, BorderLayout.CENTER);
+		questions.setPreferredSize(new Dimension(200, 200));
+		leftMenu.add(questions, BorderLayout.SOUTH);
+		
 		
 		JButton buttonPrev = new JButton("<");
 		JButton buttonNext = new JButton(">");
@@ -112,16 +121,16 @@ public class View {
 		attributes.add(buttonPrev);
 		attributes.add(objectSelected);
 		attributes.add(buttonNext);
-		attributes.setPreferredSize(new Dimension(300, 400));
+		attributes.setPreferredSize(new Dimension(250, 200));
 		
 		
 		JLabel textureNameLabel = new JLabel("Tekstura: ");
 		JTextField textureName = new JTextField(10);
 		JButton textureFind = new JButton("...");
 		textureFind.setPreferredSize(new Dimension(30, 18));
-		attributes.add(textureNameLabel);
-		attributes.add(textureName);
-		attributes.add(textureFind);
+		questions.add(textureNameLabel);
+		questions.add(textureName);
+		questions.add(textureFind);
 		
 		
 		
@@ -148,6 +157,7 @@ public class View {
 		this.currentState = map;	
 		mapPanel.repaint( );		
 		toolbox.repaint( );
+		navigatePanel.repaint( );
 	}
 	
 	public void pushEvent( Event event )
