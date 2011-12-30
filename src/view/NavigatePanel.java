@@ -3,6 +3,8 @@ package view;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import javax.swing.BoxLayout;
@@ -13,6 +15,8 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
 import controller.FocusType;
+import controller.event.EventToolSelect;
+import controller.event.EventUndo;
 
 import model.MapShape;
 
@@ -28,8 +32,12 @@ public class NavigatePanel extends JPanel
 		father = father_;
 		nextFocus = new JButton(">");
 		prevFocus = new JButton("<");
-		undo = new JButton("<-");
+		undo = new JButton("<-");		
 		redo = new JButton("->");
+		
+		undo.setEnabled( father.getState().isUndoNotEmpty() );		
+		redo.setEnabled( father.getState().isRedoNotEmpty() );	
+		
 		shapeList = new JComboBox();
 		shapeList.addItem("Cała mapa");
 		shapeList.addItem("Start łodzi");		
@@ -41,12 +49,24 @@ public class NavigatePanel extends JPanel
 			++i;
 		}
 		
+		undo.addActionListener(
+		new ActionListener()
+        { 
+            public void actionPerformed(ActionEvent e)
+            {
+            	father.pushEvent( new EventUndo( ) );
+            }
+        }); 
+		
+		
+		
+		
 		this.add(prevFocus);
 		this.add(shapeList);
 		this.add(nextFocus);
 
-		this.add(undo);
-		this.add(redo);
+		this.add(undo);		
+		this.add(redo);		
 		this.setPreferredSize(new Dimension(250, 200));
 	}
 	
@@ -67,6 +87,9 @@ public class NavigatePanel extends JPanel
 			shapeList.setSelectedIndex(1);
 		else if( father.getState().getFocusType()==FocusType.SHAPE)
 			shapeList.setSelectedIndex(father.getState().getFocusId()+2);
+		
+		undo.setEnabled( father.getState().isUndoNotEmpty() );
+		redo.setEnabled( father.getState().isRedoNotEmpty() );
 		
 		super.paintComponent(g);
 	}

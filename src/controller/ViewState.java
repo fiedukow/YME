@@ -1,17 +1,20 @@
 package controller;
 
 import model.EditorMap;
+import model.EditorToolbox;
 
 public class ViewState 
 {
 	EditorMap map;
+	EditorToolbox box;
 	FocusType focusType;
 	Integer focusId;
-	Tool selectedTool;	
+	Tool selectedTool;		
 	
-	public ViewState( EditorMap map )
+	public ViewState( EditorMap map, EditorToolbox box )
 	{
 		this.map = map;
+		this.box = box;
 		focusType = FocusType.MAP;
 		selectedTool = Tool.SELECTOR;
 		focusId = null;		
@@ -51,6 +54,18 @@ public class ViewState
 	public Tool getSelectedTool() {
 		return selectedTool;
 	}
+	
+	
+	public boolean isUndoNotEmpty()
+	{
+		return box.getUndoSize()>0;
+	}
+	
+	public boolean isRedoNotEmpty()
+	{
+		return box.getRedoSize()>0;
+	}
+	
 
 	/**
 	 * @param selectedTool the selectedTool to set

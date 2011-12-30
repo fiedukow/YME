@@ -16,7 +16,7 @@ public class YME {
 		System.out.println("Witaj w YME :-)");		
 		Model md = new Model();
 		ArrayBlockingQueue<Event> bq = new ArrayBlockingQueue<Event>(128); 
-		View v = new View( new ViewState(md.getEditorMap()), bq );
+		View v = new View( new ViewState(md.getEditorMap(), md.getToolbox()), bq );
 		new Controller(md,v,bq);
 	}
 }

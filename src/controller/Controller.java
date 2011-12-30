@@ -7,6 +7,7 @@ import java.util.concurrent.BlockingQueue;
 import controller.event.Event;
 import controller.event.EventPointSelect;
 import controller.event.EventToolSelect;
+import controller.event.EventUndo;
 
 import model.MapShape;
 import model.Model;
@@ -38,7 +39,7 @@ public class Controller extends Thread
 			System.err.println("Nie udalo sie zapisac mapy!");
 		}
 		
-		viewState = new ViewState(model.getEditorMap());	
+		viewState = new ViewState(model.getEditorMap(), model.getToolbox());	
 		view.setCurrentState( viewState );
 		start();
 		
@@ -113,6 +114,16 @@ public class Controller extends Thread
 		view.setCurrentState( viewState );
 	}
 	
+	private void doEvent( EventUndo event )
+	{
+		try {
+			model.getToolbox().undo();
+			viewState.setFocus(FocusType.MAP);
+		} catch (Exception e) {
+			// TODO should be CommandStackEmptyException
+			view.showInfo("Nie ma juz operacji do cofniecia");
+		}
+	}
 	
 	private void doEvent( Event event )
 	{
@@ -122,7 +133,10 @@ public class Controller extends Thread
 				doEvent( (EventPointSelect) event  );
 				break;
 			case TOOL_SELECT:
-				doEvent( (EventToolSelect) event);
+				doEvent( (EventToolSelect) event );
+				break;
+			case UNDO:
+				doEvent( (EventUndo) event );
 				break;
 			default:
 				break;

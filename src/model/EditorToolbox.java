@@ -96,6 +96,17 @@ public final class EditorToolbox {
 	{
 		redo(1);
 	}
+	
+	public int getUndoSize()
+	{
+		return undo.size();
+	}
+	
+	public int getRedoSize()
+	{
+		return redo.size();
+	}
+	
 }
 
 
