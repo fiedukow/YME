@@ -18,11 +18,10 @@ public class PolygonBuffer
 	
 	void reset()
 	{
-		System.out.println("ALE WYWALAM!");
 		verticles.clear();
 	}
 	
-	Vector<Point> getVerticles() throws ToFewVerticlesException
+	Vector<Point> getPolygonVerticles() throws ToFewVerticlesException
 	{
 		if( verticles.size() >= 3 )
 		{
@@ -30,6 +29,12 @@ public class PolygonBuffer
 		}
 		throw new ToFewVerticlesException(); 
 	}
+	
+	public Vector<Point> getVerticles()
+	{	
+		return verticles;
+	}
+	
 	
 }
 

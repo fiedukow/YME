@@ -47,7 +47,8 @@ public class Controller extends Thread
 			System.err.println("Nie udalo sie zapisac mapy!");
 		}
 		
-		viewState = new ViewState(model.getEditorMap(), model.getToolbox());	
+		viewState = new ViewState(model.getEditorMap(), model.getToolbox());
+		viewState.setPolygonBuffer(polygonBuffer);
 		view.setCurrentState( viewState );
 		start();
 		
@@ -67,7 +68,7 @@ public class Controller extends Thread
 				view.showInfo("Kontroler umarl :-(");
 				return;
 			}
-			view.showInfo("Event handled\n");
+			//view.showInfo("Event handled\n");
 		}
 	}
 	
@@ -75,11 +76,12 @@ public class Controller extends Thread
 	{
 		if( viewState.getSelectedTool() == Tool.POLYGON )
 			try {
-				model.getToolbox().doCommand( new doDrawPolygon("brick.jpg", polygonBuffer.getVerticles(), null) );
+				model.getToolbox().doCommand( new doDrawPolygon("brick.jpg", polygonBuffer.getPolygonVerticles(), null) );
 				polygonBuffer.reset();
 				doAfterDraw();
 			} catch (ToFewVerticlesException e) {
 				view.showInfo("Zaznaczono zbyt malo punktow by utworzyc polygon\n");
+				polygonBuffer.reset();
 			}
 	}
 	
@@ -128,7 +130,6 @@ public class Controller extends Thread
 								Math.pow(y-viewState.getMap().getStartPoint().getY(),2)
 						)
 					);
-			view.showInfo(distanceFromStart+"\n");
 			if( distanceFromStart <= viewState.getStartPointRange() )
 			{
 				viewState.setFocus(FocusType.START_POINT);
@@ -153,9 +154,7 @@ public class Controller extends Thread
 	
 	private void doEvent( EventToolSelect event )
 	{		
-		viewState.setSelectedTool(event.getTool());
-		if( event.getTool() == Tool.POLYGON )
-			polygonBuffer.reset();
+		viewState.setSelectedTool(event.getTool());		
 		view.setCurrentState( viewState );
 	}
 	
@@ -202,6 +201,9 @@ public class Controller extends Thread
 			default:
 				break;
 		}		
+		//TODO italian solution?
+		if( viewState.getSelectedTool() != Tool.POLYGON )
+			polygonBuffer.reset();
 		view.setCurrentState( viewState );
 	}
 }

@@ -10,6 +10,8 @@ public class ViewState
 	FocusType focusType;
 	Integer focusId;
 	Tool selectedTool;		
+	PolygonBuffer polygonBuffer; //TODO it should have universal Shape OtherThings in here
+	
 	
 	public ViewState( EditorMap map, EditorToolbox box )
 	{
@@ -18,6 +20,20 @@ public class ViewState
 		focusType = FocusType.MAP;
 		selectedTool = Tool.SELECTOR;
 		focusId = null;		
+	}
+
+	/**
+	 * @return the polygonBuffer
+	 */
+	public PolygonBuffer getPolygonBuffer() {
+		return polygonBuffer;
+	}
+
+	/**
+	 * @param polygonBuffer the polygonBuffer to set
+	 */
+	/*package*/ void setPolygonBuffer(PolygonBuffer polygonBuffer) {
+		this.polygonBuffer = polygonBuffer;
 	}
 
 	/**
