@@ -12,6 +12,7 @@ import controller.event.EventUndo;
 
 import model.MapShape;
 import model.Model;
+import model.TypeOfMapObject;
 import model.doDrawEllipse;
 import model.doDrawRectangle;
 import view.View;
@@ -70,26 +71,22 @@ public class Controller extends Thread
 		int x,y;
 		x = event.getX();
 		y = event.getY();
-		
-		if( viewState.getSelectedTool() == Tool.RECTANGLE )
+		if( ! (viewState.getSelectedTool() == Tool.SELECTOR) )
 		{
-			/*default rectangle*/
-			model.getToolbox().doCommand(new doDrawRectangle("wood.jpg", x,y,40,40));
+			if( viewState.getSelectedTool() == Tool.RECTANGLE )
+				model.getToolbox().doCommand(new doDrawRectangle("wood.jpg", x,y,40,40,null));
+			
+			if( viewState.getSelectedTool() == Tool.ELLIPSE )
+				model.getToolbox().doCommand(new doDrawEllipse("red.jpg", x,y,40,40,null));
+		
+			if( viewState.getSelectedTool() == Tool.QUEY )
+				model.getToolbox().doCommand(new doDrawRectangle("metal.jpg", x,y,200,30,TypeOfMapObject.QUAY));									
+			
 			viewState.setFocus(FocusType.SHAPE, viewState.getMap().getShapes().size()-1);
 			viewState.setSelectedTool(Tool.SELECTOR);
 			return;
 		}
-		
-		if( viewState.getSelectedTool() == Tool.ELLIPSE )
-		{
-			/*default rectangle*/
-			model.getToolbox().doCommand(new doDrawEllipse("red.jpg", x,y,40,40));
-			viewState.setFocus(FocusType.SHAPE, viewState.getMap().getShapes().size()-1);
-			viewState.setSelectedTool(Tool.SELECTOR);
-			return;
-		}
-		
-		if( viewState.getSelectedTool() == Tool.SELECTOR )
+		else
 		{
 			int i = 0;
 			boolean focusFound = false;

@@ -132,14 +132,18 @@ final class MapPolygon extends MapShape
 	 * @param textureName
 	 * @see java.awt.Polygon
 	 */	
-	public MapPolygon( String textureName )
+	public MapPolygon( String textureName, TypeOfMapObject type )
 	{
 		super( textureName );
 		this.shapeObject = new Polygon();
 		try
 		{
-			this.setTypeOfObject( allowedTypes.get(0));
+			if( this.isTypeAllowed(type) )
+				this.setTypeOfObject( type );
+			else
+				this.setTypeOfObject( allowedTypes.get(0));
 		}
+		
 		catch ( InvalidTypeOfMapObjectException e )
 		{
 			/*
@@ -275,14 +279,17 @@ final class MapRectangle extends MapShape
 	/**
 	 * Initialize rectangle with selected texture, position and size
 	 * @param textureName
-	 */	
-	public MapRectangle( String textureName, int x, int y, int w, int h )
+	 */			
+	public MapRectangle( String textureName, int x, int y, int w, int h, TypeOfMapObject type)
 	{
 		super( textureName );
 		this.shapeObject = new Rectangle(x,y,w,h);	
 		try
 		{
-			this.setTypeOfObject( allowedTypes.get(0));
+			if( this.isTypeAllowed(type) )
+				this.setTypeOfObject( type );
+			else
+				this.setTypeOfObject( allowedTypes.get(0));
 		}
 		catch ( InvalidTypeOfMapObjectException e )
 		{
@@ -431,13 +438,16 @@ final class MapEllipse extends MapShape
 	 * @param w - width of bound
 	 * @param h - height of bound
 	 */
-	public MapEllipse( String textureName, int x, int y, int w, int h )
+	public MapEllipse( String textureName, int x, int y, int w, int h, TypeOfMapObject type )
 	{
 		super( textureName );
 		this.shapeObject = new Ellipse2D.Double(x,y,w,h);
 		try
 		{
-			this.setTypeOfObject( allowedTypes.get(0));
+			if( this.isTypeAllowed(type) )
+				this.setTypeOfObject( type );
+			else
+				this.setTypeOfObject( allowedTypes.get(0));
 		}
 		catch ( InvalidTypeOfMapObjectException e )
 		{

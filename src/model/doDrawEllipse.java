@@ -4,9 +4,9 @@ public class doDrawEllipse implements Command
 {	
 	MapEllipse ellipse;
 	
-	public doDrawEllipse( String textureName, int x, int y, int w, int h )
+	public doDrawEllipse( String textureName, int x, int y, int w, int h, TypeOfMapObject type )
 	{
-		this.ellipse = new MapEllipse( textureName, x,y,w,h);		
+		this.ellipse = new MapEllipse( textureName, x,y,w,h, type);		
 	}
 	
 	public void invoke( EditorMap map ) throws CommandInvokeException

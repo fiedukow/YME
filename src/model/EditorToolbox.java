@@ -131,9 +131,9 @@ interface Command
 class doDrawPolygon implements Command
 {	
 	MapPolygon polygon;
-	doDrawPolygon( String textureName, Vector<Point> points )
+	doDrawPolygon( String textureName, Vector<Point> points, TypeOfMapObject type )
 	{
-		polygon = new MapPolygon( textureName );
+		polygon = new MapPolygon( textureName, type);
 		for( Point point : points )
 			polygon.addPoint((int)point.getX(), (int)point.getY());			
 	}

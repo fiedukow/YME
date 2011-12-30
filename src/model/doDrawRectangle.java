@@ -8,9 +8,9 @@ public class doDrawRectangle implements Command
 {	
 	MapRectangle rectangle;
 	
-	public doDrawRectangle( String textureName, int x, int y, int w, int h )
+	public doDrawRectangle( String textureName, int x, int y, int w, int h, TypeOfMapObject type )
 	{
-		this.rectangle = new MapRectangle( textureName, x,y,w,h);		
+		this.rectangle = new MapRectangle( textureName, x,y,w,h, type);		
 	}
 	
 	public void invoke( EditorMap map ) throws CommandInvokeException
