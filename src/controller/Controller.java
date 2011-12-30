@@ -39,7 +39,7 @@ public class Controller extends Thread
 		this.view = view;
 		this.events = events;
 		System.out.println("Controller created!");
-		try {
+		/*try {
 			model.loadMap("maps/sample.xml");
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
@@ -53,7 +53,7 @@ public class Controller extends Thread
 		{
 			System.err.println("Nie udalo sie zapisac mapy!");
 		}
-		
+		*/
 		viewState = new ViewState(model.getEditorMap(), model.getToolbox());
 		view.setCurrentState( viewState );
 		start();

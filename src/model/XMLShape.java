@@ -99,8 +99,8 @@ class XMLPolygon extends XMLShape
 	{		
 		super(polygon);
 		vertices = new Vector<Point>();		
-		for( int i = 0; i < polygon.getXCoords().length; ++i )
-		{
+		for( int i = 0; i < polygon.getNPoints(); ++i )
+		{			
 			vertices.add( new Point(polygon.getXCoords()[i], polygon.getYCoords()[i]) );
 		}
 	}

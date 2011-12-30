@@ -183,9 +183,17 @@ final class MapPolygon extends MapShape
 	public int[] getYCoords()
 	{
 		/*TODO - return copy*/
-		return getShapeObject().xpoints;
+		return getShapeObject().ypoints;
 	}
 
+	/**
+	 * Give number of verticles in polygon
+	 * @return int
+	 */
+	public int getNPoints()
+	{
+		return getShapeObject().npoints;
+	}
 	
 	/**
 	 * Resize polygon to the given Bounds size.

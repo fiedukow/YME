@@ -20,7 +20,7 @@ public class doDrawPolygon implements Command
 	public void invoke( EditorMap map ) throws CommandInvokeException
 	{
 		map.addMapShape( polygon );
-	}
+	} 
 	public void undo( EditorMap map ) throws CommandUndoException
 	{
 		map.removeMapShape( polygon );
