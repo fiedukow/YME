@@ -7,6 +7,7 @@ import java.util.concurrent.BlockingQueue;
 
 import controller.event.Event;
 import controller.event.EventChangeFocus;
+import controller.event.EventLoadMap;
 import controller.event.EventPointAccept;
 import controller.event.EventPointSelect;
 import controller.event.EventRedo;
@@ -191,6 +192,13 @@ public class Controller extends Thread
 		
 	}
 	
+	private void doEvent( EventLoadMap event )
+	{
+		model.loadMap(event.getFilePath());
+		viewState = new ViewState( model.getEditorMap(), model.getToolbox() );
+		view.setCurrentState(viewState);		
+	}
+	
 	private void doEvent( Event event )
 	{
 		switch( event.getEventType() )
@@ -212,6 +220,9 @@ public class Controller extends Thread
 				break;
 			case CHANGE_FOCUS:
 				doEvent( (EventChangeFocus) event );
+				break;
+			case LOAD_MAP:
+				doEvent( (EventLoadMap) event );
 				break;
 			default:
 				break;

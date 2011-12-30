@@ -117,6 +117,20 @@ public class ViewState
 		setFocusId( -1 );
 	}
 	
+	/**
+	 * @return the box
+	 */
+	public EditorToolbox getBox() {
+		return box;
+	}
+
+	/**
+	 * @param box the box to set
+	 */
+	void setBox(EditorToolbox box) {
+		this.box = box;
+	}
+
 	public int getStartPointRange()
 	{
 		return 25;
