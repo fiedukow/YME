@@ -272,6 +272,7 @@ public class Controller extends Thread
 		if( viewState.getSelectedTool() != Tool.POLYGON )
 			viewState.getPolygonBuffer().reset();
 		view.setCurrentState( viewState );
+		/*TODO This is sleep only for testing proposes, delete it in release version*/
 		try {
 			sleep(200);
 		} catch (InterruptedException e) {
