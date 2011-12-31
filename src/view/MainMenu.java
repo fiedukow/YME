@@ -13,6 +13,7 @@ import javax.swing.JMenuItem;
 
 
 import controller.event.EventLoadMap;
+import controller.event.EventNewMap;
 import controller.event.EventSaveMap;
 import controller.event.EventToolSelect;
 
@@ -35,10 +36,10 @@ public class MainMenu extends JMenuBar
 		options  = new HashMap<String, JMenuItem>();
 		saveFC 	 = new JFileChooser();		
 		loadFC 	 = new JFileChooser();
-		loadFC.setCurrentDirectory(new File("."));
+		loadFC.setCurrentDirectory(new File("./maps"));
 		loadFC.setFileFilter( new XMLFilter() );
 		loadFC.setApproveButtonText("Otwórz");
-		saveFC.setCurrentDirectory(new File("."));
+		saveFC.setCurrentDirectory(new File("./maps"));
 		saveFC.setFileFilter( new XMLFilter() );
 		saveFC.setApproveButtonText("Zapisz");
 		
@@ -97,6 +98,15 @@ public class MainMenu extends JMenuBar
 				            father.showInfo("Zapisuje do: "+file.getName()+"\n");
 				            father.pushEvent(new EventSaveMap(file.getPath()));
 				        }
+					}
+				}
+			); 
+		options.get("Plik/Nowy").addActionListener(
+				new ActionListener()
+				{ 
+					public void actionPerformed(ActionEvent e)
+					{
+						father.pushEvent(new EventNewMap());
 					}
 				}
 			); 

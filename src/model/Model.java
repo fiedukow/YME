@@ -14,7 +14,7 @@ public final class Model
 	private EditorToolbox box;
 	public Model()
 	{		
-		newMap("New map", "water.jpg", new Point(25,25));		
+		newMap();		
 		box = new EditorToolbox(map);
 		System.out.println("Model created.");
 	}
@@ -26,7 +26,13 @@ public final class Model
 	
 	public void newMap( String mapName, String textureName, Point startPoint )
 	{
-		map = new EditorMap( mapName, textureName, new Vector<MapShape>(), startPoint );		
+		map = new EditorMap( mapName, textureName, new Vector<MapShape>(), startPoint );
+		box = new EditorToolbox(map);
+	}
+	
+	public void newMap()
+	{
+		newMap("New map", "water.jpg", new Point(25,25));	
 	}
 	
 	public void loadMap( String fileName ) throws FileNotFoundException

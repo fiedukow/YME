@@ -9,6 +9,7 @@ import java.util.concurrent.BlockingQueue;
 import controller.event.Event;
 import controller.event.EventChangeFocus;
 import controller.event.EventLoadMap;
+import controller.event.EventNewMap;
 import controller.event.EventPointAccept;
 import controller.event.EventPointSelect;
 import controller.event.EventRedo;
@@ -221,6 +222,15 @@ public class Controller extends Thread
 		}		
 	}
 	
+	
+	private void doEvent( EventNewMap event )
+	{
+		view.showInfo("Zaczynamy prace nad nową mapą\n");
+		model.newMap();
+		viewState = new ViewState( model.getEditorMap(), model.getToolbox() );
+		view.setCurrentState(viewState);	
+	}
+	
 	private void doEvent( Event event )
 	{
 		switch( event.getEventType() )
@@ -248,6 +258,9 @@ public class Controller extends Thread
 				break;
 			case SAVE_MAP:
 				doEvent( (EventSaveMap) event );
+				break;
+			case NEW_MAP:
+				doEvent( (EventNewMap) event );
 				break;
 			default:
 				break;
