@@ -10,6 +10,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 
 import controller.event.EventExitProgram;
@@ -53,21 +54,19 @@ public class MainMenu extends JMenuBar
 		fileMenu.add(options.get("Plik/Zapisz jako"));		
 		fileMenu.add(options.get("Plik/Zamknij"));
 		
-		options.put("Edycja/Cofnij", new JMenuItem("Confnij")	);
+		options.put("Edycja/Cofnij", new JMenuItem("Cofnij")	);
 		options.put("Edycja/Powtórz", new JMenuItem("Powtórz")	);
 		editMenu.add(options.get("Edycja/Cofnij"));
 		editMenu.add(options.get("Edycja/Powtórz"));
 		
 		options.put("Pomoc/O programie...", new JMenuItem("O programie...")	);
-		options.put("Pomoc/Pomoc", new JMenuItem("Pomoc")	);
 		helpMenu.add(options.get("Pomoc/O programie..."));
-		helpMenu.add(options.get("Pomoc/Pomoc"));
 
 		addEvents();
 		
-		this.add(fileMenu);
-		this.add(helpMenu);
+		this.add(fileMenu);		
 		this.add(editMenu);
+		this.add(helpMenu);
 	}
 	
 	private void addEvents()
@@ -117,6 +116,24 @@ public class MainMenu extends JMenuBar
 					public void actionPerformed(ActionEvent e)
 					{
 						father.pushEvent(new EventExitProgram());
+					}
+				}
+			); 		
+		options.get("Pomoc/O programie...").addActionListener(
+				new ActionListener()
+				{ 
+					public void actionPerformed(ActionEvent e)
+					{
+						/*TODO Shouldn't that be info from model or controller?*/
+						JOptionPane.showMessageDialog(father.getFrame(),
+							    "Program Yaht Map Editor (YME)\n" +
+							    "Autor: Andrzej 'Yester' Fiedukowicz (fiedukow@gmail.com)\n" +
+							    "Politechnika Warszawska wydział Elektoroniki i Technik Informacyjnych\n" +
+							    "Zadanie projektowe ramach przedmiotu Programowanie Zdarzeniowe\n" +
+							    "Program umożliwia tworzenie mapy do gry Yaht, w postaci wektorowej\n",
+							    "O programie...",
+							    JOptionPane.INFORMATION_MESSAGE
+							    );
 					}
 				}
 			); 		

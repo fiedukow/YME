@@ -106,6 +106,11 @@ public class View {
         System.out.println("View created.");      
 	}
 	
+	public JFrame getFrame()
+	{
+		return mainFrame;
+	}
+	
 	public void showInfo( String toShow )
 	{
 		statusText.append(toShow);
