@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -137,6 +138,16 @@ public class MainMenu extends JMenuBar
 					}
 				}
 			); 		
+		/*TODO better? it's Italian but i don't need to write same code twice :D*/
+		options.get("Edycja/Cofnij").addActionListener( father.navigatePanel.undo.getActionListeners()[0]);
+		options.get("Edycja/Powtórz").addActionListener( father.navigatePanel.redo.getActionListeners()[0]);
+	}
+	
+	public void paintComponent( Graphics g )
+	{
+		options.get("Edycja/Cofnij").setEnabled(father.getState().isUndoNotEmpty());
+		options.get("Edycja/Powtórz").setEnabled(father.getState().isRedoNotEmpty());
+		super.paintComponent(g);
 	}
 }
 

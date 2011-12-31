@@ -172,7 +172,7 @@ public class Controller extends Thread
 			viewState.setFocus(FocusType.MAP);
 		} catch (Exception e) {
 			// TODO should be CommandStackEmptyException
-			view.showInfo("Nie ma juz operacji do cofniecia");
+			view.showInfo("Nie ma juz operacji do cofniecia\n");
 		}
 	}
 	
@@ -182,7 +182,7 @@ public class Controller extends Thread
 			model.getToolbox().redo();
 		} catch (Exception e) {
 			// TODO should be CommandStackEmptyException
-			view.showInfo("Nie ma juz operacji do ponownienia");
+			view.showInfo("Nie ma juz operacji do ponownienia\n");
 		}
 	}
 	
