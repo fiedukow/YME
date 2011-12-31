@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -11,6 +12,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
@@ -27,6 +29,7 @@ public class NavigatePanel extends JPanel
 {
 	JButton nextFocus, prevFocus, undo, redo;
 	JComboBox shapeList;
+	JProgressBar BQFill;
 	View father;
 	/*it shouldn't be here - it's most ugly thing i ever done :(*/
 	boolean consumeEvent;
@@ -40,6 +43,10 @@ public class NavigatePanel extends JPanel
 		prevFocus = new JButton("<");
 		undo = new JButton("< Cofnij");		
 		redo = new JButton("Ponow  >");
+		
+		BQFill = new JProgressBar(0, 128); //TODO no magic constans
+		BQFill.setValue(father.eventQueue.size());
+		new BQUpdater( BQFill, father );
 		
 		this.setBorder(new TitledBorder("Nawigacja"));
 		
@@ -122,6 +129,9 @@ public class NavigatePanel extends JPanel
 
 		this.add(undo);		
 		this.add(redo);		
+		
+		this.add(BQFill);
+		
 		this.setPreferredSize(new Dimension(250, 200));
 	}
 	
@@ -132,8 +142,8 @@ public class NavigatePanel extends JPanel
 	
 		shapeList.addItem(new FocusListElement("Cała mapa", FocusType.MAP, null ));
 		shapeList.addItem(new FocusListElement("Punkt startowy", FocusType.START_POINT, null));
-		consumeEvent = false;
-				
+		consumeEvent = false;	
+		
 		int i = 0;
 		for( MapShape sh : father.getState().getMap().getShapes())
 		{
@@ -159,6 +169,7 @@ public class NavigatePanel extends JPanel
 		redo.setEnabled( father.getState().isRedoNotEmpty() );
 		
 		super.paintComponent(g);
+		super.paintComponents(g);
 	}
 }
 
@@ -192,5 +203,43 @@ class FocusListElement
 	public String toString()
 	{
 		return label;
+	}
+}
+
+class BQUpdater extends Thread
+{
+	JProgressBar BQFill;
+	View father;
+	
+	public BQUpdater( JProgressBar BQFill, View father )
+	{
+		this.BQFill = BQFill;
+		this.father = father;
+		start();
+	}
+	public void run()
+	{
+		while( true )
+		{			
+			BQFill.setValue(father.eventQueue.size());
+			
+			if( (double)BQFill.getValue()/BQFill.getMaximum() < 0.5 )
+				BQFill.setForeground(Color.GREEN);
+			else if( (double)BQFill.getValue()/BQFill.getMaximum() < 0.7 )
+				BQFill.setForeground(Color.YELLOW);
+			else if( (double)BQFill.getValue()/BQFill.getMaximum() < 0.9 )
+				BQFill.setForeground(Color.ORANGE);
+			else if( (double)BQFill.getValue()/BQFill.getMaximum() < 1 )
+				BQFill.setForeground(Color.RED);
+			else 
+				BQFill.setForeground(Color.BLACK);
+			
+			BQFill.repaint();
+			try {
+				sleep(50);
+			} catch (InterruptedException e) {
+				/*noop*/
+			}
+		}
 	}
 }

@@ -50,6 +50,16 @@ public class View {
 	public View( ViewState state, BlockingQueue<Event> events )
 	{			
 		currentState = state;
+		eventQueue	 = events;
+		
+		statusBar 	 = new JPanel();
+		statusText = new JTextArea("Debug window:\n",5,100);		
+		statusText.setLineWrap(true);
+		JScrollPane statusTextScroll = new JScrollPane(statusText);
+		statusTextScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		statusBar.add( statusTextScroll );	
+		statusBar.setLayout(new GridLayout(1,1));
+		
 		mainFrame 	 = new JFrame("YME :: new map");
 		mapPanel  	 = new MapPanel( this );
 		toolbox  	 = new ToolPanel( this );
@@ -57,9 +67,7 @@ public class View {
 		menuBar		 = new MainMenu( this );
 				
 		leftMenu  	 = new JPanel();		
-		attributes 	 = new JPanel();
-		statusBar 	 = new JPanel();
-		eventQueue	 = events;
+		attributes 	 = new JPanel();				
 		questions 	 = new JPanel();
 		Container cp = mainFrame.getContentPane();
 		
@@ -69,12 +77,7 @@ public class View {
 		
 		
 		
-		statusText = new JTextArea("Debug window:\n",5,100);		
-		statusText.setLineWrap(true);
-		JScrollPane statusTextScroll = new JScrollPane(statusText);
-		statusTextScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		statusBar.add( statusTextScroll );	
-		statusBar.setLayout(new GridLayout(1,1));
+
 					
 		leftMenu.setLayout(new BorderLayout());
 		leftMenu.add(toolbox, BorderLayout.NORTH);

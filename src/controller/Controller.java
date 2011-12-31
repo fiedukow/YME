@@ -272,5 +272,10 @@ public class Controller extends Thread
 		if( viewState.getSelectedTool() != Tool.POLYGON )
 			viewState.getPolygonBuffer().reset();
 		view.setCurrentState( viewState );
+		try {
+			sleep(200);
+		} catch (InterruptedException e) {
+			System.err.println("Ktos mnie budzi:(");
+		}
 	}
 }
