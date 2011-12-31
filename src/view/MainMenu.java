@@ -12,6 +12,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 
+import controller.event.EventExitProgram;
 import controller.event.EventLoadMap;
 import controller.event.EventNewMap;
 import controller.event.EventSaveMap;
@@ -110,6 +111,15 @@ public class MainMenu extends JMenuBar
 					}
 				}
 			); 
+		options.get("Plik/Zamknij").addActionListener(
+				new ActionListener()
+				{ 
+					public void actionPerformed(ActionEvent e)
+					{
+						father.pushEvent(new EventExitProgram());
+					}
+				}
+			); 		
 	}
 }
 

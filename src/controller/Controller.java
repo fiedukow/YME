@@ -229,7 +229,7 @@ public class Controller extends Thread
 		model.newMap();
 		viewState = new ViewState( model.getEditorMap(), model.getToolbox() );
 		view.setCurrentState(viewState);	
-	}
+	}	
 	
 	private void doEvent( Event event )
 	{
@@ -261,6 +261,9 @@ public class Controller extends Thread
 				break;
 			case NEW_MAP:
 				doEvent( (EventNewMap) event );
+				break;
+			case EXIT_PROGRAM:
+				System.exit(0);
 				break;
 			default:
 				break;
