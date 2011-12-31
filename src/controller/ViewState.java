@@ -1,5 +1,8 @@
 package controller;
 
+import java.util.HashMap;
+import java.util.Vector;
+
 import model.EditorMap;
 import model.EditorToolbox;
 
@@ -11,7 +14,24 @@ public class ViewState
 	Integer focusId;
 	Tool selectedTool;		
 	PolygonBuffer polygonBuffer; //TODO it should have universal Shape OtherThings in here
+	static HashMap< FocusType, Vector<ViewQuestion> > typesQuestions;
 	
+	static
+	{
+		typesQuestions = new HashMap< FocusType, Vector<ViewQuestion> >();					
+		typesQuestions.put( FocusType.MAP, new Vector<ViewQuestion>());
+		typesQuestions.put( FocusType.START_POINT, new Vector<ViewQuestion>());
+		typesQuestions.put( FocusType.SHAPE, new Vector<ViewQuestion>());
+		
+		typesQuestions.get(FocusType.MAP).add(new ViewQuestion("Nazwa", QuestionType.STRING));
+		typesQuestions.get(FocusType.MAP).add(new ViewQuestion("Tekstura", QuestionType.FILE_CHOOSE));
+		
+		typesQuestions.get(FocusType.START_POINT).add(new ViewQuestion("Pozycja", QuestionType.TWICE_INT));
+		
+		typesQuestions.get(FocusType.SHAPE).add(new ViewQuestion("Tekstura", QuestionType.FILE_CHOOSE));
+		typesQuestions.get(FocusType.SHAPE).add(new ViewQuestion("Pozycja", QuestionType.TWICE_INT));
+		typesQuestions.get(FocusType.SHAPE).add(new ViewQuestion("Rozmiar", QuestionType.TWICE_INT));		
+	}
 	
 	public ViewState( EditorMap map, EditorToolbox box )
 	{
@@ -136,5 +156,10 @@ public class ViewState
 		return 25;
 	}
 
+	
+	public Vector<ViewQuestion> getQuestions()
+	{
+		return typesQuestions.get(focusType);
+	}
 	
 }

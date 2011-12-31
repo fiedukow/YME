@@ -1,5 +1,7 @@
 package model;
 import java.awt.Point;
+import java.awt.Point;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -106,7 +108,6 @@ public final class EditorMap
 	{
 		getShapes().remove( shape );
 	}
-
 }
 
 

@@ -92,6 +92,7 @@ public abstract class MapShape
 	abstract protected boolean isTypeAllowed( TypeOfMapObject type );
 	
 	abstract public Shape getShapeObject();
+	
 }
 
 
@@ -249,7 +250,6 @@ final class MapPolygon extends MapShape
 	protected boolean isTypeAllowed( TypeOfMapObject type ){
 		return allowedTypes.contains( type );
 	}
-
 }
 
 

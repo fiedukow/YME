@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ConcurrentModificationException;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -58,11 +59,19 @@ public class MapPanel extends JPanel
 
         int i = 0;
         
-        for( MapShape shape : getState().getMap().getShapes() )
-        {        
-        	drawShape(shape, g2, getState().getFocusType() == FocusType.SHAPE && getState().getFocusId() == i);
-        	++i;
-        }       
+        try{
+        	for( MapShape shape : getState().getMap().getShapes() )
+        	{        
+        		drawShape(shape, g2, getState().getFocusType() == FocusType.SHAPE && getState().getFocusId() == i);
+        		++i;
+        	}   
+        }
+        catch ( ConcurrentModificationException e )
+        {
+        	/*TODO shouldn't i implement cloneable and give view the copy of map instead of model object*/
+        	this.repaint();
+        	return;
+        }
         
         drawStartPoint( g2 );
         drawBufferedPolygon( g2 );

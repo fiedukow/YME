@@ -32,7 +32,7 @@ public class Controller extends Thread
 	Model model;
 	View view;
 	ViewState viewState;
-	BlockingQueue<Event> events;
+	BlockingQueue<Event> events;	
 	
 	public Controller ( Model model, View view, BlockingQueue<Event> events)
 	{
@@ -273,10 +273,10 @@ public class Controller extends Thread
 			viewState.getPolygonBuffer().reset();
 		view.setCurrentState( viewState );
 		/*TODO This is sleep only for testing proposes, delete it in release version*/
-		try {
-			sleep(200);
+		/*try {
+			sleep(500);
 		} catch (InterruptedException e) {
 			System.err.println("Ktos mnie budzi:(");
-		}
+		}*/
 	}
 }
