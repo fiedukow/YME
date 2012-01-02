@@ -1,4 +1,4 @@
-package controller;
+package controller.question;
 
 public class ViewQuestion 
 {
