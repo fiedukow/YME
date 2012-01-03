@@ -4,6 +4,8 @@ public class ViewQuestion
 {
 	QuestionType type;
 	String name;
+	
+	
 	public ViewQuestion( String name, QuestionType type )
 	{
 		this.type = type;

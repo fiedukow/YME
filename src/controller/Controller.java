@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import java.util.HashMap;
+import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 
 import controller.event.Event;
@@ -16,6 +18,10 @@ import controller.event.EventRedo;
 import controller.event.EventSaveMap;
 import controller.event.EventToolSelect;
 import controller.event.EventUndo;
+import controller.question.DoubleIntValueQuestion;
+import controller.question.QuestionType;
+import controller.question.StringValueQuestion;
+import controller.question.ViewQuestion;
 
 import model.MapShape;
 import model.Model;
@@ -33,6 +39,27 @@ public class Controller extends Thread
 	View view;
 	ViewState viewState;
 	BlockingQueue<Event> events;	
+	/*
+	static HashMap< FocusType, Vector<ViewQuestion> > typesQuestions;
+	
+	static
+	{
+		typesQuestions = new HashMap< FocusType, Vector<ViewQuestion> >();					
+		typesQuestions.put( FocusType.MAP, new Vector<ViewQuestion>());
+		typesQuestions.put( FocusType.START_POINT, new Vector<ViewQuestion>());
+		typesQuestions.put( FocusType.SHAPE, new Vector<ViewQuestion>());
+		
+		typesQuestions.get(FocusType.MAP).add(new ViewQuestion("Nazwa", QuestionType.STRING));
+		typesQuestions.get(FocusType.MAP).add(new ViewQuestion("Tekstura", QuestionType.FILE_CHOOSE));
+		
+		typesQuestions.get(FocusType.START_POINT).add(new ViewQuestion("Pozycja", QuestionType.TWICE_INT));
+		
+		typesQuestions.get(FocusType.SHAPE).add(new ViewQuestion("Tekstura", QuestionType.FILE_CHOOSE));
+		typesQuestions.get(FocusType.SHAPE).add(new ViewQuestion("Pozycja", QuestionType.TWICE_INT));
+		typesQuestions.get(FocusType.SHAPE).add(new ViewQuestion("Rozmiar", QuestionType.TWICE_INT));		
+	}
+	*/
+
 	
 	public Controller ( Model model, View view, BlockingQueue<Event> events)
 	{
@@ -40,21 +67,6 @@ public class Controller extends Thread
 		this.view = view;
 		this.events = events;
 		System.out.println("Controller created!");
-		/*try {
-			model.loadMap("maps/sample.xml");
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try 
-		{
-			model.saveMap("maps/sample1.xml");
-		} 
-		catch (IOException e) 
-		{
-			System.err.println("Nie udalo sie zapisac mapy!");
-		}
-		*/
 		viewState = new ViewState(model.getEditorMap(), model.getToolbox());
 		view.setCurrentState( viewState );
 		start();
@@ -75,10 +87,12 @@ public class Controller extends Thread
 				view.showInfo("Kontroler umarl :-(");
 				return;
 			}
-			//view.showInfo("Event handled\n");
 		}
 	}
 	
+	
+	//TODO, all doEvent to Events classes
+	//TODO, default texture & size should be given by model, not by controller
 	private void doEvent( EventPointAccept event )
 	{
 		if( viewState.getSelectedTool() == Tool.POLYGON )
@@ -99,6 +113,33 @@ public class Controller extends Thread
 				viewState.getMap().getShapes().size()-1
 				);
 		viewState.setSelectedTool(Tool.SELECTOR);
+	}
+	
+	Vector<ViewQuestion> generateQuestionsForCurrentFocus()
+	{
+		Vector<ViewQuestion> questions = new Vector<ViewQuestion>();
+		switch( viewState.getFocusType() )
+		{
+			case MAP:
+				questions.add( new StringValueQuestion("mapName",QuestionType.STRING, this.model.getEditorMap().getMapName() ) );
+				questions.add( new StringValueQuestion("texture",QuestionType.STRING, this.model.getEditorMap().getWaterTexture() ) );				
+				break;
+			case START_POINT:
+				int x = (int) this.model.getEditorMap().getStartPoint().getX();
+				int y = (int) this.model.getEditorMap().getStartPoint().getY();				
+				questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, x,y ) );							
+				break;				
+			case SHAPE:
+				int pos[] = this.model.getEditorMap().getShapes().get(viewState.getFocusId()).getPosition();
+				int siz[] = this.model.getEditorMap().getShapes().get(viewState.getFocusId()).getSize();				
+				questions.add( new StringValueQuestion("texture",QuestionType.STRING, this.model.getEditorMap().getWaterTexture() ) );
+				questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, pos[0], pos[1] ) );
+				questions.add( new DoubleIntValueQuestion("size",QuestionType.TWICE_INT, siz[0], siz[1] ) );
+				break;
+			default:
+				break;
+		}		
+		return questions;
 	}
 	
 	private void doEvent( EventPointSelect event )
@@ -154,7 +195,7 @@ public class Controller extends Thread
 				++i;
 			}
 			if( !focusFound ) viewState.setFocus(FocusType.MAP);			
-			
+			/*TODO, do internal focus change event to avoid copy of the code*/
 			return;
 		}
 	}
@@ -197,7 +238,7 @@ public class Controller extends Thread
 		
 		}
 		viewState.setFocus(event.getFocusType(), event.getFocusId());
-		
+				
 	}
 	
 	private void doEvent( EventLoadMap event )
@@ -271,6 +312,8 @@ public class Controller extends Thread
 		//TODO italian solution?
 		if( viewState.getSelectedTool() != Tool.POLYGON )
 			viewState.getPolygonBuffer().reset();
+		
+		viewState.setQuestion(generateQuestionsForCurrentFocus());
 		view.setCurrentState( viewState );
 		/*TODO This is sleep only for testing proposes, delete it in release version*/
 		/*try {

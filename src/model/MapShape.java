@@ -1,5 +1,6 @@
 package model;
 
+import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -83,6 +84,18 @@ public abstract class MapShape
 	 * @param y - target Y coordinate
 	 */
 	abstract /*package*/ void move(int x, int y);
+	
+	/**
+	 * Give someone current bound size
+	 * @return int[2] - width, height
+	 */
+	abstract public int[] getSize();
+	
+	/**
+	 * Give someone current bound position of this shape
+	 * @return int[2] - x,y position
+	 */
+	abstract public int[] getPosition();
 	
 	/**
 	 * Check if given TypeOfMapObject is allowed for this particular MapShape
@@ -232,6 +245,21 @@ final class MapPolygon extends MapShape
 			poly.ypoints[i] += ymove;
 	}
 		
+	
+	//TODO, javadoc
+	public int[] getSize()
+	{
+		int[] size = { (int) getShapeObject().getBounds().getWidth(), (int) getShapeObject().getBounds().getHeight() };
+		return size;
+	}
+	
+	//TODO, javadoc
+	public int[] getPosition()
+	{
+		int[] position = { (int) getShapeObject().getBounds().getX(), (int) getShapeObject().getBounds().getY() };
+		return position;
+	}
+	
 	/**
 	 * @return Self shape object in proper type
 	 */
@@ -328,6 +356,21 @@ final class MapRectangle extends MapShape
 	/*package*/ void move( int x, int y )
 	{
 		getShapeObject().setLocation(x, y);
+	}
+
+	
+	//TODO, javadoc
+	public int[] getSize()
+	{
+		int[] size = { getW(), getH() };
+		return size;
+	}
+	
+	//TODO, javadoc
+	public int[] getPosition()
+	{
+		int[] position = { getX(), getY() };
+		return position;
 	}
 	
 	/**
@@ -488,6 +531,20 @@ final class MapEllipse extends MapShape
 		getShapeObject().setFrame(x, y, getW(), getH());
 	}
 	
+	
+	//TODO, javadoc
+	public int[] getSize()
+	{
+		int[] size = { getW(), getH() };
+		return size;
+	}
+	
+	//TODO, javadoc
+	public int[] getPosition()
+	{
+		int[] position = { getX(), getY() };
+		return position;
+	}	
 	
 	/**
 	 * Shape (java.awt.geom.Ellipse2D.Double) getX accessor

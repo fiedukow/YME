@@ -28,6 +28,7 @@ import javax.swing.border.TitledBorder;
 import controller.Tool;
 import controller.ViewState;
 import controller.event.Event;
+import controller.question.ViewQuestion;
 
 import model.EditorMap;
 
@@ -47,6 +48,8 @@ public class View {
 	JPanel statusBar;
 	JTextArea statusText;
 	JComboBox objectSelected;
+	
+	
 	public View( ViewState state, BlockingQueue<Event> events )
 	{			
 		currentState = state;
@@ -126,6 +129,9 @@ public class View {
 		mapPanel.repaint( );		
 		toolbox.repaint( );
 		navigatePanel.repaint( );
+		if( getState().getQuestion() != null )
+			for( ViewQuestion pytanie :  getState().getQuestion() )
+				showInfo( pytanie.getName()+"\n" );
 	}
 	
 	public void pushEvent( Event event )

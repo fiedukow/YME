@@ -3,6 +3,9 @@ package controller;
 import java.util.HashMap;
 import java.util.Vector;
 
+import controller.question.QuestionType;
+import controller.question.ViewQuestion;
+
 import model.EditorMap;
 import model.EditorToolbox;
 
@@ -14,25 +17,8 @@ public class ViewState
 	Integer focusId;
 	Tool selectedTool;		
 	PolygonBuffer polygonBuffer; //TODO it should have universal Shape OtherThings in here
-	static HashMap< FocusType, Vector<ViewQuestion> > typesQuestions;
-	
-	static
-	{
-		typesQuestions = new HashMap< FocusType, Vector<ViewQuestion> >();					
-		typesQuestions.put( FocusType.MAP, new Vector<ViewQuestion>());
-		typesQuestions.put( FocusType.START_POINT, new Vector<ViewQuestion>());
-		typesQuestions.put( FocusType.SHAPE, new Vector<ViewQuestion>());
-		
-		typesQuestions.get(FocusType.MAP).add(new ViewQuestion("Nazwa", QuestionType.STRING));
-		typesQuestions.get(FocusType.MAP).add(new ViewQuestion("Tekstura", QuestionType.FILE_CHOOSE));
-		
-		typesQuestions.get(FocusType.START_POINT).add(new ViewQuestion("Pozycja", QuestionType.TWICE_INT));
-		
-		typesQuestions.get(FocusType.SHAPE).add(new ViewQuestion("Tekstura", QuestionType.FILE_CHOOSE));
-		typesQuestions.get(FocusType.SHAPE).add(new ViewQuestion("Pozycja", QuestionType.TWICE_INT));
-		typesQuestions.get(FocusType.SHAPE).add(new ViewQuestion("Rozmiar", QuestionType.TWICE_INT));		
-	}
-	
+	Vector<ViewQuestion> question;
+			
 	public ViewState( EditorMap map, EditorToolbox box )
 	{
 		this.map = map;
@@ -41,6 +27,20 @@ public class ViewState
 		selectedTool = Tool.SELECTOR;
 		polygonBuffer = new PolygonBuffer();
 		focusId = null;		
+	}
+
+	/**
+	 * @return the question
+	 */
+	public Vector<ViewQuestion> getQuestion() {
+		return question;
+	}
+
+	/**
+	 * @param question the question to set
+	 */
+	/*package*/ void setQuestion(Vector<ViewQuestion> question) {
+		this.question = question;
 	}
 
 	/**
@@ -157,9 +157,10 @@ public class ViewState
 	}
 
 	
-	public Vector<ViewQuestion> getQuestions()
+/*	public Vector<ViewQuestion> getQuestions()
 	{
 		return typesQuestions.get(focusType);
 	}
+*/
 	
 }
