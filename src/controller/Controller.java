@@ -34,6 +34,7 @@ import model.doDrawRectangle;
 import model.doMoveShape;
 import model.doResizeShape;
 import model.doSetStartPoint;
+import model.doChangeShapeTexture;
 import view.View;
 
 /*Controller in MVC meaning*/
@@ -43,28 +44,7 @@ public class Controller extends Thread
 	View view;
 	ViewState viewState;
 	BlockingQueue< Event > events;	
-	/*
-	static HashMap< FocusType, Vector<ViewQuestion> > typesQuestions;
-	
-	static
-	{
-		typesQuestions = new HashMap< FocusType, Vector<ViewQuestion> >();					
-		typesQuestions.put( FocusType.MAP, new Vector<ViewQuestion>());
-		typesQuestions.put( FocusType.START_POINT, new Vector<ViewQuestion>());
-		typesQuestions.put( FocusType.SHAPE, new Vector<ViewQuestion>());
-		
-		typesQuestions.get(FocusType.MAP).add(new ViewQuestion("Nazwa", QuestionType.STRING));
-		typesQuestions.get(FocusType.MAP).add(new ViewQuestion("Tekstura", QuestionType.FILE_CHOOSE));
-		
-		typesQuestions.get(FocusType.START_POINT).add(new ViewQuestion("Pozycja", QuestionType.TWICE_INT));
-		
-		typesQuestions.get(FocusType.SHAPE).add(new ViewQuestion("Tekstura", QuestionType.FILE_CHOOSE));
-		typesQuestions.get(FocusType.SHAPE).add(new ViewQuestion("Pozycja", QuestionType.TWICE_INT));
-		typesQuestions.get(FocusType.SHAPE).add(new ViewQuestion("Rozmiar", QuestionType.TWICE_INT));		
-	}
-	*/
 
-	
 	public Controller ( Model model, View view, BlockingQueue<Event> events)
 	{
 		this.model = model;
@@ -315,7 +295,12 @@ public class Controller extends Thread
 					int size[] = ((DoubleIntValueQuestion) answer).getValue();
 					this.model.getToolbox().doCommand( new doResizeShape( size[0], size[1], viewState.getFocusId() ) );
 				}
-				break;
+				else if( answer.getName() == "texture" )
+				{
+					String newTexture = ((StringValueQuestion) answer).getValue();
+					this.model.getToolbox().doCommand( new doChangeShapeTexture( newTexture, viewState.getFocusId() ) );
+				}
+				break;			
 			default:
 				break;
 		}				

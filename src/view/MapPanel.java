@@ -157,9 +157,9 @@ public class MapPanel extends JPanel
             img = TextureCache.getInstance().get( fileName );
         }
         catch(IOException e)
-        {
-        	
+        {        
             System.err.println("Blad odczytu tekstury "+fileName);
+            g2.setPaint(Color.RED);
             return;
         }
         if( img == null ) return;

@@ -155,6 +155,8 @@ class doChangeWaterTexutre implements Command
 	}	
 }
 
+
+
 class doChangeTypeOfMapObject implements Command
 {
 	public void invoke( EditorMap map ) throws CommandInvokeException
