@@ -22,7 +22,7 @@ public class AttributePanel extends JPanel
 	public void paintComponent(Graphics g)
 	{
 		currentLabels = new Vector<AttributesLabel>(); 
-		for( ViewQuestion q : father.getState().getQuestion() )
+		for( ViewQuestion q : father.getState().getQuestions() )
 		{
 			currentLabels.add(produceLabel(q));
 		}		

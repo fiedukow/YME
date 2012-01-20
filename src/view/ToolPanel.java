@@ -30,12 +30,14 @@ public class ToolPanel extends JPanel
 		buttons = new LinkedHashMap<Tool, ToolButton>();
 		this.father = father;
 		
-		buttons.put(Tool.SELECTOR, new ToolButton("Wybierz obiekt na mapie", "icons/arrow.png", Tool.SELECTOR, father));
-		buttons.put(Tool.STARTPOINT, new ToolButton("Rysuj punkt startowy lodzi", "icons/compass.png", Tool.STARTPOINT, father));
-		buttons.put(Tool.POLYGON, new ToolButton("Rysuj dowolny poligon", "icons/polygon.png", Tool.POLYGON, father));
-		buttons.put(Tool.RECTANGLE, new ToolButton("Rysuj prostokat", "icons/rectangle.png", Tool.RECTANGLE, father));
-		buttons.put(Tool.ELLIPSE, new ToolButton("Rysuj elipse", "icons/ellipse.png", Tool.ELLIPSE, father));
-		buttons.put(Tool.QUEY, new ToolButton("Rysuj keje", "icons/quey.png", Tool.QUEY, father));
+		{
+			buttons.put(Tool.SELECTOR, new ToolButton("Wybierz obiekt na mapie", "icons/arrow.png", Tool.SELECTOR, father));
+			buttons.put(Tool.STARTPOINT, new ToolButton("Rysuj punkt startowy lodzi", "icons/compass.png", Tool.STARTPOINT, father));
+			buttons.put(Tool.POLYGON, new ToolButton("Rysuj dowolny poligon", "icons/polygon.png", Tool.POLYGON, father));
+			buttons.put(Tool.RECTANGLE, new ToolButton("Rysuj prostokat", "icons/rectangle.png", Tool.RECTANGLE, father));
+			buttons.put(Tool.ELLIPSE, new ToolButton("Rysuj elipse", "icons/ellipse.png", Tool.ELLIPSE, father));
+			buttons.put(Tool.QUEY, new ToolButton("Rysuj keje", "icons/quey.png", Tool.QUEY, father));
+		}
 		
 		for( ToolButton tb : buttons.values() )
 		{

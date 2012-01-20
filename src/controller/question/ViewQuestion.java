@@ -1,15 +1,14 @@
 package controller.question;
 
-public class ViewQuestion 
+abstract public class ViewQuestion 
 {
 	QuestionType type;
 	String name;
-	
-	
+		
 	public ViewQuestion( String name, QuestionType type )
 	{
 		this.type = type;
-		this.name = name;	
+		this.name = name;
 	}
 	
 	/**
@@ -25,3 +24,5 @@ public class ViewQuestion
 		return name;
 	}	
 }
+
+

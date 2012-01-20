@@ -3,9 +3,11 @@ package controller.question;
 public class StringValueQuestion extends ViewQuestion 
 {
 	String value;
-	public StringValueQuestion( String name, QuestionType type, String value )
+	public StringValueQuestion( String name, QuestionType type, String value ) throws WrongQuestionTypeException
 	{
 		super(name,type);
+		
+		if( type != QuestionType.STRING ) throw new WrongQuestionTypeException();
 		this.value = value;
 	}
 	
@@ -13,5 +15,10 @@ public class StringValueQuestion extends ViewQuestion
 	{
 		super(name,type);
 		this.value = ""; 
+	}
+	
+	public String getValue()
+	{
+		return this.value;
 	}
 }

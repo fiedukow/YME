@@ -53,5 +53,4 @@ public final class Model
 	{
 		return map;
 	}
-	/*FIXME - i need some interface ;( */
 }

@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.Shape;
 import java.awt.TexturePaint;
 import java.awt.event.MouseAdapter;
@@ -52,6 +53,7 @@ public class MapPanel extends JPanel
 	{
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         int w = this.getWidth();     
         int h = this.getHeight();    
         setTexturePaint("textures/"+getState().getMap().getWaterTexture(), g2); //FIXME myGraphics2D        

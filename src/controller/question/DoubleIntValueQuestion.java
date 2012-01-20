@@ -3,9 +3,11 @@ package controller.question;
 public class DoubleIntValueQuestion extends ViewQuestion 
 {
 	int first, second;
-	public DoubleIntValueQuestion( String name, QuestionType type, int first, int second )
+	public DoubleIntValueQuestion( String name, QuestionType type, int first, int second ) throws WrongQuestionTypeException
 	{
 		super(name,type);
+		
+		if( type != QuestionType.TWICE_INT ) throw new WrongQuestionTypeException();
 		this.first = first;
 		this.second = second;
 	}
@@ -16,7 +18,7 @@ public class DoubleIntValueQuestion extends ViewQuestion
 	}
 	public int[] getValue()
 	{
-		int[] result = {first,second};
+		int[] result = { first, second };
 		return result;
 	}
 }

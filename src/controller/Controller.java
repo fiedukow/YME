@@ -14,6 +14,7 @@ import controller.event.EventLoadMap;
 import controller.event.EventNewMap;
 import controller.event.EventPointAccept;
 import controller.event.EventPointSelect;
+import controller.event.EventQuestionAnswered;
 import controller.event.EventRedo;
 import controller.event.EventSaveMap;
 import controller.event.EventToolSelect;
@@ -22,6 +23,7 @@ import controller.question.DoubleIntValueQuestion;
 import controller.question.QuestionType;
 import controller.question.StringValueQuestion;
 import controller.question.ViewQuestion;
+import controller.question.WrongQuestionTypeException;
 
 import model.MapShape;
 import model.Model;
@@ -29,6 +31,8 @@ import model.TypeOfMapObject;
 import model.doDrawEllipse;
 import model.doDrawPolygon;
 import model.doDrawRectangle;
+import model.doMoveShape;
+import model.doResizeShape;
 import model.doSetStartPoint;
 import view.View;
 
@@ -38,7 +42,7 @@ public class Controller extends Thread
 	Model model;
 	View view;
 	ViewState viewState;
-	BlockingQueue<Event> events;	
+	BlockingQueue< Event > events;	
 	/*
 	static HashMap< FocusType, Vector<ViewQuestion> > typesQuestions;
 	
@@ -97,7 +101,10 @@ public class Controller extends Thread
 	{
 		if( viewState.getSelectedTool() == Tool.POLYGON )
 			try {
-				model.getToolbox().doCommand( new doDrawPolygon("brick.jpg", viewState.getPolygonBuffer().getPolygonVerticles(), null) );
+				model.getToolbox().doCommand
+						( 
+								new doDrawPolygon("brick.jpg", viewState.getPolygonBuffer().getPolygonVerticles(), null) 
+						);
 				viewState.getPolygonBuffer().reset();			
 				doAfterDraw();
 			} catch (ToFewVerticlesException e) {
@@ -109,7 +116,7 @@ public class Controller extends Thread
 	void doAfterDraw()
 	{
 		viewState.setFocus( 
-				viewState.getSelectedTool()==Tool.STARTPOINT ? FocusType.START_POINT : FocusType.SHAPE, 
+				viewState.getSelectedTool() == Tool.STARTPOINT ? FocusType.START_POINT : FocusType.SHAPE, 
 				viewState.getMap().getShapes().size()-1
 				);
 		viewState.setSelectedTool(Tool.SELECTOR);
@@ -118,27 +125,35 @@ public class Controller extends Thread
 	Vector<ViewQuestion> generateQuestionsForCurrentFocus()
 	{
 		Vector<ViewQuestion> questions = new Vector<ViewQuestion>();
-		switch( viewState.getFocusType() )
-		{
-			case MAP:
-				questions.add( new StringValueQuestion("mapName",QuestionType.STRING, this.model.getEditorMap().getMapName() ) );
-				questions.add( new StringValueQuestion("texture",QuestionType.STRING, this.model.getEditorMap().getWaterTexture() ) );				
-				break;
-			case START_POINT:
-				int x = (int) this.model.getEditorMap().getStartPoint().getX();
-				int y = (int) this.model.getEditorMap().getStartPoint().getY();				
-				questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, x,y ) );							
-				break;				
-			case SHAPE:
-				int pos[] = this.model.getEditorMap().getShapes().get(viewState.getFocusId()).getPosition();
-				int siz[] = this.model.getEditorMap().getShapes().get(viewState.getFocusId()).getSize();				
-				questions.add( new StringValueQuestion("texture",QuestionType.STRING, this.model.getEditorMap().getWaterTexture() ) );
-				questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, pos[0], pos[1] ) );
-				questions.add( new DoubleIntValueQuestion("size",QuestionType.TWICE_INT, siz[0], siz[1] ) );
-				break;
-			default:
-				break;
-		}		
+		
+		try{			
+			switch( viewState.getFocusType() )
+			{
+				case MAP:
+					questions.add( new StringValueQuestion("mapName",QuestionType.STRING, this.model.getEditorMap().getMapName() ) );
+					questions.add( new StringValueQuestion("texture",QuestionType.STRING, this.model.getEditorMap().getWaterTexture() ) );				
+					break;
+				case START_POINT:
+					int x = (int) this.model.getEditorMap().getStartPoint().getX();
+					int y = (int) this.model.getEditorMap().getStartPoint().getY();				
+					questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, x,y ) );							
+					break;				
+				case SHAPE:
+					int pos[] = this.model.getEditorMap().getShapes().get(viewState.getFocusId()).getPosition();
+					int siz[] = this.model.getEditorMap().getShapes().get(viewState.getFocusId()).getSize();				
+					questions.add( new StringValueQuestion("texture",QuestionType.STRING, this.model.getEditorMap().getWaterTexture() ) );
+					questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, pos[0], pos[1] ) );
+					questions.add( new DoubleIntValueQuestion("size",QuestionType.TWICE_INT, siz[0], siz[1] ) );
+					break;
+				default:
+					break;
+			}		
+		}
+		catch( WrongQuestionTypeException e )
+		{			
+			System.err.println("Niemozliwy wyjatek w kontrolerze, wymagana rewizja kodu.");
+			e.printStackTrace(); /*impossible statement*/
+		}
 		return questions;
 	}
 	
@@ -152,14 +167,15 @@ public class Controller extends Thread
 			viewState.getPolygonBuffer().addPoint( new Point(x, y) );
 		else if( ! (viewState.getSelectedTool() == Tool.SELECTOR) )			
 		{
+			//TODO, switch here
 			if( viewState.getSelectedTool() == Tool.RECTANGLE )
-				model.getToolbox().doCommand(new doDrawRectangle("wood.jpg", x,y,40,40,null));			
+				model.getToolbox().doCommand( new doDrawRectangle( "wood.jpg", x, y, 40, 40, null ) );			
 			if( viewState.getSelectedTool() == Tool.ELLIPSE )
-				model.getToolbox().doCommand(new doDrawEllipse("red.jpg", x,y,40,40,null));		
+				model.getToolbox().doCommand( new doDrawEllipse( "red.jpg", x, y, 40, 40, null ) );		
 			if( viewState.getSelectedTool() == Tool.QUEY )
-				model.getToolbox().doCommand(new doDrawRectangle("metal.jpg", x,y,200,30,TypeOfMapObject.QUAY));						
+				model.getToolbox().doCommand( new doDrawRectangle( "metal.jpg", x, y, 200, 30, TypeOfMapObject.QUAY ) );						
 			if( viewState.getSelectedTool() == Tool.STARTPOINT )
-				model.getToolbox().doCommand(new doSetStartPoint(x,y));
+				model.getToolbox().doCommand( new doSetStartPoint(x,y) );
 
 			doAfterDraw();
 			return;
@@ -270,7 +286,40 @@ public class Controller extends Thread
 		model.newMap();
 		viewState = new ViewState( model.getEditorMap(), model.getToolbox() );
 		view.setCurrentState(viewState);	
+	}
+	
+	private void doEvent( EventQuestionAnswered event )
+	{
+		view.showInfo("Dostalem odpowiedz na pytanie.\n");
+		ViewQuestion answer = event.getQuestion();			
+		switch( viewState.getFocusType() )
+		{
+			case MAP:
+				break;
+			case START_POINT:
+				if( answer.getName() == "position" )
+				{
+					int pos[] = ((DoubleIntValueQuestion) answer).getValue();
+					this.model.getToolbox().doCommand( new doSetStartPoint( pos[0], pos[1] ) );
+				}
+				break;				
+			case SHAPE:					
+				if( answer.getName() == "position" )
+				{
+					int pos[] = ((DoubleIntValueQuestion) answer).getValue();
+					this.model.getToolbox().doCommand( new doMoveShape( pos[0], pos[1], viewState.getFocusId() ) );
+				}
+				else if( answer.getName() == "size" )
+				{
+					int size[] = ((DoubleIntValueQuestion) answer).getValue();
+					this.model.getToolbox().doCommand( new doResizeShape( size[0], size[1], viewState.getFocusId() ) );
+				}
+				break;
+			default:
+				break;
+		}				
 	}	
+	
 	
 	private void doEvent( Event event )
 	{
@@ -303,6 +352,9 @@ public class Controller extends Thread
 			case NEW_MAP:
 				doEvent( (EventNewMap) event );
 				break;
+			case QUESTION_ANSWERED:
+				doEvent( (EventQuestionAnswered) event );
+				break;
 			case EXIT_PROGRAM:
 				System.exit(0);
 				break;
@@ -313,7 +365,7 @@ public class Controller extends Thread
 		if( viewState.getSelectedTool() != Tool.POLYGON )
 			viewState.getPolygonBuffer().reset();
 		
-		viewState.setQuestion(generateQuestionsForCurrentFocus());
+		viewState.setQuestion( generateQuestionsForCurrentFocus() );
 		view.setCurrentState( viewState );
 		/*TODO This is sleep only for testing proposes, delete it in release version*/
 		/*try {

@@ -1,6 +1,5 @@
 package model;
 
-import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -219,12 +218,19 @@ final class MapPolygon extends MapShape
 	{
 		Polygon poly = getShapeObject();
 		Rectangle bound = poly.getBounds();
-		double widthFactor = w/bound.getWidth();
+		int boundX = (int) bound.getX();
+		int boundY = (int) bound.getY();
+		double widthFactor = w/bound.getWidth();		
 		double heightFactor = h/bound.getHeight();
 		for( int i = 0; i < poly.xpoints.length; ++i )
-			poly.xpoints[i] *= widthFactor;
+		{
+			poly.xpoints[i] = (int) (boundX + widthFactor*(poly.xpoints[i]-boundX));
+		}
 		for( int i = 0; i < poly.ypoints.length; ++i )
-			poly.ypoints[i] *= heightFactor;
+		{
+			poly.ypoints[i] = (int) (boundY + heightFactor*(poly.ypoints[i]-boundY));
+		}
+		poly.invalidate();
 	}
 	
 	/**
@@ -243,6 +249,7 @@ final class MapPolygon extends MapShape
 			poly.xpoints[i] += xmove;
 		for( int i = 0; i < poly.ypoints.length; ++i )
 			poly.ypoints[i] += ymove;
+		poly.invalidate();
 	}
 		
 	

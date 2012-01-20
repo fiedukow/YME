@@ -17,9 +17,9 @@ public class ViewState
 	Integer focusId;
 	Tool selectedTool;		
 	PolygonBuffer polygonBuffer; //TODO it should have universal Shape OtherThings in here
-	Vector<ViewQuestion> question;
-			
-	public ViewState( EditorMap map, EditorToolbox box )
+	Vector<ViewQuestion> questions;
+				
+	public ViewState( EditorMap map, EditorToolbox box)
 	{
 		this.map = map;
 		this.box = box;
@@ -27,20 +27,21 @@ public class ViewState
 		selectedTool = Tool.SELECTOR;
 		polygonBuffer = new PolygonBuffer();
 		focusId = null;		
+		questions = new Vector<ViewQuestion>();
 	}
 
 	/**
 	 * @return the question
 	 */
-	public Vector<ViewQuestion> getQuestion() {
-		return question;
+	public Vector<ViewQuestion> getQuestions() {
+		return questions;
 	}
 
 	/**
 	 * @param question the question to set
 	 */
 	/*package*/ void setQuestion(Vector<ViewQuestion> question) {
-		this.question = question;
+		this.questions = question;
 	}
 
 	/**

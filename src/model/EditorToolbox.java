@@ -1,17 +1,15 @@
 package model;
 import java.util.Stack;
-import java.util.Vector;
-import java.awt.Point;
-import java.awt.Rectangle;
 
 /**
  * Main class used to change EditorMap state.
  * @author fiedukow
  */
-public final class EditorToolbox {	
-	private Stack<Command> undo; /*Stack of commands invoked - user for "undo" operation*/
-	private Stack<Command> redo; /*Stack used for "redo" operation*/
-	private EditorMap map;
+public final class EditorToolbox 
+{	
+	final private Stack<Command> undo; /*Stack of commands invoked - user for "undo" operation*/
+	final private Stack<Command> redo; /*Stack used for "redo" operation*/
+	final private EditorMap map;
 	
 	public EditorToolbox( EditorMap map )
 	{
@@ -26,9 +24,12 @@ public final class EditorToolbox {
 	 */
 	public void doCommand( Command cmd ) 
 	{
-		try {
+		try 
+		{
 			cmd.invoke( map );
-		} catch (CommandInvokeException e) {
+		} 
+		catch (CommandInvokeException e) 
+		{
 			System.err.println("Nie udalo sie wykonac komendy");
 			return;
 		}
@@ -49,7 +50,9 @@ public final class EditorToolbox {
 			cmd  = undo.pop();
 			try {
 				cmd.undo( map );				
-			} catch (CommandUndoException e) {
+			}
+			catch (CommandUndoException e) 
+			{
 				System.err.println("Nie udalo sie wycofać komendy");
 				undo.push(cmd); /* put it back where it was */
 				return;
@@ -79,9 +82,12 @@ public final class EditorToolbox {
 		for(int i = 0; i < howMany; ++i )
 		{
 			cmd  = redo.pop();
-			try {
+			try 
+			{
 				cmd.invoke( map );
-			} catch (CommandInvokeException e) {
+			} 
+			catch (CommandInvokeException e) 
+			{
 				System.err.println("Nie udalo sie wykonac ponownie komendy");
 				redo.push(cmd); /* put it back where it was */
 				return;
@@ -124,30 +130,6 @@ interface Command
 	abstract void undo( EditorMap map ) throws CommandUndoException;
 }
 
-
-class doResizeShape implements Command
-{
-	public void invoke( EditorMap map ) throws CommandInvokeException
-	{
-		/*FIXME*/
-	}
-	public void undo( EditorMap map ) throws CommandUndoException
-	{
-		/*FIXME*/
-	}	
-}
-
-class doMoveShape implements Command
-{
-	public void invoke( EditorMap map ) throws CommandInvokeException
-	{
-		/*FIXME*/
-	}
-	public void undo( EditorMap map ) throws CommandUndoException
-	{
-		/*FIXME*/
-	}	
-}
 
 class doChangeMapName implements Command
 {
@@ -202,6 +184,7 @@ class doRemoveShape implements Command
 
 
 /*
+ * 
  *
  * 		EXCEPTION CLASSES BELOW
  * 

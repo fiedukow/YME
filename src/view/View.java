@@ -32,83 +32,100 @@ import controller.question.ViewQuestion;
 
 import model.EditorMap;
 
+/**
+ * 
+ * 
+ * @author fiedukow
+ *
+ */
 public class View {
 	ViewState currentState;
 	BlockingQueue<Event> eventQueue;
+	
 	JFrame mainFrame;
+	JPanel leftMenu;	
 	MapPanel mapPanel;
 	ToolPanel toolbox;
 	NavigatePanel navigatePanel;
 	MainMenu menuBar;
-	JPanel leftMenu;	
-	
-	JPanel attributes;
-	
-	JPanel questions;
-	JPanel statusBar;
+	JPanel statusBar;	
 	JTextArea statusText;
-	JComboBox objectSelected;
+	
+	/*temporary only*/
+	JPanel questions;
+		
 	
 	
 	public View( ViewState state, BlockingQueue<Event> events )
-	{			
+	{				
 		currentState = state;
 		eventQueue	 = events;
 		
-		statusBar 	 = new JPanel();
-		statusText = new JTextArea("Debug window:\n",5,100);		
-		statusText.setLineWrap(true);
-		JScrollPane statusTextScroll = new JScrollPane(statusText);
-		statusTextScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		statusBar.add( statusTextScroll );	
-		statusBar.setLayout(new GridLayout(1,1));
+		Container contentPane;
+													
+		{
+			mainFrame 	 = new JFrame("YME :: new map"); /*TODO, frame name should be MapName, change it in repaint()*/						
+			mapPanel  	 = new MapPanel( this );
+			leftMenu     = new JPanel( );
+			statusBar 	 = new JPanel( );
+			
+			navigatePanel= new NavigatePanel( this );
+			menuBar		 = new MainMenu( this );				
+			toolbox  	 = new ToolPanel( this );		
+			
+			statusText   = new JTextArea( "Debug window:\n", 5, 100 );
+			questions 	 = new QuestionPanel( this );
+			
+			contentPane  = mainFrame.getContentPane();
+		}	
+							
 		
-		mainFrame 	 = new JFrame("YME :: new map");
-		mapPanel  	 = new MapPanel( this );
-		toolbox  	 = new ToolPanel( this );
-		navigatePanel= new NavigatePanel( this );
-		menuBar		 = new MainMenu( this );
-				
-		leftMenu  	 = new JPanel();		
-		attributes 	 = new JPanel();				
-		questions 	 = new JPanel();
-		Container cp = mainFrame.getContentPane();
-		
-		
-		mainFrame.setPreferredSize(new Dimension(1024,768));
-		mainFrame.setJMenuBar(menuBar);	
-		
-		
-		
-
-					
-		leftMenu.setLayout(new BorderLayout());
-		leftMenu.add(toolbox, BorderLayout.NORTH);
-		//leftMenu.add(attributes, BorderLayout.CENTER);
-		leftMenu.add(navigatePanel, BorderLayout.CENTER);
-		questions.setPreferredSize(new Dimension(200, 200));
-		leftMenu.add(questions, BorderLayout.SOUTH);
-		
-				
-		JLabel textureNameLabel = new JLabel("Tekstura: ");
-		JTextField textureName = new JTextField(10);
-		JButton textureFind = new JButton("...");
-		textureFind.setPreferredSize(new Dimension(30, 18));
-		questions.add(textureNameLabel);
-		questions.add(textureName);
-		questions.add(textureFind);
+		{					
+			statusText.setLineWrap( true );			
+			JScrollPane statusTextScroll = new JScrollPane( statusText );
+			statusTextScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);			
+			statusBar.add( statusTextScroll );	
+			statusBar.setLayout(new GridLayout(1,1)); //TODO, something better?
+		}
 		
 		
+		/*tmp*/
+		{
+			questions.setPreferredSize(new Dimension(200, 200) );		
+			/*JLabel textureNameLabel = new JLabel("Tekstura: ");
+			JTextField textureName = new JTextField(10);
+			JButton textureFind = new JButton("...");
+			textureFind.setPreferredSize(new Dimension(30, 18));
+			questions.add(textureNameLabel);
+			questions.add(textureName);
+			questions.add(textureFind);*/
+		}
 		
 		
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        mainFrame.pack();
-        mainFrame.repaint();
-        cp.setLayout(new BorderLayout());
-        cp.add(mapPanel, BorderLayout.CENTER);
-        cp.add(leftMenu, BorderLayout.EAST);
-        cp.add(statusBar, BorderLayout.SOUTH);
-        mainFrame.setVisible(true);
+		{			
+			leftMenu.setLayout(new BorderLayout());
+			leftMenu.add(toolbox, BorderLayout.NORTH);		
+			leftMenu.add(navigatePanel, BorderLayout.CENTER);			
+			leftMenu.add(questions, BorderLayout.SOUTH);
+		}
+							
+		
+		{
+			contentPane.setLayout(new BorderLayout());
+			contentPane.add(mapPanel, BorderLayout.CENTER);
+			contentPane.add(leftMenu, BorderLayout.EAST);
+			contentPane.add(statusBar, BorderLayout.SOUTH);
+		}
+		
+		{
+			mainFrame.setPreferredSize(new Dimension(1024,768));
+			mainFrame.setJMenuBar(menuBar);
+	        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			mainFrame.pack();
+			mainFrame.repaint();
+			mainFrame.setVisible(true);
+		}
+		
         System.out.println("View created.");      
 	}
 	
@@ -117,21 +134,23 @@ public class View {
 		return mainFrame;
 	}
 	
-	public void showInfo( String toShow )
+
+	public synchronized void showInfo( String toShow )
 	{
 		statusText.append(toShow);
 		statusText.setCaretPosition( statusText.getText().length() );
 	}
-	
-	public void setCurrentState( ViewState map )
+
+	//TODO, invoke later here?
+	public synchronized void setCurrentState( ViewState map )
 	{
 		this.currentState = map;	
 		mapPanel.repaint( );		
 		toolbox.repaint( );
 		navigatePanel.repaint( );
-		if( getState().getQuestion() != null )
-			for( ViewQuestion pytanie :  getState().getQuestion() )
-				showInfo( pytanie.getName()+"\n" );
+		leftMenu.remove(questions);
+		questions = new QuestionPanel(this);
+		leftMenu.add(questions, BorderLayout.SOUTH);
 	}
 	
 	public void pushEvent( Event event )
