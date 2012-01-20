@@ -149,7 +149,7 @@ public class MapPanel extends JPanel
 	}
 	
 	
-    private void setTexturePaint(String fileName, Graphics2D g2)
+    static private void setTexturePaint(String fileName, Graphics2D g2)
     {
         BufferedImage img;
         try

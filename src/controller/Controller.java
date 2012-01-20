@@ -140,8 +140,9 @@ public class Controller extends Thread
 					break;				
 				case SHAPE:
 					int pos[] = this.model.getEditorMap().getShapes().get(viewState.getFocusId()).getPosition();
-					int siz[] = this.model.getEditorMap().getShapes().get(viewState.getFocusId()).getSize();				
-					questions.add( new StringValueQuestion("texture",QuestionType.STRING, this.model.getEditorMap().getWaterTexture() ) );
+					int siz[] = this.model.getEditorMap().getShapes().get(viewState.getFocusId()).getSize();
+					String texture = this.model.getEditorMap().getShapes().get(viewState.getFocusId()).getTextureName(); 
+					questions.add( new StringValueQuestion("texture",QuestionType.STRING, texture ) );
 					questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, pos[0], pos[1] ) );
 					questions.add( new DoubleIntValueQuestion("size",QuestionType.TWICE_INT, siz[0], siz[1] ) );
 					break;

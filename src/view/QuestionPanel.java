@@ -24,6 +24,7 @@ import javax.swing.border.TitledBorder;
 
 import controller.event.EventQuestionAnswered;
 import controller.question.DoubleIntValueQuestion;
+import controller.question.StringValueQuestion;
 import controller.question.QuestionType;
 import controller.question.ViewQuestion;
 import controller.question.WrongQuestionTypeException;
@@ -42,7 +43,7 @@ public class QuestionPanel extends JPanel
 		
 		for( ViewQuestion question : father.getState().getQuestions() )
 		{	
-			QuestionComponent qc = new QuestionComponentFactory( question, father ).getObject();			
+			QuestionComponent qc = new QuestionComponentFactory( question, father ).getObject();
 			for( Component comp : qc.getComponents() )
 			{				
 				this.add(comp);
@@ -60,11 +61,15 @@ class QuestionComponentFactory
 		switch( question.getType() )
 		{
 			case TWICE_INT:
-				int v[] = ((DoubleIntValueQuestion) question).getValue();
-				created = new QuestionTwiceInt( father, question.getName() , v[0] , v[1] ); 
+				int values[] = ((DoubleIntValueQuestion) question).getValue();
+				created = new QuestionTwiceIntComponent( father, question.getName() , values[0] , values[1] ); 
+				break;
+			case STRING:
+				String value = ((StringValueQuestion) question).getValue();
+				created = new QuestionStringComponent( father, question.getName(), value );
 				break;
 			default:
-				created = new QuestionTwiceInt( father, question.getName() , 99,99 );
+				created = new QuestionTwiceIntComponent( father, question.getName() , 99,99 );
 				break;
 		}
 	}
@@ -77,7 +82,6 @@ class QuestionComponentFactory
 
 abstract class QuestionComponent
 {
-	HashMap<String, Component> componentsAnswers;
 	LinkedList< Component > componentsToDraw;
 	String name;
 	View father;
@@ -86,7 +90,6 @@ abstract class QuestionComponent
 	{
 		this.name = name;
 		this.father = father;
-		componentsAnswers = new HashMap<String, Component>();
 		componentsToDraw = new LinkedList <Component>();
 	}
 	Collection<Component> getComponents()
@@ -100,11 +103,11 @@ abstract class QuestionComponent
 	}
 }
 
-class QuestionTwiceInt extends QuestionComponent
+class QuestionTwiceIntComponent extends QuestionComponent
 {	
 	JTextField firstTF, secondTF;
 	
-	QuestionTwiceInt( View father, String name, int first, int second )	
+	QuestionTwiceIntComponent( View father, String name, int first, int second )	
 	{
 		super( father, name );
 		firstTF = new JTextField(""+first, 5);		
@@ -113,10 +116,7 @@ class QuestionTwiceInt extends QuestionComponent
 		description.setFont( new Font ( "Courier", Font.PLAIN, 14 ) );
 		componentsToDraw.add( description );
 		componentsToDraw.add( firstTF );
-		componentsToDraw.add( secondTF );
-		
-		componentsAnswers.put("first", new JTextField( ""+first, 5 ));
-		componentsAnswers.put("second", new JTextField( ""+second, 5 ));
+		componentsToDraw.add( secondTF );	
 		
 		ActionListener forBoth = new ActionListener()
 		{
@@ -147,6 +147,54 @@ class QuestionTwiceInt extends QuestionComponent
 		{
 			father.showInfo("BŁAD: Podales nieprawidlowe dane - uzyj wartosci calkowitoliczbowych.\n");
 		}
+		catch( WrongQuestionTypeException e )
+		{
+			father.showInfo("BŁĄD KRYTYCZNY: Niepoprawny typ pytania kontrolera!\n");
+			throw new RuntimeException();
+		}
+	}
+}
+
+
+
+
+
+class QuestionStringComponent extends QuestionComponent
+{	
+	JTextField valueField;
+	
+	QuestionStringComponent( View father, String name, String value )	
+	{
+		super( father, name );
+		valueField = new JTextField(value, 11);		
+		JLabel description = new JLabel( padding( name, 9 )+": " );
+		description.setFont( new Font ( "Courier", Font.PLAIN, 14 ) );
+		componentsToDraw.add( description );
+		componentsToDraw.add( valueField );
+		
+		ActionListener actionListener = new ActionListener()
+		{
+			public void actionPerformed(ActionEvent event) {
+				sendEvent();
+			}
+		};
+		
+		valueField.addActionListener( actionListener );
+	}
+	void sendEvent(){
+		try
+		{
+			father.pushEvent( 
+						new EventQuestionAnswered( 
+							new StringValueQuestion( 
+								name, 
+								QuestionType.STRING, 
+								valueField.getText()
+								) 
+						     ) 
+						);
+			
+		}		
 		catch( WrongQuestionTypeException e )
 		{
 			father.showInfo("BŁĄD KRYTYCZNY: Niepoprawny typ pytania kontrolera!\n");

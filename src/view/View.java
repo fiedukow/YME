@@ -87,20 +87,7 @@ public class View {
 			statusBar.add( statusTextScroll );	
 			statusBar.setLayout(new GridLayout(1,1)); //TODO, something better?
 		}
-		
-		
-		/*tmp*/
-		{
-			questions.setPreferredSize(new Dimension(200, 200) );		
-			/*JLabel textureNameLabel = new JLabel("Tekstura: ");
-			JTextField textureName = new JTextField(10);
-			JButton textureFind = new JButton("...");
-			textureFind.setPreferredSize(new Dimension(30, 18));
-			questions.add(textureNameLabel);
-			questions.add(textureName);
-			questions.add(textureFind);*/
-		}
-		
+				
 		
 		{			
 			leftMenu.setLayout(new BorderLayout());
