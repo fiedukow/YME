@@ -4,7 +4,7 @@ import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 
@@ -23,6 +23,7 @@ import controller.question.ActionQuestion;
 import controller.question.DoubleIntValueQuestion;
 import controller.question.QuestionType;
 import controller.question.StringValueQuestion;
+import controller.question.TypeOfMapObjectQuestion;
 import controller.question.ViewQuestion;
 import controller.question.WrongQuestionTypeException;
 
@@ -30,6 +31,7 @@ import model.MapShape;
 import model.Model;
 import model.TypeOfMapObject;
 import model.doChangeMapName;
+import model.doChangeTypeOfMapObject;
 import model.doChangeWaterTexture;
 import model.doDrawEllipse;
 import model.doDrawPolygon;
@@ -59,8 +61,7 @@ public class Controller extends Thread
 		view.setCurrentState( viewState );
 		start();
 		
-		view.showInfo("Kontroler wita widok :-)\n");
-		
+		view.showInfo("Kontroler wita widok :-)\n");		
 	}
 	public void run()
 	{
@@ -72,8 +73,8 @@ public class Controller extends Thread
 				/*
 				 * something goes terribly horribly wrong (or its program end?)
 				 */
-				view.showInfo("Kontroler umarl :-(");
-				return;
+				System.err.println("Kontroler umarl :-(");
+				throw new RuntimeException();
 			}
 		}
 	}
@@ -123,13 +124,18 @@ public class Controller extends Thread
 					questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, x,y ) );							
 					break;				
 				case SHAPE:
-					int pos[] = this.model.getEditorMap().getShapes().get(viewState.getFocusId()).getPosition();
-					int siz[] = this.model.getEditorMap().getShapes().get(viewState.getFocusId()).getSize();
-					String texture = this.model.getEditorMap().getShapes().get(viewState.getFocusId()).getTextureName(); 
+					MapShape currentShape = this.model.getEditorMap().getShapes().get(viewState.getFocusId());
+					int pos[] = currentShape.getPosition();
+					int siz[] = currentShape.getSize();
+					TypeOfMapObject currentTOMP = currentShape.getTypeOfObject();
+					LinkedList<TypeOfMapObject> possibleTOMP = currentShape.getAllowedTypesOfMapObject();					
+					String texture = currentShape.getTextureName();
+					
 					questions.add( new StringValueQuestion("texture",QuestionType.STRING, texture ) );
-					questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, pos[0], pos[1] ) );
+					questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, pos[0], pos[1] ) );					
 					questions.add( new DoubleIntValueQuestion("size",QuestionType.TWICE_INT, siz[0], siz[1] ) );
-					questions.add( new ActionQuestion("delete",QuestionType.BUTTON ) );
+					questions.add( new TypeOfMapObjectQuestion("typeOfMapObject", QuestionType.TYPE_OF_MAP_OBJECT, currentTOMP, possibleTOMP) );
+					questions.add( new ActionQuestion("delete",QuestionType.BUTTON ) );					
 					break;
 				default:
 					break;
@@ -314,8 +320,12 @@ public class Controller extends Thread
 					String newTexture = ((StringValueQuestion) answer).getValue();
 					this.model.getToolbox().doCommand( new doChangeShapeTexture( newTexture, viewState.getFocusId() ) );
 				}
-				else if( answer.getName() == "delete" )
-				{					
+				else if( answer.getName() == "typeOfMapObject" )
+				{	
+					TypeOfMapObject newType = ((TypeOfMapObjectQuestion) answer).getValue();
+					this.model.getToolbox().doCommand( new doChangeTypeOfMapObject( newType, viewState.getFocusId() ) );				}
+				else if( answer.getName() == "delete" )					
+				{										
 					this.model.getToolbox().doCommand( new doRemoveShape( viewState.getFocusId() ) );
 					viewState.setFocus( FocusType.MAP );
 				}
@@ -325,6 +335,11 @@ public class Controller extends Thread
 		}				
 	}	
 	
+	private void eventCleanup()
+	{
+		if( viewState.getSelectedTool() != Tool.POLYGON )
+			viewState.getPolygonBuffer().reset();
+	}
 	
 	private void doEvent( Event event )
 	{
@@ -366,9 +381,7 @@ public class Controller extends Thread
 			default:
 				break;
 		}		
-		//TODO italian solution?
-		if( viewState.getSelectedTool() != Tool.POLYGON )
-			viewState.getPolygonBuffer().reset();
+		eventCleanup();		
 		
 		viewState.setQuestion( generateQuestionsForCurrentFocus() );
 		view.setCurrentState( viewState );

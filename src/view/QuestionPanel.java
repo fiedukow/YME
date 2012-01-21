@@ -3,42 +3,48 @@ package view;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.ArrayList;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Vector;
 
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
+
+import model.TypeOfMapObject;
 
 import controller.event.EventQuestionAnswered;
 import controller.question.ActionQuestion;
 import controller.question.DoubleIntValueQuestion;
 import controller.question.StringValueQuestion;
 import controller.question.QuestionType;
+import controller.question.TypeOfMapObjectQuestion;
 import controller.question.ViewQuestion;
 import controller.question.WrongQuestionTypeException;
 
 public class QuestionPanel extends JPanel
 {
-	public static final HashMap<String, String> translator = new HashMap<String, String>();
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final HashMap<String, String> translator = new HashMap<String, String>();
 	{	
-		translator.put("texture" , "Tekstura");
-		translator.put("delete"  , "Usuń");
-		translator.put("mapName" , "Nazwa mapy");
-		translator.put("size"    , "Wymiary");
-		translator.put("position", "Pozycja");		
+		translator.put("texture" 		, "Tekstura");
+		translator.put("delete" 	 	, "                  Usuń                  ");
+		translator.put("mapName" 		, "Nazwa mapy");
+		translator.put("size"    	 	, "Wymiary");
+		translator.put("position"       , "Pozycja");
+		translator.put("typeOfMapObject", "Typ obiektu");	
 	}
 	
 	View father;
@@ -61,6 +67,11 @@ public class QuestionPanel extends JPanel
 		}	
 		this.setVisible(true);
 	}
+	
+	public static String Translate( String toTranslate )
+	{
+		return translator.get(toTranslate);
+	}
 }
 	
 class QuestionComponentFactory
@@ -80,6 +91,11 @@ class QuestionComponentFactory
 				break;
 			case BUTTON:
 				created = new QuestionButtonComponent( father, question.getName() );
+				break;
+			case TYPE_OF_MAP_OBJECT:
+				TypeOfMapObject selected = ((TypeOfMapObjectQuestion) question).getValue();							
+				LinkedList<TypeOfMapObject> possibleValues = ((TypeOfMapObjectQuestion) question).getPossibleValues();
+				created = new QuestionTypeOfMapObjectComponent( father, question.getName(), selected, possibleValues );
 				break;
 			default:
 				created = new QuestionTwiceIntComponent( father, question.getName() , 0, 0 );
@@ -125,7 +141,7 @@ class QuestionTwiceIntComponent extends QuestionComponent
 		super( father, name );
 		firstTF = new JTextField(""+first, 5);		
 		secondTF = new JTextField( ""+second, 5 );
-		JLabel description = new JLabel( padding( QuestionPanel.translator.get(name), 9 )+": " );
+		JLabel description = new JLabel( padding( QuestionPanel.Translate(name), 9 )+": " );
 		description.setFont( new Font ( "Courier", Font.PLAIN, 14 ) );
 		componentsToDraw.add( description );
 		componentsToDraw.add( firstTF );
@@ -180,7 +196,7 @@ class QuestionStringComponent extends QuestionComponent
 	{
 		super( father, name );
 		valueField = new JTextField(value, 11);		
-		JLabel description = new JLabel( padding( QuestionPanel.translator.get(name) , 9 )+": " );
+		JLabel description = new JLabel( padding( QuestionPanel.Translate(name) , 9 )+": " );
 		description.setFont( new Font ( "Courier", Font.PLAIN, 14 ) );
 		componentsToDraw.add( description );
 		componentsToDraw.add( valueField );
@@ -217,7 +233,6 @@ class QuestionStringComponent extends QuestionComponent
 }
 
 
-
 class QuestionButtonComponent extends QuestionComponent
 {		
 	JButton action;
@@ -225,8 +240,8 @@ class QuestionButtonComponent extends QuestionComponent
 	QuestionButtonComponent( View father, String name )	
 	{
 		super( father, name );
-		action = new JButton( QuestionPanel.translator.get(name) );
-		action.setSize( 200, 20 );
+		action = new JButton( QuestionPanel.Translate(name) );
+		action.setMnemonic( KeyEvent.VK_R ); //ALT+R to remove element
 		componentsToDraw.add( action );		
 		
 		ActionListener actionListener = new ActionListener()
@@ -256,5 +271,69 @@ class QuestionButtonComponent extends QuestionComponent
 			father.showInfo("BŁĄD KRYTYCZNY: Niepoprawny typ pytania kontrolera!\n");
 			throw new RuntimeException();
 		}
+	}
+}
+
+class QuestionTypeOfMapObjectComponent extends QuestionComponent
+{		
+	JComboBox box;
+	private final HashMap<String, TypeOfMapObject> rePadMap;
+	
+	QuestionTypeOfMapObjectComponent( View father, String name, TypeOfMapObject selectedValue, LinkedList<TypeOfMapObject> possibleValues )	
+	{
+		super( father, name );
+		rePadMap = new HashMap<String, TypeOfMapObject>();
+						
+		JLabel description = new JLabel( padding( QuestionPanel.Translate(name) , 9 )+": " );
+		description.setFont( new Font ( "Courier", Font.PLAIN, 14 ) );
+		componentsToDraw.add( description );
+		
+		box = new JComboBox( );
+		
+		for( TypeOfMapObject value : possibleValues )
+		{
+			String show = padding( value.toString(), 14 ); 
+			rePadMap.put( show, value);
+			box.addItem( show );
+		}
+		box.setSelectedItem(  padding( selectedValue.toString(), 14 ) );
+		
+		componentsToDraw.add( box );		
+		
+		ItemListener itemListener = new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent arg0) {
+				sendEvent();
+			}
+		};
+		
+		box.addItemListener( itemListener );
+	}
+	
+	void sendEvent(){
+		try
+		{
+			father.pushEvent( 
+						new EventQuestionAnswered( 
+							new TypeOfMapObjectQuestion( 
+								name,
+								QuestionType.TYPE_OF_MAP_OBJECT,
+								unPad((String) box.getSelectedItem()),
+								new LinkedList<TypeOfMapObject>()
+								)
+						     ) 
+						);
+			
+		}		
+		catch( WrongQuestionTypeException e )
+		{
+			father.showInfo("BŁĄD KRYTYCZNY: Niepoprawny typ pytania kontrolera!\n");
+			throw new RuntimeException();
+		}
+	}
+	
+	private TypeOfMapObject unPad( String key )
+	{
+		return rePadMap.get( key );
 	}
 }

@@ -131,24 +131,6 @@ interface Command
 }
 
 
-class doChangeTypeOfMapObject implements Command
-{
-	public void invoke( EditorMap map ) throws CommandInvokeException
-	{
-		/*FIXME*/
-	}
-	public void undo( EditorMap map ) throws CommandUndoException
-	{
-		/*FIXME*/
-	}	
-}
-
-
-
-
-
-
-
 /*
  * 
  *

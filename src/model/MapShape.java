@@ -4,7 +4,7 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
-import java.util.Vector;
+import java.util.LinkedList;
 
 
 /**
@@ -17,7 +17,9 @@ public abstract class MapShape
 	private String textureName;	
 	private TypeOfMapObject typeOfObject; /** Current value type of map object */	
 	protected Shape shapeObject; /**The reference to the basic shape object (created in derived class constructor)*/
-		
+
+	abstract public LinkedList<TypeOfMapObject> getAllowedTypesOfMapObject();
+	
 	/**
 	 * Default constructor, set textureName
 	 * @param textureName
@@ -117,17 +119,22 @@ public abstract class MapShape
 final class MapPolygon extends MapShape
 {
 	
-	protected static Vector<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
+	protected static LinkedList<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
 	
 	/**
 	 * List of allowed types
 	 */
 	static
 	{
-		allowedTypes = new Vector<TypeOfMapObject>();
+		allowedTypes = new LinkedList<TypeOfMapObject>();
 		allowedTypes.add( TypeOfMapObject.DESTROY );
 		allowedTypes.add( TypeOfMapObject.STOP );
 		allowedTypes.add( TypeOfMapObject.BUMP );
+	}
+	
+	public LinkedList<TypeOfMapObject> getAllowedTypesOfMapObject()
+	{
+		return allowedTypes;
 	}
 	
 	
@@ -296,18 +303,24 @@ final class MapPolygon extends MapShape
  */
 final class MapRectangle extends MapShape
 {
-	protected static Vector<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
+	protected static LinkedList<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
 	
 	/**
 	 * List of allowed types
 	 */
 	static
 	{
-		allowedTypes = new Vector<TypeOfMapObject>();
+		allowedTypes = new LinkedList<TypeOfMapObject>();
 		allowedTypes.add( TypeOfMapObject.DESTROY );
 		allowedTypes.add( TypeOfMapObject.STOP );
 		allowedTypes.add( TypeOfMapObject.BUMP );
 		allowedTypes.add( TypeOfMapObject.QUAY );
+	}
+	
+	
+	public LinkedList<TypeOfMapObject> getAllowedTypesOfMapObject()
+	{
+		return allowedTypes;
 	}
 	
 	/**
@@ -466,17 +479,23 @@ final class MapRectangle extends MapShape
 final class MapEllipse extends MapShape
 {
 	
-	protected static Vector<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
+	protected static LinkedList<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
 	
 	/**
 	 * List of allowed types
 	 */
 	static
 	{		
-		allowedTypes = new Vector<TypeOfMapObject>();
+		allowedTypes = new LinkedList<TypeOfMapObject>();
 		allowedTypes.add( TypeOfMapObject.DESTROY );
 		allowedTypes.add( TypeOfMapObject.STOP );
 		allowedTypes.add( TypeOfMapObject.BUMP );
+	}
+	
+	
+	public LinkedList<TypeOfMapObject> getAllowedTypesOfMapObject()
+	{
+		return allowedTypes;
 	}
 	
 	/**
