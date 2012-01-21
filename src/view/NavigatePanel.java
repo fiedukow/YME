@@ -27,6 +27,11 @@ import model.MapShape;
 
 public class NavigatePanel extends JPanel  
 {
+	/**
+	 * UID
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	JButton nextFocus, prevFocus, undo, redo;
 	JComboBox shapeList;
 	JProgressBar BQFill;
@@ -137,6 +142,7 @@ public class NavigatePanel extends JPanel
 	
 	public void paintComponent(Graphics g)
 	{
+		super.paintComponent(g);
 		consumeEvent = true;
 		shapeList.removeAllItems();
 	
@@ -144,19 +150,16 @@ public class NavigatePanel extends JPanel
 		shapeList.addItem(new FocusListElement("Punkt startowy", FocusType.START_POINT, null));
 		consumeEvent = false;	
 		
-		int i = 0;
-		for( MapShape sh : father.getState().getMap().getShapes())
-		{
+		int size = father.getState().getMap().getShapes().size();
+		for( int i = 0; i < size; ++i )
 			shapeList.addItem( new FocusListElement("Element # "+(i+1), FocusType.SHAPE, i ));
-			++i;
-		}
 			
 		
-		for( i = 0; i < shapeList.getItemCount(); ++i )
+		for( int i = 0; i < shapeList.getItemCount(); ++i )
 		{
 			if ( ((FocusListElement) shapeList.getItemAt(i)).getFocusType() == father.getState().getFocusType() 
 			&& ( 
-				 (((FocusListElement) shapeList.getItemAt(i)).getFocusId() == null )||
+				 (((FocusListElement) shapeList.getItemAt(i)).getFocusId() == null ) ||
 				 (((FocusListElement) shapeList.getItemAt(i)).getFocusId() == father.getState().getFocusId() )) 
 			   )
 			{				
@@ -166,10 +169,7 @@ public class NavigatePanel extends JPanel
 		}
 		
 		undo.setEnabled( father.getState().isUndoNotEmpty() );
-		redo.setEnabled( father.getState().isRedoNotEmpty() );
-		
-		super.paintComponent(g);
-		super.paintComponents(g);
+		redo.setEnabled( father.getState().isRedoNotEmpty() );		
 	}
 }
 
@@ -206,30 +206,49 @@ class FocusListElement
 	}
 }
 
+/**
+ * Status of blocking Queue - it updates provided progress bar presenting fill of the BlockingQueue
+ * @author fiedukow
+ */
 class BQUpdater extends Thread
 {
+	/**
+	 * ProgressBar component presenting blocking queue fill
+	 */
 	JProgressBar BQFill;
+	
+	/**
+	 * View objest which contains this element.
+	 */
 	View father;
 	
+	/**
+	 * Simple constructor setting internal field correctly and start updater thread.
+	 * @param BQFill - Graphics component which should be updated by BQUpdater
+	 * @param father - View which blocking Queue will be observed
+	 */
 	public BQUpdater( JProgressBar BQFill, View father )
 	{
 		this.BQFill = BQFill;
 		this.father = father;
 		start();
 	}
+	
+	/**
+	 * Update statusBar 20 times/ sec
+	 */
 	public void run()
 	{
 		while( true )
 		{			
-			BQFill.setValue(father.eventQueue.size());
-			
-			if( (double)BQFill.getValue()/BQFill.getMaximum() < 0.5 )
+			BQFill.setValue(father.eventQueue.size());			
+			if( (double) BQFill.getValue()/BQFill.getMaximum() < 0.5 )
 				BQFill.setForeground(Color.GREEN);
-			else if( (double)BQFill.getValue()/BQFill.getMaximum() < 0.7 )
+			else if( (double) BQFill.getValue()/BQFill.getMaximum() < 0.7 )
 				BQFill.setForeground(Color.YELLOW);
-			else if( (double)BQFill.getValue()/BQFill.getMaximum() < 0.9 )
+			else if( (double) BQFill.getValue()/BQFill.getMaximum() < 0.9 )
 				BQFill.setForeground(Color.ORANGE);
-			else if( (double)BQFill.getValue()/BQFill.getMaximum() < 1 )
+			else if( (double) BQFill.getValue()/BQFill.getMaximum() < 1 )
 				BQFill.setForeground(Color.RED);
 			else 
 				BQFill.setForeground(Color.BLACK);
@@ -238,7 +257,7 @@ class BQUpdater extends Thread
 			try {
 				sleep(50);
 			} catch (InterruptedException e) {
-				/*noop*/
+				System.err.println("BlockingQueue progress bar awainting interrupted.");
 			}
 		}
 	}

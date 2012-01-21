@@ -40,6 +40,7 @@ public class QuestionPanel extends JPanel
 	private static final HashMap<String, String> translator = new HashMap<String, String>();
 	{	
 		translator.put("texture" 		, "Tekstura");
+		//TODO, it shoud be better then this ---
 		translator.put("delete" 	 	, "                  Usuń                  ");
 		translator.put("mapName" 		, "Nazwa mapy");
 		translator.put("size"    	 	, "Wymiary");

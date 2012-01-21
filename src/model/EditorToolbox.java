@@ -124,6 +124,8 @@ public final class EditorToolbox
  * Warning: UNDO command will work only if the map state is the same as just after using invoke!
  * @author fiedukow
  */
+
+//TODO, SHOULD BE IN OTHER PACKAGE! 
 interface Command
 {	
 	abstract void invoke( EditorMap map ) throws CommandInvokeException;

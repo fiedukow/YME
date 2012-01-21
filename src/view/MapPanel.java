@@ -3,11 +3,9 @@ package view;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.Shape;
 import java.awt.TexturePaint;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -24,13 +22,31 @@ import controller.ViewState;
 import controller.event.EventPointAccept;
 import controller.event.EventPointSelect;
 
-import model.EditorMap;
 import model.MapShape;
 
+/**
+ * Provides way to draw a map in human readable form.
+ * It also generate some basic Events connected with map.
+ * @author fiedukow
+ */
 public class MapPanel extends JPanel
 {
+	/**
+	 * UID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * The view which created this MapPanel
+	 */
 	private View father; 
 	
+	/**
+	 * Main constructor - creates panel with father setted
+	 * Using father you can easily repaint using newest snapshot every time you want
+	 * What's more father allow to push events to queue
+	 * @param father_ - the view which created this MapPanel
+	 */
 	public MapPanel( View father_ )
 	{
 		this.father = father_;		
@@ -48,12 +64,15 @@ public class MapPanel extends JPanel
         }); 
 	}
 
-
+	/**
+	 * How to repaint this map.
+	 * It describes the way to draw all elements on map and  is called automaticly with repaint();
+	 */
 	public void paintComponent(Graphics g)
 	{
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        //g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         int w = this.getWidth();     
         int h = this.getHeight();    
         setTexturePaint("textures/"+getState().getMap().getWaterTexture(), g2); //FIXME myGraphics2D        
@@ -79,7 +98,11 @@ public class MapPanel extends JPanel
         drawBufferedPolygon( g2 );
 	}
 	
-	void drawBufferedPolygon( Graphics2D g2 )
+	/**
+	 * It draws not completed polygon started by user as a number of thick lines.
+	 * @param g2 - Graphics2D object to draw on.
+	 */
+	private void drawBufferedPolygon( Graphics2D g2 )
 	{
 		Vector<Point> bufferedVerticles = getState().getPolygonBuffer().getVerticles();
     
@@ -110,19 +133,29 @@ public class MapPanel extends JPanel
 	    }
 	}
 	
-	void drawShape( MapShape sh, Graphics2D g2, boolean focus )
+	/**
+	 * Draw MapShape on MapPanel - if it is focus - use yellow border 
+	 * @param shape - MapShape to draw
+	 * @param g2 - Graphics2D object to draw on. 
+	 * @param focus - true if this shape is focused
+	 */
+	void drawShape( MapShape shape, Graphics2D g2, boolean focus )
 	{
-		setTexturePaint("textures/"+sh.getTextureName(), g2);
-		g2.fill(sh.getShapeObject());
+		setTexturePaint("textures/"+shape.getTextureName(), g2);
+		g2.fill(shape.getShapeObject());
 		if( ! focus )
 			g2.setPaint(Color.BLACK);
 		else
 			g2.setPaint(Color.YELLOW);
 		
-		g2.draw(sh.getShapeObject());
+		g2.draw(shape.getShapeObject());
 	}		
 	
-	void drawStartPoint( Graphics2D g2 )
+	/**
+	 * Draw symbol of start point where it should be.
+	 * @param g2 - Graphics2D object to draw on.
+	 */
+	private void drawStartPoint( Graphics2D g2 )
 	{
 		Point startPoint = getState().getMap().getStartPoint();
 	    int range = getState().getStartPointRange();
@@ -148,7 +181,11 @@ public class MapPanel extends JPanel
 	    g2.draw(startPointShape);        
 	}
 	
-	
+	/**
+	 * Sets paint on brush to texture given by parameter using TextureCache
+	 * @param fileName - path to texture (jpg)
+	 * @param g2 - Grapics2D object with brush to be changed
+	 */
     static private void setTexturePaint(String fileName, Graphics2D g2)
     {
         BufferedImage img;
@@ -169,6 +206,10 @@ public class MapPanel extends JPanel
         g2.setPaint(paint);
     }
     
+    /**
+     * Accessor to father method
+     * @return current state of View (snapshot)
+     */
     private ViewState getState()
     {
     	return father.getState();
@@ -176,6 +217,7 @@ public class MapPanel extends JPanel
     
     
 	/**
+	 * Draws thick lane using polygons.
 	 * @author Real Gagnon (rgagnon.com)
 	 * @param g
 	 * @param x1
