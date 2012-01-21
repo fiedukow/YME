@@ -8,10 +8,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -31,12 +31,22 @@ import controller.question.TypeOfMapObjectQuestion;
 import controller.question.ViewQuestion;
 import controller.question.WrongQuestionTypeException;
 
+/**
+ * Panel with attributes of current focus
+ * It contains components needed to answer questions about current focus
+ * asked by Controller.
+ * @author fiedukow
+ */
 public class QuestionPanel extends JPanel
 {
 	/**
-	 * 
+	 * UID 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Map which translate Controller questionName into user readable form
+	 */
 	private static final HashMap<String, String> translator = new HashMap<String, String>();
 	{	
 		translator.put("texture" 		, "Tekstura");
@@ -48,9 +58,22 @@ public class QuestionPanel extends JPanel
 		translator.put("typeOfMapObject", "Typ obiektu");	
 	}
 	
+	/**
+	 * the View which this component is part of.
+	 */
 	View father;
-	Vector<QuestionComponent> questions;
 	
+	/**
+	 * Contains all Components of questions asked by Controller.
+	 * @see QuestionComponent
+	 */
+	ArrayList<QuestionComponent> questions;
+	
+	/**
+	 * Main constructor - set father and ask him for question from current snapshot
+	 * It creates all needed components and display it on the panel.
+	 * @param father
+	 */
 	QuestionPanel( View father )
 	{
 		super();
@@ -69,15 +92,36 @@ public class QuestionPanel extends JPanel
 		this.setVisible(true);
 	}
 	
+	/**
+	 * Accessor to translate table.
+	 * @param toTranslate - Controller questionName.
+	 * @return user readable name of question
+	 */
 	public static String Translate( String toTranslate )
 	{
 		return translator.get(toTranslate);
 	}
 }
 	
+/**
+ * Factory of QuestionComponents
+ * It allows to create QuestionComponents objects according to ViewQuestion object 
+ * @author fiedukow
+ */
 class QuestionComponentFactory
 {
+	/**
+	 * Object ready to use after constructor of this class
+	 * It is the QuestionComponent created by factory.
+	 */
 	QuestionComponent created;
+	
+	/**
+	 * Main constructor - create object using question
+	 * It also provides father object required by all derived by QuestionComponent classes 
+	 * @param question - question asked by Controller
+	 * @param father - the View object - provides current snapshot
+	 */
 	public QuestionComponentFactory( ViewQuestion question, View father )
 	{
 		switch( question.getType() )
@@ -104,35 +148,85 @@ class QuestionComponentFactory
 		}
 	}
 	
+	/**
+	 * Access to object created by factory
+	 * @return created object
+	 */
 	public QuestionComponent getObject()
 	{
 		return created;
 	}
 }
 
+/**
+ * Base class for all Question components
+ * Question component contains number of Swing components ready to add into panel
+ * @author fiedukow
+ *
+ */
 abstract class QuestionComponent
 {
+	/**
+	 * Swing component ready to use
+	 */	
 	LinkedList< Component > componentsToDraw;
-	String name;
-	View father;
-	abstract void sendEvent();
-	QuestionComponent(View father, String name)
+	
+	/**
+	 * Name of the question given by Controller
+	 */
+	protected final String name;
+	
+	/**
+	 * the View - provides push event & snapshot
+	 */
+	protected final View father;
+	
+	/**
+	 * Main constructor - used in derived classes as super
+	 * It set field common for all derived classes
+	 * @param father - View providing event pushing & snapshot
+	 * @param name - name of question given by Controller.
+	 */
+	protected QuestionComponent(View father, String name)
 	{
 		this.name = name;
 		this.father = father;
 		componentsToDraw = new LinkedList <Component>();
 	}
-	Collection<Component> getComponents()
+	
+	/**
+	 * Gives collection of swing components to draw on Panel
+	 * @return collection
+	 */
+	public Collection<Component> getComponents()
 	{
 		return componentsToDraw;
 	}
 	
+	/**
+	 * Static method operating on string 
+	 * It cut&pad string to given length
+	 * @param toPad - String to pad
+	 * @param size - place size
+	 * @return - padded String
+	 */
 	static String padding( String toPad, int size )
 	{
 		return String.format("%-" + size + "s", toPad.substring(0,Math.min(toPad.length(), size )));
 	}
+	
+	/**
+	 * Should send answer to Controller
+	 */
+	abstract void sendEvent();
 }
 
+
+/**
+ * Component with label and place for two int elements
+ * [LABEL9chars] : [INT] [INT]
+ * @author fiedukow
+ */
 class QuestionTwiceIntComponent extends QuestionComponent
 {	
 	JTextField firstTF, secondTF;
