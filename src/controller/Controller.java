@@ -19,6 +19,7 @@ import controller.event.EventRedo;
 import controller.event.EventSaveMap;
 import controller.event.EventToolSelect;
 import controller.event.EventUndo;
+import controller.question.ActionQuestion;
 import controller.question.DoubleIntValueQuestion;
 import controller.question.QuestionType;
 import controller.question.StringValueQuestion;
@@ -28,10 +29,13 @@ import controller.question.WrongQuestionTypeException;
 import model.MapShape;
 import model.Model;
 import model.TypeOfMapObject;
+import model.doChangeMapName;
+import model.doChangeWaterTexture;
 import model.doDrawEllipse;
 import model.doDrawPolygon;
 import model.doDrawRectangle;
 import model.doMoveShape;
+import model.doRemoveShape;
 import model.doResizeShape;
 import model.doSetStartPoint;
 import model.doChangeShapeTexture;
@@ -125,6 +129,7 @@ public class Controller extends Thread
 					questions.add( new StringValueQuestion("texture",QuestionType.STRING, texture ) );
 					questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, pos[0], pos[1] ) );
 					questions.add( new DoubleIntValueQuestion("size",QuestionType.TWICE_INT, siz[0], siz[1] ) );
+					questions.add( new ActionQuestion("delete",QuestionType.BUTTON ) );
 					break;
 				default:
 					break;
@@ -271,11 +276,20 @@ public class Controller extends Thread
 	
 	private void doEvent( EventQuestionAnswered event )
 	{
-		view.showInfo("Dostalem odpowiedz na pytanie.\n");
 		ViewQuestion answer = event.getQuestion();			
 		switch( viewState.getFocusType() )
 		{
 			case MAP:
+				if( answer.getName() == "texture" )
+				{
+					String newTexture = ((StringValueQuestion) answer).getValue();
+					this.model.getToolbox().doCommand( new doChangeWaterTexture( newTexture  ) );
+				}
+				else if( answer.getName() == "mapName" )
+				{
+					String newName = ((StringValueQuestion) answer).getValue();
+					this.model.getToolbox().doCommand( new doChangeMapName( newName  ) );
+				}
 				break;
 			case START_POINT:
 				if( answer.getName() == "position" )
@@ -284,7 +298,7 @@ public class Controller extends Thread
 					this.model.getToolbox().doCommand( new doSetStartPoint( pos[0], pos[1] ) );
 				}
 				break;				
-			case SHAPE:					
+			case SHAPE:		
 				if( answer.getName() == "position" )
 				{
 					int pos[] = ((DoubleIntValueQuestion) answer).getValue();
@@ -299,6 +313,11 @@ public class Controller extends Thread
 				{
 					String newTexture = ((StringValueQuestion) answer).getValue();
 					this.model.getToolbox().doCommand( new doChangeShapeTexture( newTexture, viewState.getFocusId() ) );
+				}
+				else if( answer.getName() == "delete" )
+				{					
+					this.model.getToolbox().doCommand( new doRemoveShape( viewState.getFocusId() ) );
+					viewState.setFocus( FocusType.MAP );
 				}
 				break;			
 			default:
@@ -354,7 +373,8 @@ public class Controller extends Thread
 		viewState.setQuestion( generateQuestionsForCurrentFocus() );
 		view.setCurrentState( viewState );
 		/*TODO This is sleep only for testing proposes, delete it in release version*/
-		/*try {
+		/*
+		try {
 			sleep(500);
 		} catch (InterruptedException e) {
 			System.err.println("Ktos mnie budzi:(");

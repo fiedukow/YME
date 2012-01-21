@@ -131,32 +131,6 @@ interface Command
 }
 
 
-class doChangeMapName implements Command
-{
-	public void invoke( EditorMap map ) throws CommandInvokeException
-	{
-		/*FIXME*/
-	}
-	public void undo( EditorMap map ) throws CommandUndoException
-	{
-		/*FIXME*/
-	}	
-}
-
-class doChangeWaterTexutre implements Command
-{
-	public void invoke( EditorMap map ) throws CommandInvokeException
-	{
-		/*FIXME*/
-	}
-	public void undo( EditorMap map ) throws CommandUndoException
-	{
-		/*FIXME*/
-	}	
-}
-
-
-
 class doChangeTypeOfMapObject implements Command
 {
 	public void invoke( EditorMap map ) throws CommandInvokeException
@@ -169,17 +143,7 @@ class doChangeTypeOfMapObject implements Command
 	}	
 }
 
-class doRemoveShape implements Command
-{
-	public void invoke( EditorMap map ) throws CommandInvokeException
-	{
-		/*FIXME*/
-	}
-	public void undo( EditorMap map ) throws CommandUndoException
-	{
-		/*FIXME*/
-	}	
-}
+
 
 
 

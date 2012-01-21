@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
 import controller.event.EventQuestionAnswered;
+import controller.question.ActionQuestion;
 import controller.question.DoubleIntValueQuestion;
 import controller.question.StringValueQuestion;
 import controller.question.QuestionType;
@@ -31,6 +32,15 @@ import controller.question.WrongQuestionTypeException;
 
 public class QuestionPanel extends JPanel
 {
+	public static final HashMap<String, String> translator = new HashMap<String, String>();
+	{	
+		translator.put("texture" , "Tekstura");
+		translator.put("delete"  , "Usuń");
+		translator.put("mapName" , "Nazwa mapy");
+		translator.put("size"    , "Wymiary");
+		translator.put("position", "Pozycja");		
+	}
+	
 	View father;
 	Vector<QuestionComponent> questions;
 	
@@ -68,8 +78,11 @@ class QuestionComponentFactory
 				String value = ((StringValueQuestion) question).getValue();
 				created = new QuestionStringComponent( father, question.getName(), value );
 				break;
+			case BUTTON:
+				created = new QuestionButtonComponent( father, question.getName() );
+				break;
 			default:
-				created = new QuestionTwiceIntComponent( father, question.getName() , 99,99 );
+				created = new QuestionTwiceIntComponent( father, question.getName() , 0, 0 );
 				break;
 		}
 	}
@@ -112,7 +125,7 @@ class QuestionTwiceIntComponent extends QuestionComponent
 		super( father, name );
 		firstTF = new JTextField(""+first, 5);		
 		secondTF = new JTextField( ""+second, 5 );
-		JLabel description = new JLabel( padding( name, 9 )+": " );
+		JLabel description = new JLabel( padding( QuestionPanel.translator.get(name), 9 )+": " );
 		description.setFont( new Font ( "Courier", Font.PLAIN, 14 ) );
 		componentsToDraw.add( description );
 		componentsToDraw.add( firstTF );
@@ -167,7 +180,7 @@ class QuestionStringComponent extends QuestionComponent
 	{
 		super( father, name );
 		valueField = new JTextField(value, 11);		
-		JLabel description = new JLabel( padding( name, 9 )+": " );
+		JLabel description = new JLabel( padding( QuestionPanel.translator.get(name) , 9 )+": " );
 		description.setFont( new Font ( "Courier", Font.PLAIN, 14 ) );
 		componentsToDraw.add( description );
 		componentsToDraw.add( valueField );
@@ -190,6 +203,49 @@ class QuestionStringComponent extends QuestionComponent
 								name, 
 								QuestionType.STRING, 
 								valueField.getText()
+								) 
+						     ) 
+						);
+			
+		}		
+		catch( WrongQuestionTypeException e )
+		{
+			father.showInfo("BŁĄD KRYTYCZNY: Niepoprawny typ pytania kontrolera!\n");
+			throw new RuntimeException();
+		}
+	}
+}
+
+
+
+class QuestionButtonComponent extends QuestionComponent
+{		
+	JButton action;
+	
+	QuestionButtonComponent( View father, String name )	
+	{
+		super( father, name );
+		action = new JButton( QuestionPanel.translator.get(name) );
+		action.setSize( 200, 20 );
+		componentsToDraw.add( action );		
+		
+		ActionListener actionListener = new ActionListener()
+		{
+			public void actionPerformed(ActionEvent event) {
+				sendEvent();
+			}
+		};
+		
+		action.addActionListener( actionListener );
+	}
+	void sendEvent(){
+		try
+		{
+			father.pushEvent( 
+						new EventQuestionAnswered( 
+							new ActionQuestion( 
+								name,
+								QuestionType.BUTTON
 								) 
 						     ) 
 						);
