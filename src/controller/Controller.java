@@ -61,6 +61,8 @@ public class Controller extends Thread
 		actionMap.put( EventUndo.class        , new ActionUndo()        );
 		actionMap.put( EventRedo.class        , new ActionRedo()        );
 		actionMap.put( EventChangeFocus.class , new ActionChangeFocus() );
+		actionMap.put( EventLoadMap.class     , new ActionLoadMap()     );
+		actionMap.put( EventSaveMap.class     , new ActionSaveMap()     );
 	}
 
 	public Controller ( Model model, View view, BlockingQueue<Event> events)
@@ -175,6 +177,22 @@ public class Controller extends Thread
 		return viewState.getMap().getShapes().size();
 	}
 	
+	void loadMap( String filePath ) throws FileNotFoundException
+	{
+		model.loadMap( filePath );
+	}
+	
+	void saveMap( String filePath ) throws IOException
+	{
+		model.saveMap( filePath );
+	}
+	
+	void createAndSetNewViewState( )
+	{
+		this.viewState = new ViewState( model.getEditorMap(), model.getToolbox() );
+		view.setCurrentState(viewState);	
+	}
+	
 	//TODO, all doEvent to Events classes
 	//TODO, default texture & size should be given by model, not by controller
 	
@@ -228,28 +246,6 @@ public class Controller extends Thread
 		}
 		return questions;
 	}	
-	
-	private void doEvent( EventLoadMap event )
-	{
-		try
-		{
-			model.loadMap(event.getFilePath());
-			viewState = new ViewState( model.getEditorMap(), model.getToolbox() );
-			view.setCurrentState(viewState);	
-		} catch ( FileNotFoundException e ) {
-			view.showInfo("Nie udalo sie otworzyc pliku... Szczegoly: "+ e.getMessage() +"\n");			
-		}
-		
-	}
-	
-	private void doEvent( EventSaveMap event )
-	{
-		try {
-			model.saveMap(event.getFilePath());
-		} catch (IOException e) {
-			view.showInfo("Nie udalo sie zapisac pliku... Szczegoly: "+ e.getMessage() +"\n");
-		}		
-	}
 	
 	
 	private void doEvent( EventNewMap event )
@@ -329,12 +325,6 @@ public class Controller extends Thread
 		
 		switch( event.getEventType() )
 		{				
-			case LOAD_MAP:
-				doEvent( (EventLoadMap) event );
-				break;
-			case SAVE_MAP:
-				doEvent( (EventSaveMap) event );
-				break;
 			case NEW_MAP:
 				doEvent( (EventNewMap) event );
 				break;
