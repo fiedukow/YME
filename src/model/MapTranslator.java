@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import com.thoughtworks.xstream.XStream;
@@ -73,7 +74,7 @@ final class MapTranslator
 	 */
 	public EditorMap translate()
 	{		
-		Vector<MapShape> resultShapes = new Vector<MapShape>();		
+		ArrayList<MapShape> resultShapes = new ArrayList<MapShape>();		
 		for( XMLShape sh : shapes )
 		{
 			resultShapes.add( sh.translate() );

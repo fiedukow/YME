@@ -3,6 +3,7 @@ package model;
 import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Vector;
 
 /*
@@ -26,7 +27,7 @@ public final class Model
 	
 	public void newMap( String mapName, String textureName, Point startPoint )
 	{
-		map = new EditorMap( mapName, textureName, new Vector<MapShape>(), startPoint );
+		map = new EditorMap( mapName, textureName, new ArrayList<MapShape>(), startPoint );
 		box = new EditorToolbox(map);
 	}
 	

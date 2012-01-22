@@ -1,5 +1,6 @@
 package model;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -10,20 +11,20 @@ public final class EditorMap
 {
 	private String mapName;					/**Map name, for general proposes*/
 	private String waterTexture;		    /**The texture used as the background*/
-	private Vector<MapShape> shapes;		/**List of polygons presented on the map*/
+	private ArrayList<MapShape> shapes;		/**List of polygons presented on the map*/
 	private Point startPoint;
 	
 	/**
 	 * Main constructor of Map
 	 * @param mapName
 	 * @param waterTexture
-	 * @param shapes
+	 * @param resultShapes
 	 */
-	public EditorMap( String mapName, String waterTexture, Vector<MapShape> shapes, Point startPoint )
+	public EditorMap( String mapName, String waterTexture, ArrayList<MapShape> resultShapes, Point startPoint )
 	{
 		this.mapName = mapName;
 		this.waterTexture = waterTexture;
-		this.shapes = shapes;
+		this.shapes = resultShapes;
 		this.startPoint = startPoint;
 	}
 	
@@ -80,7 +81,7 @@ public final class EditorMap
 	/**
 	 * @return the shapes
 	 */
-	public Vector<MapShape> getShapes() {
+	public ArrayList<MapShape> getShapes() {
 		return shapes;
 	}
 

@@ -4,6 +4,8 @@ import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
@@ -27,6 +29,7 @@ import controller.question.TypeOfMapObjectQuestion;
 import controller.question.ViewQuestion;
 import controller.question.WrongQuestionTypeException;
 
+import model.Command;
 import model.MapShape;
 import model.Model;
 import model.TypeOfMapObject;
@@ -50,12 +53,18 @@ public class Controller extends Thread
 	View view;
 	ViewState viewState;
 	BlockingQueue< Event > events;	
+	static final HashMap < Class < ? extends Event >, Action > actionMap = new HashMap < Class < ? extends Event >, Action >();
+	
+	static
+	{
+		actionMap.put( EventPointSelect.class , new ActionSelectPoint() );
+	}
 
 	public Controller ( Model model, View view, BlockingQueue<Event> events)
 	{
 		this.model = model;
 		this.view = view;
-		this.events = events;
+		this.events = events;		
 		System.out.println("Controller created!");
 		viewState = new ViewState(model.getEditorMap(), model.getToolbox());
 		view.setCurrentState( viewState );
@@ -77,6 +86,51 @@ public class Controller extends Thread
 				throw new RuntimeException();
 			}
 		}
+	}
+	
+	Tool getSelectedTool()
+	{
+		return viewState.getSelectedTool();
+	}
+	
+	int getStartPointRange()
+	{
+		return viewState.getStartPointRange();
+	}
+	
+	void setFocus( FocusType focusType )
+	{
+		viewState.setFocus( focusType );
+	}
+	
+	void setFocus( FocusType focusType, int focusId )
+	{
+		viewState.setFocus( focusType, focusId );
+	}
+	
+	ArrayList<MapShape> getMapShapes()
+	{
+		 return model.getEditorMap().getShapes();
+	}
+	
+	void addPoint( Point toAdd )
+	{
+		viewState.getPolygonBuffer( ).addPoint( toAdd );
+	}
+	
+	void doCommand( Command toDo )
+	{
+		model.getToolbox().doCommand( toDo );
+	}
+	
+	int getStartPointX( )
+	{
+		return (int) viewState.getMap().getStartPoint().getX();
+	}
+	
+	int getStartPointY( )
+	{
+		return (int) viewState.getMap().getStartPoint().getY();
 	}
 	
 	
@@ -170,9 +224,7 @@ public class Controller extends Thread
 				model.getToolbox().doCommand( new doSetStartPoint(x,y) );
 
 			doAfterDraw();
-			return;
-			
-
+			return;		
 		}
 		
 		else
@@ -343,11 +395,12 @@ public class Controller extends Thread
 	
 	private void doEvent( Event event )
 	{
+		Action toDo = actionMap.get(event.getClass());
+		if( actionMap.get(event.getClass()) != null )
+			toDo.invoke( this, event );
+		
 		switch( event.getEventType() )
 		{
-			case MAP_POINT_SELECT:
-				doEvent( (EventPointSelect) event  );
-				break;
 			case MAP_POINT_ACCEPT:
 				doEvent( (EventPointAccept) event );
 				break;
@@ -386,8 +439,7 @@ public class Controller extends Thread
 		viewState.setQuestion( generateQuestionsForCurrentFocus() );
 		view.setCurrentState( viewState );
 		/*TODO This is sleep only for testing proposes, delete it in release version*/
-		/*
-		try {
+		/*try {
 			sleep(500);
 		} catch (InterruptedException e) {
 			System.err.println("Ktos mnie budzi:(");
