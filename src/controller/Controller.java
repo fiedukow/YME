@@ -36,9 +36,6 @@ import model.TypeOfMapObject;
 import model.doChangeMapName;
 import model.doChangeTypeOfMapObject;
 import model.doChangeWaterTexture;
-import model.doDrawEllipse;
-import model.doDrawPolygon;
-import model.doDrawRectangle;
 import model.doMoveShape;
 import model.doRemoveShape;
 import model.doResizeShape;
@@ -59,6 +56,7 @@ public class Controller extends Thread
 	{
 		actionMap.put( EventPointSelect.class , new ActionSelectPoint() );
 		actionMap.put( EventPointAccept.class , new ActionPointAccept() );
+		actionMap.put( EventToolSelect.class  , new ActionToolSelect()  );
 	}
 
 	public Controller ( Model model, View view, BlockingQueue<Event> events)
@@ -89,9 +87,17 @@ public class Controller extends Thread
 		}
 	}
 	
+	/*
+	 * Internal accessors for other package Controller classes
+	 */
+	
 	Tool getSelectedTool()
 	{
 		return viewState.getSelectedTool();
+	}
+	
+	public void setSelectedTool(Tool tool) {
+		viewState.setSelectedTool( tool );
 	}
 	
 	int getStartPointRange()
@@ -203,11 +209,7 @@ public class Controller extends Thread
 		return questions;
 	}	
 	
-	private void doEvent( EventToolSelect event )
-	{		
-		viewState.setSelectedTool(event.getTool());		
-		view.setCurrentState( viewState );
-	}
+
 	
 	private void doEvent( EventUndo event )
 	{
@@ -344,9 +346,6 @@ public class Controller extends Thread
 		
 		switch( event.getEventType() )
 		{
-			case TOOL_SELECT:
-				doEvent( (EventToolSelect) event );
-				break;
 			case UNDO:
 				doEvent( (EventUndo) event );
 				break;
@@ -385,4 +384,5 @@ public class Controller extends Thread
 			System.err.println("Ktos mnie budzi:(");
 		}*/
 	}
+	
 }
