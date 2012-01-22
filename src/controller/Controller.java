@@ -30,6 +30,7 @@ import controller.question.ViewQuestion;
 import controller.question.WrongQuestionTypeException;
 
 import model.Command;
+import model.CommandStackEmptyException;
 import model.MapShape;
 import model.Model;
 import model.TypeOfMapObject;
@@ -57,6 +58,9 @@ public class Controller extends Thread
 		actionMap.put( EventPointSelect.class , new ActionSelectPoint() );
 		actionMap.put( EventPointAccept.class , new ActionPointAccept() );
 		actionMap.put( EventToolSelect.class  , new ActionToolSelect()  );
+		actionMap.put( EventUndo.class        , new ActionUndo()        );
+		actionMap.put( EventRedo.class        , new ActionRedo()        );
+		actionMap.put( EventChangeFocus.class , new ActionChangeFocus() );
 	}
 
 	public Controller ( Model model, View view, BlockingQueue<Event> events)
@@ -110,10 +114,11 @@ public class Controller extends Thread
 		viewState.setFocus( focusType );
 	}
 	
-	void setFocus( FocusType focusType, int focusId )
+	void setFocus( FocusType focusType, Integer focusId )
 	{
 		viewState.setFocus( focusType, focusId );
 	}
+	
 	
 	ArrayList<MapShape> getMapShapes()
 	{
@@ -153,6 +158,21 @@ public class Controller extends Thread
 	void showInfo( String toShow )
 	{
 		view.showInfo( toShow );
+	}
+	
+	void toolboxUndo() throws CommandStackEmptyException
+	{
+		model.getToolbox().undo();
+	}
+	
+	void toolboxRedo() throws CommandStackEmptyException
+	{
+		model.getToolbox().redo();
+	}
+	
+	int getMapShapesCount()
+	{
+		return viewState.getMap().getShapes().size();
 	}
 	
 	//TODO, all doEvent to Events classes
@@ -208,43 +228,6 @@ public class Controller extends Thread
 		}
 		return questions;
 	}	
-	
-
-	
-	private void doEvent( EventUndo event )
-	{
-		try {
-			model.getToolbox().undo();
-			viewState.setFocus(FocusType.MAP);
-		} catch (Exception e) {
-			// TODO should be CommandStackEmptyException
-			view.showInfo("Nie ma juz operacji do cofniecia\n");
-		}
-	}
-	
-	private void doEvent( EventRedo event )
-	{
-		try {
-			model.getToolbox().redo();
-		} catch (Exception e) {
-			// TODO should be CommandStackEmptyException
-			view.showInfo("Nie ma juz operacji do ponownienia\n");
-		}
-	}
-	
-	private void doEvent( EventChangeFocus event )
-	{
-		Integer idFocus = event.getFocusId();
-		if( idFocus!=null )
-		{
-		idFocus = idFocus%viewState.getMap().getShapes().size();
-		if( idFocus < 0 )
-			idFocus = event.getFocusId()%viewState.getMap().getShapes().size() + idFocus;
-		
-		}
-		viewState.setFocus(event.getFocusType(), event.getFocusId());
-				
-	}
 	
 	private void doEvent( EventLoadMap event )
 	{
@@ -345,16 +328,7 @@ public class Controller extends Thread
 			toDo.invoke( this, event );
 		
 		switch( event.getEventType() )
-		{
-			case UNDO:
-				doEvent( (EventUndo) event );
-				break;
-			case REDO:
-				doEvent( (EventRedo) event );
-				break;
-			case CHANGE_FOCUS:
-				doEvent( (EventChangeFocus) event );
-				break;
+		{				
 			case LOAD_MAP:
 				doEvent( (EventLoadMap) event );
 				break;
