@@ -1,9 +1,7 @@
 package controller;
 
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.ArrayList;
 
-import controller.question.QuestionType;
 import controller.question.ViewQuestion;
 
 import model.EditorMap;
@@ -17,7 +15,7 @@ public class ViewState
 	Integer focusId;
 	Tool selectedTool;		
 	PolygonBuffer polygonBuffer; //TODO it should have universal Shape OtherThings in here
-	Vector<ViewQuestion> questions;
+	ArrayList<ViewQuestion> questions;
 				
 	public ViewState( EditorMap map, EditorToolbox box)
 	{
@@ -27,21 +25,21 @@ public class ViewState
 		selectedTool = Tool.SELECTOR;
 		polygonBuffer = new PolygonBuffer();
 		focusId = null;		
-		questions = new Vector<ViewQuestion>();
+		questions = new ArrayList<ViewQuestion>();
 	}
 
 	/**
 	 * @return the question
 	 */
-	public Vector<ViewQuestion> getQuestions() {
+	public ArrayList<ViewQuestion> getQuestions() {
 		return questions;
 	}
 
 	/**
-	 * @param question the question to set
+	 * @param arrayList the question to set
 	 */
-	/*package*/ void setQuestion(Vector<ViewQuestion> question) {
-		this.questions = question;
+	/*package*/ void setQuestion(ArrayList<ViewQuestion> arrayList) {
+		this.questions = arrayList;
 	}
 
 	/**
@@ -155,13 +153,5 @@ public class ViewState
 	public int getStartPointRange()
 	{
 		return 25;
-	}
-
-	
-/*	public Vector<ViewQuestion> getQuestions()
-	{
-		return typesQuestions.get(focusType);
-	}
-*/
-	
+	}	
 }

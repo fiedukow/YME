@@ -10,39 +10,14 @@ import java.util.LinkedList;
 import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 
-import controller.event.Event;
-import controller.event.EventChangeFocus;
-import controller.event.EventExitProgram;
-import controller.event.EventLoadMap;
-import controller.event.EventNewMap;
-import controller.event.EventPointAccept;
-import controller.event.EventPointSelect;
-import controller.event.EventQuestionAnswered;
-import controller.event.EventRedo;
-import controller.event.EventSaveMap;
-import controller.event.EventToolSelect;
-import controller.event.EventUndo;
-import controller.question.ActionQuestion;
-import controller.question.DoubleIntValueQuestion;
-import controller.question.QuestionType;
-import controller.question.StringValueQuestion;
-import controller.question.TypeOfMapObjectQuestion;
-import controller.question.ViewQuestion;
-import controller.question.WrongQuestionTypeException;
+import controller.event.*;
+import controller.question.*;
 
 import model.Command;
 import model.CommandStackEmptyException;
 import model.MapShape;
 import model.Model;
 import model.TypeOfMapObject;
-import model.doChangeMapName;
-import model.doChangeTypeOfMapObject;
-import model.doChangeWaterTexture;
-import model.doMoveShape;
-import model.doRemoveShape;
-import model.doResizeShape;
-import model.doSetStartPoint;
-import model.doChangeShapeTexture;
 import view.View;
 
 /*Controller in MVC meaning*/
@@ -56,16 +31,17 @@ public class Controller extends Thread
 	
 	static
 	{
-		actionMap.put( EventPointSelect.class , new ActionSelectPoint() );
-		actionMap.put( EventPointAccept.class , new ActionPointAccept() );
-		actionMap.put( EventToolSelect.class  , new ActionToolSelect()  );
-		actionMap.put( EventUndo.class        , new ActionUndo()        );
-		actionMap.put( EventRedo.class        , new ActionRedo()        );
-		actionMap.put( EventChangeFocus.class , new ActionChangeFocus() );
-		actionMap.put( EventLoadMap.class     , new ActionLoadMap()     );
-		actionMap.put( EventSaveMap.class     , new ActionSaveMap()     );
-		actionMap.put( EventNewMap.class      , new ActionNewMap()      );
-		actionMap.put( EventExitProgram.class , new ActionExit()        );
+		actionMap.put( EventPointSelect.class 		, new ActionSelectPoint() 	);
+		actionMap.put( EventPointAccept.class 		, new ActionPointAccept() 	);
+		actionMap.put( EventToolSelect.class  		, new ActionToolSelect()  	);
+		actionMap.put( EventUndo.class        		, new ActionUndo()        	);
+		actionMap.put( EventRedo.class        		, new ActionRedo()        	);
+		actionMap.put( EventChangeFocus.class 		, new ActionChangeFocus() 	);
+		actionMap.put( EventLoadMap.class     		, new ActionLoadMap()     	);
+		actionMap.put( EventSaveMap.class     		, new ActionSaveMap()     	);
+		actionMap.put( EventNewMap.class           	, new ActionNewMap()      	);
+		actionMap.put( EventExitProgram.class      	, new ActionExit()        	);
+		actionMap.put( EventQuestionAnswered.class 	, new ActionQuestionAnswer());
 	}
 
 	public Controller ( Model model, View view, BlockingQueue<Event> events)
@@ -77,9 +53,8 @@ public class Controller extends Thread
 		viewState = new ViewState(model.getEditorMap(), model.getToolbox());
 		view.setCurrentState( viewState );
 		start();
-		
-		view.showInfo("Kontroler wita widok :-)\n");		
 	}
+	
 	public void run()
 	{
 		while( true )
@@ -103,6 +78,16 @@ public class Controller extends Thread
 	Tool getSelectedTool()
 	{
 		return viewState.getSelectedTool();
+	}
+	
+	FocusType getFocusType()
+	{
+		return viewState.getFocusType();
+	}
+	
+	Integer getFocusId()
+	{
+		return viewState.getFocusId();
 	}
 	
 	public void setSelectedTool(Tool tool) {
@@ -180,6 +165,21 @@ public class Controller extends Thread
 		return viewState.getMap().getShapes().size();
 	}
 	
+	MapShape getShapeById( int id )
+	{
+		return getMapShapes().get(id);
+	}
+	
+	String getMapName()
+	{
+		return model.getEditorMap().getMapName();
+	}
+	
+	String getWaterTexture()
+	{
+		return model.getEditorMap().getWaterTexture();
+	}
+	
 	void loadMap( String filePath ) throws FileNotFoundException
 	{
 		model.loadMap( filePath );
@@ -200,10 +200,7 @@ public class Controller extends Thread
 		this.viewState = new ViewState( model.getEditorMap(), model.getToolbox() );
 		view.setCurrentState(viewState);	
 	}
-	
-	//TODO, all doEvent to Events classes
-	//TODO, default texture & size should be given by model, not by controller
-	
+		
 	void doAfterDraw()
 	{
 		viewState.setFocus( 
@@ -213,27 +210,39 @@ public class Controller extends Thread
 		viewState.setSelectedTool(Tool.SELECTOR);
 	}
 	
-	Vector<ViewQuestion> generateQuestionsForCurrentFocus()
+	
+	/**
+	 * A little bit ugly question generator for current focus
+	 * It generates all question controller should ask view.
+	 * TODO, It's hardcoded because it's constant for every type of FocusTape
+	 * Maybe it be coded in classes like Map & Shape, and here only decide
+	 * which class will be asked for questions to ask.   
+	 * @return 
+	 */
+	ArrayList<ViewQuestion> generateQuestionsForCurrentFocus()
 	{
-		Vector<ViewQuestion> questions = new Vector<ViewQuestion>();
+		ArrayList<ViewQuestion> questions = new ArrayList<ViewQuestion>();
 		
 		try{			
 			switch( viewState.getFocusType() )
 			{
 				case MAP:
-					questions.add( new StringValueQuestion("mapName",QuestionType.STRING, this.model.getEditorMap().getMapName() ) );
-					questions.add( new StringValueQuestion("texture",QuestionType.STRING, this.model.getEditorMap().getWaterTexture() ) );				
+					//current attributes values
+					questions.add( new StringValueQuestion("mapName",QuestionType.STRING, getMapName() ) );
+					questions.add( new StringValueQuestion("texture",QuestionType.STRING, getWaterTexture() ) );				
 					break;
 				case START_POINT:
-					int x = (int) this.model.getEditorMap().getStartPoint().getX();
-					int y = (int) this.model.getEditorMap().getStartPoint().getY();				
+					//current attributes values
+					int x = getStartPointX();
+					int y = getStartPointY();				
 					questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, x,y ) );							
 					break;				
 				case SHAPE:
-					MapShape currentShape = this.model.getEditorMap().getShapes().get(viewState.getFocusId());
+					//current attributes values
+					MapShape currentShape = getShapeById( getFocusId() );
 					int pos[] = currentShape.getPosition();
 					int siz[] = currentShape.getSize();
-					TypeOfMapObject currentTOMP = currentShape.getTypeOfObject();
+					TypeOfMapObject currentTOMP = currentShape.getTypeOfObject();					
 					LinkedList<TypeOfMapObject> possibleTOMP = currentShape.getAllowedTypesOfMapObject();					
 					String texture = currentShape.getTextureName();
 					
@@ -256,65 +265,15 @@ public class Controller extends Thread
 	}	
 	
 	
-	private void doEvent( EventQuestionAnswered event )
-	{
-		ViewQuestion answer = event.getQuestion();			
-		switch( viewState.getFocusType() )
-		{
-			case MAP:
-				if( answer.getName() == "texture" )
-				{
-					String newTexture = ((StringValueQuestion) answer).getValue();
-					this.model.getToolbox().doCommand( new doChangeWaterTexture( newTexture  ) );
-				}
-				else if( answer.getName() == "mapName" )
-				{
-					String newName = ((StringValueQuestion) answer).getValue();
-					this.model.getToolbox().doCommand( new doChangeMapName( newName  ) );
-				}
-				break;
-			case START_POINT:
-				if( answer.getName() == "position" )
-				{
-					int pos[] = ((DoubleIntValueQuestion) answer).getValue();
-					this.model.getToolbox().doCommand( new doSetStartPoint( pos[0], pos[1] ) );
-				}
-				break;				
-			case SHAPE:		
-				if( answer.getName() == "position" )
-				{
-					int pos[] = ((DoubleIntValueQuestion) answer).getValue();
-					this.model.getToolbox().doCommand( new doMoveShape( pos[0], pos[1], viewState.getFocusId() ) );
-				}
-				else if( answer.getName() == "size" )
-				{
-					int size[] = ((DoubleIntValueQuestion) answer).getValue();
-					this.model.getToolbox().doCommand( new doResizeShape( size[0], size[1], viewState.getFocusId() ) );
-				}
-				else if( answer.getName() == "texture" )
-				{
-					String newTexture = ((StringValueQuestion) answer).getValue();
-					this.model.getToolbox().doCommand( new doChangeShapeTexture( newTexture, viewState.getFocusId() ) );
-				}
-				else if( answer.getName() == "typeOfMapObject" )
-				{	
-					TypeOfMapObject newType = ((TypeOfMapObjectQuestion) answer).getValue();
-					this.model.getToolbox().doCommand( new doChangeTypeOfMapObject( newType, viewState.getFocusId() ) );				}
-				else if( answer.getName() == "delete" )					
-				{										
-					this.model.getToolbox().doCommand( new doRemoveShape( viewState.getFocusId() ) );
-					viewState.setFocus( FocusType.MAP );
-				}
-				break;			
-			default:
-				break;
-		}				
-	}	
 	
-	private void eventCleanup()
+	
+	private void refresh()
 	{
+		//there is no better place for this:
 		if( viewState.getSelectedTool() != Tool.POLYGON )
 			viewState.getPolygonBuffer().reset();
+		viewState.setQuestion( generateQuestionsForCurrentFocus() );
+		view.setCurrentState( viewState );
 	}
 	
 	private void doEvent( Event event )
@@ -322,25 +281,7 @@ public class Controller extends Thread
 		Action toDo = actionMap.get(event.getClass());
 		if( actionMap.get(event.getClass()) != null )
 			toDo.invoke( this, event );
-		
-		switch( event.getEventType() )
-		{				
-			case QUESTION_ANSWERED:
-				doEvent( (EventQuestionAnswered) event );
-				break;
-			default:
-				break;
-		}		
-		eventCleanup();		
-		
-		viewState.setQuestion( generateQuestionsForCurrentFocus() );
-		view.setCurrentState( viewState );
-		/*TODO This is sleep only for testing proposes, delete it in release version*/
-		/*try {
-			sleep(500);
-		} catch (InterruptedException e) {
-			System.err.println("Ktos mnie budzi:(");
-		}*/
+		refresh();
 	}
 	
 }
