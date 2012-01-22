@@ -12,6 +12,7 @@ import java.util.concurrent.BlockingQueue;
 
 import controller.event.Event;
 import controller.event.EventChangeFocus;
+import controller.event.EventExitProgram;
 import controller.event.EventLoadMap;
 import controller.event.EventNewMap;
 import controller.event.EventPointAccept;
@@ -64,6 +65,7 @@ public class Controller extends Thread
 		actionMap.put( EventLoadMap.class     , new ActionLoadMap()     );
 		actionMap.put( EventSaveMap.class     , new ActionSaveMap()     );
 		actionMap.put( EventNewMap.class      , new ActionNewMap()      );
+		actionMap.put( EventExitProgram.class , new ActionExit()        );
 	}
 
 	public Controller ( Model model, View view, BlockingQueue<Event> events)
@@ -325,9 +327,6 @@ public class Controller extends Thread
 		{				
 			case QUESTION_ANSWERED:
 				doEvent( (EventQuestionAnswered) event );
-				break;
-			case EXIT_PROGRAM:
-				System.exit(0);
 				break;
 			default:
 				break;
