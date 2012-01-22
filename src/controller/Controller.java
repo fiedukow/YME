@@ -217,7 +217,7 @@ public class Controller extends Thread
 	 * TODO, It's hardcoded because it's constant for every type of FocusTape
 	 * Maybe it be coded in classes like Map & Shape, and here only decide
 	 * which class will be asked for questions to ask.   
-	 * @return 
+	 * @return ArrayLisit of question for current focus - ready to set on ViewState
 	 */
 	ArrayList<ViewQuestion> generateQuestionsForCurrentFocus()
 	{
