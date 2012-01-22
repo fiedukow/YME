@@ -12,6 +12,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.Vector;
 
@@ -104,7 +105,7 @@ public class MapPanel extends JPanel
 	 */
 	private void drawBufferedPolygon( Graphics2D g2 )
 	{
-		Vector<Point> bufferedVerticles = getState().getPolygonBuffer().getVerticles();
+		ArrayList<Point> bufferedVerticles = getState().getPolygonBuffer().getVerticles();
     
 	    if( bufferedVerticles.size() > 0 )
 	    {

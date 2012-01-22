@@ -1,6 +1,7 @@
 package model;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -10,10 +11,10 @@ import java.util.Vector;
 public class doDrawPolygon implements Command
 {	
 	MapPolygon polygon;
-	public doDrawPolygon( String textureName, Vector<Point> points, TypeOfMapObject type )
+	public doDrawPolygon( String textureName, ArrayList<Point> arrayList, TypeOfMapObject type )
 	{
 		polygon = new MapPolygon( textureName, type);
-		for( Point point : points )
+		for( Point point : arrayList )
 			polygon.addPoint((int)point.getX(), (int)point.getY());			
 	}
 	

@@ -1,14 +1,15 @@
 package controller;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Vector;
 
-public class PolygonBuffer 
+public class PolygonBuffer  
 {
-	Vector<Point> verticles;
+	ArrayList<Point> verticles;
 	PolygonBuffer()
 	{
-		verticles = new Vector<Point>();
+		verticles = new ArrayList<Point>();
 	}
 	
 	void addPoint( Point point )	
@@ -21,7 +22,7 @@ public class PolygonBuffer
 		verticles.clear();
 	}
 	
-	Vector<Point> getPolygonVerticles() throws ToFewVerticlesException
+	ArrayList<Point> getPolygonVerticles() throws ToFewVerticlesException
 	{
 		if( verticles.size() >= 3 )
 		{
@@ -30,7 +31,7 @@ public class PolygonBuffer
 		throw new ToFewVerticlesException(); 
 	}
 	
-	public Vector<Point> getVerticles()
+	public ArrayList<Point> getVerticles()
 	{	
 		return verticles;
 	}

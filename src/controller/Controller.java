@@ -58,6 +58,7 @@ public class Controller extends Thread
 	static
 	{
 		actionMap.put( EventPointSelect.class , new ActionSelectPoint() );
+		actionMap.put( EventPointAccept.class , new ActionPointAccept() );
 	}
 
 	public Controller ( Model model, View view, BlockingQueue<Event> events)
@@ -133,24 +134,23 @@ public class Controller extends Thread
 		return (int) viewState.getMap().getStartPoint().getY();
 	}
 	
+	ArrayList<Point> getBufferedPolygonVerticles() throws ToFewVerticlesException
+	{
+		return viewState.getPolygonBuffer().getPolygonVerticles();
+	}
+	
+	void resetPolygonBuffer()
+	{
+		viewState.getPolygonBuffer().reset();
+	}
+	
+	void showInfo( String toShow )
+	{
+		view.showInfo( toShow );
+	}
 	
 	//TODO, all doEvent to Events classes
 	//TODO, default texture & size should be given by model, not by controller
-	private void doEvent( EventPointAccept event )
-	{
-		if( viewState.getSelectedTool() == Tool.POLYGON )
-			try {
-				model.getToolbox().doCommand
-						( 
-								new doDrawPolygon("brick.jpg", viewState.getPolygonBuffer().getPolygonVerticles(), null) 
-						);
-				viewState.getPolygonBuffer().reset();			
-				doAfterDraw();
-			} catch (ToFewVerticlesException e) {
-				view.showInfo("Zaznaczono zbyt malo punktow by utworzyc polygon\n");
-				viewState.getPolygonBuffer().reset();
-			}
-	}
 	
 	void doAfterDraw()
 	{
@@ -201,64 +201,7 @@ public class Controller extends Thread
 			e.printStackTrace(); /*impossible statement*/
 		}
 		return questions;
-	}
-	
-	private void doEvent( EventPointSelect event )
-	{
-		
-		int x,y;
-		x = event.getX();
-		y = event.getY();
-		if( viewState.getSelectedTool() == Tool.POLYGON )
-			viewState.getPolygonBuffer().addPoint( new Point(x, y) );
-		else if( ! (viewState.getSelectedTool() == Tool.SELECTOR) )			
-		{
-			//TODO, switch here
-			if( viewState.getSelectedTool() == Tool.RECTANGLE )
-				model.getToolbox().doCommand( new doDrawRectangle( "wood.jpg", x, y, 40, 40, null ) );			
-			if( viewState.getSelectedTool() == Tool.ELLIPSE )
-				model.getToolbox().doCommand( new doDrawEllipse( "red.jpg", x, y, 40, 40, null ) );		
-			if( viewState.getSelectedTool() == Tool.QUEY )
-				model.getToolbox().doCommand( new doDrawRectangle( "metal.jpg", x, y, 200, 30, TypeOfMapObject.QUAY ) );						
-			if( viewState.getSelectedTool() == Tool.STARTPOINT )
-				model.getToolbox().doCommand( new doSetStartPoint(x,y) );
-
-			doAfterDraw();
-			return;		
-		}
-		
-		else
-		{
-			int i = 0;
-			boolean focusFound = false;
-			int distanceFromStart = 
-					(int) (
-						Math.sqrt(
-								Math.pow(x-viewState.getMap().getStartPoint().getX(),2) +
-								Math.pow(y-viewState.getMap().getStartPoint().getY(),2)
-						)
-					);
-			if( distanceFromStart <= viewState.getStartPointRange() )
-			{
-				viewState.setFocus(FocusType.START_POINT);
-				focusFound = true;
-			}
-			if( !focusFound )
-			for( MapShape shape : model.getEditorMap().getShapes())
-			{
-				if( shape.getShapeObject().contains(x, y) )
-				{
-					viewState.setFocus(FocusType.SHAPE, i);
-					focusFound = true;
-					//TODO maybe backward and brake?
-				} 				
-				++i;
-			}
-			if( !focusFound ) viewState.setFocus(FocusType.MAP);			
-			/*TODO, do internal focus change event to avoid copy of the code*/
-			return;
-		}
-	}
+	}	
 	
 	private void doEvent( EventToolSelect event )
 	{		
@@ -401,9 +344,6 @@ public class Controller extends Thread
 		
 		switch( event.getEventType() )
 		{
-			case MAP_POINT_ACCEPT:
-				doEvent( (EventPointAccept) event );
-				break;
 			case TOOL_SELECT:
 				doEvent( (EventToolSelect) event );
 				break;
