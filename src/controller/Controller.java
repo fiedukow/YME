@@ -63,6 +63,7 @@ public class Controller extends Thread
 		actionMap.put( EventChangeFocus.class , new ActionChangeFocus() );
 		actionMap.put( EventLoadMap.class     , new ActionLoadMap()     );
 		actionMap.put( EventSaveMap.class     , new ActionSaveMap()     );
+		actionMap.put( EventNewMap.class      , new ActionNewMap()      );
 	}
 
 	public Controller ( Model model, View view, BlockingQueue<Event> events)
@@ -187,6 +188,11 @@ public class Controller extends Thread
 		model.saveMap( filePath );
 	}
 	
+	void newMap( )
+	{
+		model.newMap();	
+	}
+	
 	void createAndSetNewViewState( )
 	{
 		this.viewState = new ViewState( model.getEditorMap(), model.getToolbox() );
@@ -247,14 +253,6 @@ public class Controller extends Thread
 		return questions;
 	}	
 	
-	
-	private void doEvent( EventNewMap event )
-	{
-		view.showInfo("Zaczynamy prace nad nową mapą\n");
-		model.newMap();
-		viewState = new ViewState( model.getEditorMap(), model.getToolbox() );
-		view.setCurrentState(viewState);	
-	}
 	
 	private void doEvent( EventQuestionAnswered event )
 	{
@@ -325,9 +323,6 @@ public class Controller extends Thread
 		
 		switch( event.getEventType() )
 		{				
-			case NEW_MAP:
-				doEvent( (EventNewMap) event );
-				break;
 			case QUESTION_ANSWERED:
 				doEvent( (EventQuestionAnswered) event );
 				break;
