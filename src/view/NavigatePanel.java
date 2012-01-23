@@ -6,24 +6,17 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 
 import controller.FocusType;
 import controller.event.EventChangeFocus;
 import controller.event.EventRedo;
-import controller.event.EventToolSelect;
 import controller.event.EventUndo;
-
-import model.MapShape;
 
 public class NavigatePanel extends JPanel  
 {
@@ -33,9 +26,10 @@ public class NavigatePanel extends JPanel
 	private static final long serialVersionUID = 1L;
 	
 	JButton nextFocus, prevFocus, undo, redo;
-	JComboBox shapeList;
+	JComboBox<FocusListElement> shapeList;
 	JProgressBar BQFill;
 	View father;
+	
 	/*it shouldn't be here - it's most ugly thing i ever done :(*/
 	boolean consumeEvent;
 	
@@ -49,7 +43,7 @@ public class NavigatePanel extends JPanel
 		undo = new JButton("< Cofnij");		
 		redo = new JButton("Ponow  >");
 		
-		BQFill = new JProgressBar(0, 128); //TODO no magic constans
+		BQFill = new JProgressBar(0, 128);
 		BQFill.setValue(father.eventQueue.size());
 		new BQUpdater( BQFill, father );
 		
@@ -58,16 +52,13 @@ public class NavigatePanel extends JPanel
 		undo.setEnabled( father.getState().isUndoNotEmpty() );		
 		redo.setEnabled( father.getState().isRedoNotEmpty() );	
 		
-		shapeList = new JComboBox();
+		shapeList = new JComboBox<FocusListElement>();
 		shapeList.addItem(new FocusListElement("Cała mapa", FocusType.MAP, null ));
 		shapeList.addItem(new FocusListElement("Punkt startowy", FocusType.START_POINT, null));		
 		shapeList.setFont(new Font("Courier", Font.PLAIN, 12));
-		int i = 1;
-		for( MapShape sh : father.getState().getMap().getShapes())
-		{
-			shapeList.addItem(new FocusListElement("Element # "+(i+1), FocusType.SHAPE, i ));
-			++i;
-		}
+		int size = father.getState().getMap().getShapes().size();
+		for( int i  = 0; i < size; ++i )
+			shapeList.addItem(new FocusListElement("Element # "+(i+1), FocusType.SHAPE, i ));			
 		
 		undo.addActionListener(
 		new ActionListener()

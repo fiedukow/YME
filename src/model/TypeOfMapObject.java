@@ -19,5 +19,10 @@ public enum TypeOfMapObject
  * @author fiedukow
  */
 class InvalidTypeOfMapObjectException extends Exception
-{	
+{
+
+	/**
+	 * UID 
+	 */
+	private static final long serialVersionUID = 1L;	
 }

@@ -1,7 +1,7 @@
 package model;
 
 import java.awt.Point;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  * Base class for all XML represented shapes allowed in program
@@ -9,8 +9,8 @@ import java.util.Vector;
  */
 abstract class XMLShape
 {	
-	private String textureName;	
-	private TypeOfMapObject typeOfObject; /** Current value type of map object */
+	private final String textureName;	
+	private final TypeOfMapObject typeOfObject; /** Current value type of map object */
 	/*TODO universal attribute collection?*/
 	
 	/**
@@ -89,7 +89,7 @@ abstract class XMLShape
  */
 class XMLPolygon extends XMLShape
 { 	
-	Vector<Point> vertices;
+	private final ArrayList<Point> vertices;
 	
 	/**
 	 * Main constructor - creates XMLPolygon using MapPolygon
@@ -98,7 +98,7 @@ class XMLPolygon extends XMLShape
 	public XMLPolygon( MapPolygon polygon )
 	{		
 		super(polygon);
-		vertices = new Vector<Point>();		
+		vertices = new ArrayList<Point>();		
 		for( int i = 0; i < polygon.getNPoints(); ++i )
 		{			
 			vertices.add( new Point(polygon.getXCoords()[i], polygon.getYCoords()[i]) );
@@ -127,7 +127,7 @@ class XMLPolygon extends XMLShape
  */
 class XMLRectangle extends XMLShape
 { 	
-	int x,y,w,h;
+	private final int x,y,w,h;
 	
 	/**
 	 * Main constructor - creates XMLRectagle using MapRectangle
@@ -161,7 +161,7 @@ class XMLRectangle extends XMLShape
  */
 class XMLEllipse extends XMLShape
 { 	
-	int x,y,w,h;
+	private final int x,y,w,h;
 	
 	/**
 	 * Main constructor - creates XMLElllipse using MapEllipse
@@ -195,5 +195,10 @@ class XMLEllipse extends XMLShape
  */
 class UnrecognizedTypeOfMapShape extends Exception
 {
+
+	/**
+	 * UID
+	 */
+	private static final long serialVersionUID = 1L;
 	
 }

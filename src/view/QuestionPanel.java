@@ -371,7 +371,7 @@ class QuestionButtonComponent extends QuestionComponent
 
 class QuestionTypeOfMapObjectComponent extends QuestionComponent
 {		
-	JComboBox box;
+	JComboBox<String> box;
 	private final HashMap<String, TypeOfMapObject> rePadMap;
 	
 	QuestionTypeOfMapObjectComponent( View father, String name, TypeOfMapObject selectedValue, LinkedList<TypeOfMapObject> possibleValues )	
@@ -383,7 +383,7 @@ class QuestionTypeOfMapObjectComponent extends QuestionComponent
 		description.setFont( new Font ( "Courier", Font.PLAIN, 14 ) );
 		componentsToDraw.add( description );
 		
-		box = new JComboBox( );
+		box = new JComboBox<String>( );
 		
 		for( TypeOfMapObject value : possibleValues )
 		{

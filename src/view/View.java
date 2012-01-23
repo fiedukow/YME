@@ -151,7 +151,7 @@ public class View {
 	}
 	
 	/**
-	 * Accesor to frame 
+	 * Accessor to frame 
 	 * @return mainFrame - the main frame of Application
 	 */
 	public JFrame getFrame()
@@ -163,7 +163,7 @@ public class View {
 	 * Show text in debug window - it is useful for debug and to show some informations for users.
 	 * @param toShow - the String you want to show
 	 */
-	public synchronized void showInfo( String toShow )
+	public void showInfo( String toShow )
 	{
 		statusText.append(toShow);
 		statusText.setCaretPosition( statusText.getText().length() );
@@ -173,7 +173,7 @@ public class View {
 	 * It update view using given snapshot.
 	 * @param map - ViewState (snapshot of the appliaction model) - object containing all informations needed
 	 */
-	public synchronized void setCurrentState( ViewState map )
+	public void setCurrentState( ViewState map )
 	{
 		this.currentState = map;	
 		mapPanel.repaint( );		

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Vector;
 import java.util.concurrent.BlockingQueue;
 
 import controller.event.*;
@@ -20,7 +19,11 @@ import model.Model;
 import model.TypeOfMapObject;
 import view.View;
 
-/*Controller in MVC meaning*/
+/**
+ * Controller in MVC meaning.
+ * @author fiedukow
+ *
+ */
 public class Controller extends Thread 
 {
 	Model model;
@@ -29,6 +32,9 @@ public class Controller extends Thread
 	BlockingQueue< Event > events;	
 	static final HashMap < Class < ? extends Event >, Action > actionMap = new HashMap < Class < ? extends Event >, Action >();
 	
+	/**
+	 * Connect events with concrete actions
+	 */
 	static
 	{
 		actionMap.put( EventPointSelect.class 		, new ActionSelectPoint() 	);
@@ -264,10 +270,7 @@ public class Controller extends Thread
 		return questions;
 	}	
 	
-	
-	
-	
-	private void refresh()
+	private void refreshView()
 	{
 		//there is no better place for this:
 		if( viewState.getSelectedTool() != Tool.POLYGON )
@@ -281,7 +284,7 @@ public class Controller extends Thread
 		Action toDo = actionMap.get(event.getClass());
 		if( actionMap.get(event.getClass()) != null )
 			toDo.invoke( this, event );
-		refresh();
+		refreshView();
 	}
 	
 }

@@ -40,5 +40,10 @@ public class PolygonBuffer
 
 class ToFewVerticlesException extends Exception
 {
+
+	/**
+	 * UID
+	 */
+	private static final long serialVersionUID = 1L;
 	
 }

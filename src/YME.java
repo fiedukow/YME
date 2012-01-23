@@ -10,10 +10,7 @@ import model.Model;
 
 /*
  * Overall TODO list
- *  - Exception handling
  *  - Java doc in controller and model
- *  - View State class(?)
- *  - Questions in view
  *  - Access modifiers
  */
 
@@ -24,9 +21,9 @@ public class YME
 	public static final void main( String[] args )
 	{		
 		System.out.println("Witaj w YME :-)");		
-		Model md = new Model();
-		ArrayBlockingQueue<Event> bq = new ArrayBlockingQueue<Event>( 128 ); 
-		View v = new View( new ViewState(md.getEditorMap(), md.getToolbox()), bq );
-		new Controller(md,v,bq);
+		Model model = new Model();
+		ArrayBlockingQueue<Event> blockingQueue= new ArrayBlockingQueue<Event>( 128 ); 
+		View view = new View( new ViewState(model.getEditorMap(), model.getToolbox()), blockingQueue );
+		new Controller(model,view,blockingQueue);
 	}
 }

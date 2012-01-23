@@ -22,11 +22,21 @@ public interface Command
 
 /*throw when something goes wrong in command*/
 class CommandInvokeException extends Exception 
-{	
+{
+
+	/**
+	 * UID
+	 */
+	private static final long serialVersionUID = 1L;	
 }
 
 /*throw when something goes wrond in command undo*/
 class CommandUndoException extends Exception
 {
+
+	/**
+	 * UID
+	 */
+	private static final long serialVersionUID = 1L;
 }
 

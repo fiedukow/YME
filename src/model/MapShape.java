@@ -12,7 +12,7 @@ import java.util.LinkedList;
  * @author fiedukow
  * @see java.awt.Shape
  */
-public abstract class MapShape
+public abstract class MapShape implements Cloneable
 {
 	private String textureName;	
 	private TypeOfMapObject typeOfObject; /** Current value type of map object */	
@@ -107,6 +107,8 @@ public abstract class MapShape
 	
 	abstract public Shape getShapeObject();
 	
+	abstract public MapShape clone();
+	
 }
 
 
@@ -118,7 +120,6 @@ public abstract class MapShape
  */
 final class MapPolygon extends MapShape
 {
-	
 	protected static LinkedList<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
 	
 	/**
@@ -134,7 +135,7 @@ final class MapPolygon extends MapShape
 	
 	public LinkedList<TypeOfMapObject> getAllowedTypesOfMapObject()
 	{
-		return allowedTypes;
+		return allowedTypes;		
 	}
 	
 	
@@ -281,6 +282,16 @@ final class MapPolygon extends MapShape
 	{
 		return (Polygon) shapeObject;
 	}
+	
+	public MapPolygon clone()
+	{
+		MapPolygon result = new MapPolygon( getTextureName(), getTypeOfObject() );
+		Polygon shape = getShapeObject();
+		for( int i = 0; i < shape.npoints; ++ i )			
+			result.addPoint(shape.xpoints[i], shape.ypoints[i]);
+		return result;
+	}
+	
 	
 	/*
 	 * PROTECTED SECTION
@@ -445,6 +456,12 @@ final class MapRectangle extends MapShape
 	/*package*/ void setRectangle( int x, int y, int w, int h )
 	{
 		getShapeObject().setRect(x, y, w, h);
+	}
+	
+	
+	public MapRectangle clone()
+	{
+		return new MapRectangle( getTextureName(), getX(), getY(), getW(), getH(), getTypeOfObject() );
 	}
 	
 	
@@ -632,6 +649,13 @@ final class MapEllipse extends MapShape
 	{
 		return (Ellipse2D.Double) shapeObject;
 	}	
+	
+	
+	public MapEllipse clone()
+	{
+		return new MapEllipse( getTextureName(), getX(), getY(), getW(), getH(), getTypeOfObject() );
+	}
+	
 	
 	/*
 	 * PROTECTED SECTION

@@ -18,10 +18,13 @@ import controller.event.EventExitProgram;
 import controller.event.EventLoadMap;
 import controller.event.EventNewMap;
 import controller.event.EventSaveMap;
-import controller.event.EventToolSelect;
 
 public class MainMenu extends JMenuBar 
 {
+	/**
+	 * UID
+	 */
+	private static final long serialVersionUID = 1L;
 	JMenu fileMenu;
 	JMenu helpMenu;
 	JMenu editMenu;

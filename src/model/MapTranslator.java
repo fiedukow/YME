@@ -7,7 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Vector;
 
 import com.thoughtworks.xstream.XStream;
 
@@ -19,10 +18,10 @@ import com.thoughtworks.xstream.XStream;
  */
 final class MapTranslator
 {
-	private String mapName;					/** Map name, for general proposes */
-	private String waterTexture;			/** The texture used as the background */
-	private Point  startPoint;
-	private Vector<XMLShape> shapes;	    /** List of polygons presented on the map */
+	private final String mapName;					/** Map name, for general proposes */
+	private final String waterTexture;				/** The texture used as the background */
+	private final Point  startPoint;
+	private final ArrayList<XMLShape> shapes;	    /** List of polygons presented on the map */
 
 	public static final String xmlHeader = "<?xml version=\"1.0\"?>\n";
 	
@@ -54,7 +53,7 @@ final class MapTranslator
 		this.mapName = map.getMapName();
 		this.waterTexture = map.getWaterTexture();
 		this.startPoint = map.getStartPoint();
-		this.shapes = new Vector<XMLShape>();
+		this.shapes = new ArrayList<XMLShape>();
 		
 		for( MapShape sh : map.getShapes() )
 		{	

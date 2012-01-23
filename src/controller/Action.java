@@ -29,98 +29,6 @@ interface Action
 	abstract void invoke( Controller father, Event generalEvent );
 }
 
-class ActionSelectPoint implements Action
-{
-	public void invoke(Controller father, Event generalEvent) {
-		EventPointSelect event = (EventPointSelect) generalEvent;
-		Tool selectedTool =  father.getSelectedTool();
-		int x,y;
-		x = event.getX();
-		y = event.getY();
-		/*drawing*/
-		if( selectedTool == Tool.POLYGON )
-			father.addPoint( new Point(x, y) );
-		else if( ! ( selectedTool == Tool.SELECTOR) )			
-		{
-			//TODO, switch here
-			switch( selectedTool )
-			{
-				case RECTANGLE:
-					father.doCommand( new doDrawRectangle( "wood.jpg", x, y, 40, 40, null ) );			
-					break;
-				case ELLIPSE:
-					father.doCommand( new doDrawEllipse( "red.jpg", x, y, 40, 40, null ) );
-					break;
-				case QUEY:
-					father.doCommand( new doDrawRectangle( "metal.jpg", x, y, 200, 30, TypeOfMapObject.QUAY ) );
-					break;
-				case STARTPOINT:
-					father.doCommand( new doSetStartPoint(x,y) );
-					break;
-			}
-
-			father.doAfterDraw();
-			return;		
-		}
-		/*selecting*/
-		else
-		{
-			int i = 0;
-			boolean focusFound = false;
-			int distanceFromStart = 
-					(int) (
-						Math.sqrt(
-								Math.pow(x-father.getStartPointX(),2) +
-								Math.pow(y-father.getStartPointY(),2)
-						)
-					);
-			if( distanceFromStart <= father.getStartPointRange() )
-			{
-				father.setFocus(FocusType.START_POINT);
-				focusFound = true;
-			}
-			if( !focusFound )
-			for( MapShape shape : father.getMapShapes() )
-			{
-				if( shape.getShapeObject().contains(x, y) )
-				{
-					father.setFocus(FocusType.SHAPE, i);
-					focusFound = true;
-					//TODO maybe backward and brake?
-				} 				
-				++i;
-			}
-			if( !focusFound ) father.setFocus(FocusType.MAP);			
-			/*TODO, do internal focus change event to avoid copy of the code*/
-			return;
-			}		
-	}	
-}
-
-class ActionPointAccept implements Action
-{
-	public void invoke(Controller father, Event generalEvent) {
-		if( father.getSelectedTool() == Tool.POLYGON )
-		{
-			try {
-				father.doCommand
-						( 
-								new doDrawPolygon("brick.jpg", father.getBufferedPolygonVerticles(), TypeOfMapObject.DESTROY ) 
-						);			
-				father.doAfterDraw();
-			} 
-			catch (ToFewVerticlesException e) 
-			{
-				father.showInfo("Zaznaczono zbyt malo punktow by utworzyc polygon\n");				
-			}
-			finally
-			{
-				father.resetPolygonBuffer();
-			}
-		}
-	}	
-}
-
 class ActionToolSelect implements Action
 {
 	public void invoke(Controller father, Event generalEvent) {
@@ -277,6 +185,99 @@ class ActionQuestionAnswer implements Action
 				break;			
 			default:
 				break;
+		}
+	}	
+}
+
+class ActionSelectPoint implements Action
+{
+	public void invoke(Controller father, Event generalEvent) {
+		EventPointSelect event = (EventPointSelect) generalEvent;
+		Tool selectedTool =  father.getSelectedTool();
+		int x,y;
+		x = event.getX();
+		y = event.getY();
+		/*drawing*/
+		if( selectedTool == Tool.POLYGON )
+			father.addPoint( new Point(x, y) );
+		else if( ! ( selectedTool == Tool.SELECTOR) )			
+		{
+			//TODO, switch here
+			switch( selectedTool )
+			{
+				case RECTANGLE:
+					father.doCommand( new doDrawRectangle( "wood.jpg", x, y, 40, 40, null ) );			
+					break;
+				case ELLIPSE:
+					father.doCommand( new doDrawEllipse( "red.jpg", x, y, 40, 40, null ) );
+					break;
+				case QUEY:
+					father.doCommand( new doDrawRectangle( "metal.jpg", x, y, 200, 30, TypeOfMapObject.QUAY ) );
+					break;
+				case STARTPOINT:
+					father.doCommand( new doSetStartPoint(x,y) );
+					break;
+			}
+
+			father.doAfterDraw();
+			return;		
+		}
+		/*selecting*/
+		else
+		{
+			int i = 0;
+			boolean focusFound = false;
+			int distanceFromStart = 
+					(int) (
+						Math.sqrt(
+								Math.pow(x-father.getStartPointX(),2) +
+								Math.pow(y-father.getStartPointY(),2)
+						)
+					);
+			if( distanceFromStart <= father.getStartPointRange() )
+			{
+				father.setFocus(FocusType.START_POINT);
+				focusFound = true;
+			}
+			if( !focusFound )
+			for( MapShape shape : father.getMapShapes() )
+			{
+				if( shape.getShapeObject().contains(x, y) )
+				{
+					father.setFocus(FocusType.SHAPE, i);
+					focusFound = true;
+					//TODO maybe backward and brake?
+				} 				
+				++i;
+			}
+			if( !focusFound ) father.setFocus(FocusType.MAP);			
+			/*TODO, do internal focus change event to avoid copy of the code*/
+			return;
+			}		
+	}	
+}
+
+
+class ActionPointAccept implements Action
+{
+	public void invoke(Controller father, Event generalEvent) {
+		if( father.getSelectedTool() == Tool.POLYGON )
+		{
+			try {
+				father.doCommand
+						( 
+								new doDrawPolygon("brick.jpg", father.getBufferedPolygonVerticles(), TypeOfMapObject.DESTROY ) 
+						);			
+				father.doAfterDraw();
+			} 
+			catch (ToFewVerticlesException e) 
+			{
+				father.showInfo("Zaznaczono zbyt malo punktow by utworzyc polygon\n");				
+			}
+			finally
+			{
+				father.resetPolygonBuffer();
+			}
 		}
 	}	
 }

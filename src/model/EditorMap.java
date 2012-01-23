@@ -1,13 +1,12 @@
 package model;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Vector;
 
 /**
  * The map description for map Editor. Have some get/set function as interface.
  * @author fiedukow
  */
-public final class EditorMap
+public final class EditorMap implements Cloneable
 {
 	private String mapName;					/**Map name, for general proposes*/
 	private String waterTexture;		    /**The texture used as the background*/
@@ -26,6 +25,16 @@ public final class EditorMap
 		this.waterTexture = waterTexture;
 		this.shapes = resultShapes;
 		this.startPoint = startPoint;
+	}
+	
+	public EditorMap clone()
+	{
+		ArrayList<MapShape> resultArray = new ArrayList<MapShape>();
+		for( MapShape shape : shapes )
+		{
+			resultArray.add( shape.clone() );
+		}
+		return new EditorMap( new String( mapName ), new String ( waterTexture ), resultArray, new Point( startPoint ) );
 	}
 	
 	/**

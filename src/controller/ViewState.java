@@ -17,7 +17,7 @@ public class ViewState
 	PolygonBuffer polygonBuffer; //TODO it should have universal Shape OtherThings in here
 	ArrayList<ViewQuestion> questions;
 				
-	public ViewState( EditorMap map, EditorToolbox box)
+	public ViewState( EditorMap map, EditorToolbox box )
 	{
 		this.map = map;
 		this.box = box;
