@@ -218,6 +218,7 @@ public class Controller extends Thread
 				viewState.getMap().getShapes().size()-1
 				);
 		viewState.setSelectedTool(Tool.SELECTOR);
+		refreshView();
 	}
 	
 	
@@ -244,7 +245,6 @@ public class Controller extends Thread
 	
 	private void refreshView()
 	{
-		//there is no better place for this:
 		if( viewState.getSelectedTool() != Tool.POLYGON )
 			viewState.getPolygonBuffer().reset();
 		viewState.setQuestion( generateQuestionsForCurrentFocus() );
