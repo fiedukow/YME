@@ -2,7 +2,7 @@ package controller.question;
 
 public class StringValueQuestion extends ViewQuestion 
 {
-	String value;
+	private final String value;
 	public StringValueQuestion( String name, QuestionType type, String value ) throws WrongQuestionTypeException
 	{
 		super(name,type);

@@ -3,7 +3,7 @@ package model;
 
 public class doDrawEllipse implements Command
 {	
-	MapEllipse ellipse;
+	private final MapEllipse ellipse;
 	
 	public doDrawEllipse( String textureName, int x, int y, int w, int h, TypeOfMapObject type )
 	{

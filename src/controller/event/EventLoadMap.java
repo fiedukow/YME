@@ -2,7 +2,7 @@ package controller.event;
 
 public class EventLoadMap extends Event 
 {
-	String filePath;
+	private final String filePath;
 	
 	public EventLoadMap( String filePath )
 	{		

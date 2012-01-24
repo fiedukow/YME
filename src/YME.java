@@ -7,14 +7,6 @@ import controller.ViewState;
 import controller.event.Event;
 import model.Model;
 
-
-/*
- * Overall TODO list
- *  - Java doc in controller and model
- *  - Access modifiers
- */
-
-
 /*Main class*/
 public class YME 
 {

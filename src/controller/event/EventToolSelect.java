@@ -4,7 +4,7 @@ import controller.Tool;
 
 public class EventToolSelect extends Event 
 {
-	private Tool tool;
+	private final Tool tool;
 
 	public EventToolSelect( Tool tool )
 	{

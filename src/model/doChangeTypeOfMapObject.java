@@ -3,8 +3,8 @@ package model;
 
 public class doChangeTypeOfMapObject implements Command
 {
-	int whichElement;
-	TypeOfMapObject type;
+	private final int whichElement;
+	private TypeOfMapObject type;
 	
 	public doChangeTypeOfMapObject( TypeOfMapObject type, int whichElement )
 	{

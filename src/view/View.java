@@ -27,15 +27,11 @@ public class View {
 	/*
 	 * General informations
 	 */
-	/**
-	 * Reference to current snapshot
-	 */
-	ViewState currentState;
 	
 	/**
 	 * Reference to blocking queue which will be used to communicate with Controller
 	 */
-	BlockingQueue<Event> eventQueue;
+	final BlockingQueue<Event> eventQueue;
 	
 	/*
 	 * Graphics components 
@@ -44,48 +40,53 @@ public class View {
 	/**
 	 * main window
 	 */
-	JFrame mainFrame;
+	private final JFrame mainFrame;
 	
 	/**
 	 * whole left part of the screen
 	 */
-	JPanel leftMenu;	
+	private final JPanel leftMenu;	
 	
 	/**
 	 * Main part of the screen - map
 	 */
-	MapPanel mapPanel;
+	private final MapPanel mapPanel;
 	
 	/**
 	 * Tools buttons with can be use to change mode
 	 */
-	ToolPanel toolbox;
+	private final ToolPanel toolbox;
 	
 	/**
 	 * Panel which will be use to navigate between objects on map
 	 * and to allow users to make undo/redo operations
 	 */
-	NavigatePanel navigatePanel;
+	final NavigatePanel navigatePanel;
 	
 	/**
 	 * Main menu - contains most important functions of whole program
 	 */
-	MainMenu menuBar;
+	private final MainMenu menuBar;
 	
 	/**
 	 * Shows status information, especially debug window
 	 */
-	JPanel statusBar;	
+	private final JPanel statusBar;	
 	
 	/**
 	 * Textarea visible for user - to show him messages.
 	 */
-	JTextArea statusText;
+	private final JTextArea statusText;
 	
 	/**
 	 * Panel with question from model (means - attributes to change for current focus)
 	 */
-	QuestionPanel questions;
+	private QuestionPanel questions;
+	
+	/**
+	 * Reference to current snapshot
+	 */
+	private ViewState currentState;
 		
 	
 	/**

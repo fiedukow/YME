@@ -2,7 +2,7 @@ package controller.question;
 
 public class DoubleIntValueQuestion extends ViewQuestion 
 {
-	int first, second;
+	private final int first, second;
 	public DoubleIntValueQuestion( String name, QuestionType type, int first, int second ) throws WrongQuestionTypeException
 	{
 		super(name,type);

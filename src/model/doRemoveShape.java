@@ -3,8 +3,8 @@ package model;
 
 public class doRemoveShape implements Command
 {	
-	MapShape shape;
-	int index;
+	private MapShape shape;
+	private final int index;
 
 	public doRemoveShape( int index )
 	{

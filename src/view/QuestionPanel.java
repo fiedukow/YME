@@ -124,7 +124,7 @@ class QuestionComponentFactory
 	 * Object ready to use after constructor of this class
 	 * It is the QuestionComponent created by factory.
 	 */
-	QuestionComponent created;
+	private final QuestionComponent created;
 	
 	/**
 	 * Main constructor - create object using question
@@ -179,7 +179,7 @@ abstract class QuestionComponent
 	/**
 	 * Swing component ready to use
 	 */	
-	LinkedList< Component > componentsToDraw;
+	protected LinkedList< Component > componentsToDraw;
 	
 	/**
 	 * Name of the question given by Controller
@@ -238,7 +238,7 @@ abstract class QuestionComponent
  */
 class QuestionTwiceIntComponent extends QuestionComponent
 {	
-	JTextField firstTF, secondTF;
+	private final JTextField firstTF, secondTF;
 	
 	QuestionTwiceIntComponent( View father, String name, int first, int second )	
 	{
@@ -294,7 +294,7 @@ class QuestionTwiceIntComponent extends QuestionComponent
 
 class QuestionStringComponent extends QuestionComponent
 {	
-	JTextField valueField;
+	private final JTextField valueField;
 	
 	QuestionStringComponent( View father_, String name, String value )	
 	{
@@ -339,7 +339,7 @@ class QuestionStringComponent extends QuestionComponent
 
 class QuestionButtonComponent extends QuestionComponent
 {		
-	JButton action;
+	private final JButton action;
 	
 	QuestionButtonComponent( View father, String name )	
 	{

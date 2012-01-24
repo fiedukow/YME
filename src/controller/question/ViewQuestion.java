@@ -2,8 +2,8 @@ package controller.question;
 
 abstract public class ViewQuestion 
 {
-	QuestionType type;
-	String name;
+	private final QuestionType type;
+	private final String name;
 		
 	public ViewQuestion( String name, QuestionType type )
 	{

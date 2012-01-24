@@ -7,7 +7,7 @@ package model;
  */
 public class doDrawRectangle implements Command
 {	
-	MapRectangle rectangle;
+	private final MapRectangle rectangle;
 	
 	public doDrawRectangle( String textureName, int x, int y, int w, int h, TypeOfMapObject type )
 	{

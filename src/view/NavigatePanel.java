@@ -25,20 +25,24 @@ public class NavigatePanel extends JPanel
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	JButton nextFocus, prevFocus, undo, redo;
-	JComboBox<FocusListElement> shapeList;
-	JProgressBar BQFill;
-	View father;
+	private final JButton nextFocus, prevFocus;
+
+	final JButton undo;
+	final JButton redo;
+	
+	private final JComboBox<FocusListElement> shapeList;
+	private final JProgressBar BQFill;
+	private final View father;
 	
 	/*it shouldn't be here - it's most ugly thing i ever done :(*/
-	boolean consumeEvent;
+	private boolean consumeEvent;
 	
 	public NavigatePanel( View father_ )
 	{
 		super();		
 		consumeEvent = false;
 		father = father_;
-		nextFocus = new JButton(">");
+		nextFocus = new JButton(">"); 
 		prevFocus = new JButton("<");
 		undo = new JButton("< Cofnij");		
 		redo = new JButton("Ponow  >");

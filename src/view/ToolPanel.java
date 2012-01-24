@@ -32,12 +32,12 @@ public class ToolPanel extends JPanel
 	/**
 	 * The View inside which is this panel 
 	 */
-	View father;
+	private final View father;
 	
 	/**
 	 * Map of buttons with tools
 	 */
-	LinkedHashMap<Tool, ToolButton> buttons;
+	private final LinkedHashMap<Tool, ToolButton> buttons;
 	
 	/**
 	 * Main constructor, sets father and creates all ToolButtons which are necessary

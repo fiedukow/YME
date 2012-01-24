@@ -3,7 +3,7 @@ package model;
 
 public class doChangeMapName implements Command
 {
-	String mapName;
+	private String mapName;
 	
 	public doChangeMapName( String mapName )
 	{

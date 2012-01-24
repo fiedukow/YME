@@ -3,7 +3,7 @@ package model;
 
 public class doChangeWaterTexture implements Command
 {
-	String textureName;
+	private String textureName;
 	
 	public doChangeWaterTexture( String textureName )
 	{

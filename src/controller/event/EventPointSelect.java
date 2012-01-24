@@ -4,7 +4,7 @@ import java.awt.event.MouseEvent;
 
 public class EventPointSelect extends Event 
 {
-	int x, y;
+	private final int x, y;
 	
 	public EventPointSelect( MouseEvent event )
 	{

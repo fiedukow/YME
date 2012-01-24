@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class PolygonBuffer  
 {
-	ArrayList<Point> verticles;
+	private final ArrayList<Point> verticles;
 	PolygonBuffer()
 	{
 		verticles = new ArrayList<Point>();

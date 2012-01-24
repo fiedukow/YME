@@ -3,9 +3,8 @@ package model;
 
 public class doResizeShape implements Command
 {
-	/*TODO, it's generally bad when resize to value close to zero*/
-	MapShape shape;
-	int w,h,whichElement;
+	private MapShape shape;
+	private final int w,h,whichElement;
 	
 	public doResizeShape( int w, int h, int whichElement )
 	{
@@ -21,7 +20,8 @@ public class doResizeShape implements Command
 	}
 
 	public void undo(EditorMap map) throws CommandUndoException {
-		map.removeMapShape( whichElement );
+		shape = map.getShape( whichElement );
+		map.removeMapShape( whichElement );		
 		map.addMapShape( whichElement, shape );
 	}
 }

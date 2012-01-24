@@ -9,14 +9,14 @@ import model.EditorToolbox;
 import model.MapShape;
 
 public class ViewState 
-{
-	EditorMap map;
-	EditorToolbox box;
-	FocusType focusType;
-	Integer focusId;
-	Tool selectedTool;		
-	PolygonBuffer polygonBuffer; //TODO it should have universal Shape OtherThings in here
-	ArrayList<ViewQuestion> questions;
+{		
+	private Tool selectedTool;
+	private EditorToolbox box;
+	private PolygonBuffer polygonBuffer;
+	private ArrayList<ViewQuestion> questions;
+	private EditorMap map;
+	private FocusType focusType;
+	private Integer focusId;
 				
 	public ViewState( EditorMap map, EditorToolbox box )
 	{

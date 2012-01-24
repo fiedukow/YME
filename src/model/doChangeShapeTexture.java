@@ -3,8 +3,8 @@ package model;
 
 public class doChangeShapeTexture implements Command
 {
-	String textureName;
-	int whichElement;
+	private String textureName;
+	private final int whichElement;
 	
 	public doChangeShapeTexture( String textureName, int whichElement  )
 	{

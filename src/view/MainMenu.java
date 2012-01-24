@@ -25,13 +25,13 @@ public class MainMenu extends JMenuBar
 	 * UID
 	 */
 	private static final long serialVersionUID = 1L;
-	JMenu fileMenu;
-	JMenu helpMenu;
-	JMenu editMenu;
-	HashMap<String, JMenuItem> options;
-	View father;
-	JFileChooser saveFC;
-	JFileChooser loadFC;
+	private final JMenu fileMenu;
+	private final JMenu helpMenu;
+	private final JMenu editMenu;
+	private final HashMap<String, JMenuItem> options;
+	private final View father;
+	private final JFileChooser saveFC;
+	private final JFileChooser loadFC;
 	
 	MainMenu(View father)
 	{	

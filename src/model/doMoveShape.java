@@ -3,7 +3,8 @@ package model;
 
 public class doMoveShape implements Command 
 {
-	int x,y,whichElement;
+	private int x,y;
+	private final int whichElement;
 	
 	public doMoveShape( int x, int y, int whichElement )
 	{

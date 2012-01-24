@@ -4,8 +4,8 @@ import controller.FocusType;
 
 public class EventChangeFocus extends Event 
 {
-	Integer focusId;
-	FocusType focusType;
+	private final Integer focusId;
+	private final FocusType focusType;
 	
 	public EventChangeFocus( FocusType focusType, Integer focusId )
 	{

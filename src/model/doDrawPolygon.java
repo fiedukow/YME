@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public class doDrawPolygon implements Command
 {	
-	MapPolygon polygon;
+	private final MapPolygon polygon;
 	public doDrawPolygon( String textureName, ArrayList<Point> arrayList, TypeOfMapObject type )
 	{
 		polygon = new MapPolygon( textureName, type);

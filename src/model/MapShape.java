@@ -154,7 +154,7 @@ public abstract class MapShape implements Cloneable
  */
 final class MapPolygon extends MapShape
 {
-	protected static LinkedList<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
+	protected static final LinkedList<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
 	
 	/**
 	 * List of allowed types
@@ -163,8 +163,9 @@ final class MapPolygon extends MapShape
 	{
 		allowedTypes = new LinkedList<TypeOfMapObject>();
 		allowedTypes.add( TypeOfMapObject.DESTROY );
-		allowedTypes.add( TypeOfMapObject.STOP );
+		allowedTypes.add( TypeOfMapObject.STOP );		
 		allowedTypes.add( TypeOfMapObject.BUMP );
+		allowedTypes.add( TypeOfMapObject.WIN );
 	}
 	
 	public LinkedList<TypeOfMapObject> getAllowedTypesOfMapObject()
@@ -226,7 +227,6 @@ final class MapPolygon extends MapShape
 	 */
 	public int[] getXCoords()
 	{
-		/*TODO - return copy*/
 		return getShapeObject().xpoints;
 	}
 	
@@ -237,7 +237,6 @@ final class MapPolygon extends MapShape
 	 */
 	public int[] getYCoords()
 	{
-		/*TODO - return copy*/
 		return getShapeObject().ypoints;
 	}
 
@@ -347,7 +346,7 @@ final class MapPolygon extends MapShape
  */
 final class MapRectangle extends MapShape
 {
-	protected static LinkedList<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
+	protected static final LinkedList<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
 	
 	/**
 	 * List of allowed types
@@ -530,7 +529,7 @@ final class MapRectangle extends MapShape
 final class MapEllipse extends MapShape
 {
 	
-	protected static LinkedList<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
+	protected static final LinkedList<TypeOfMapObject> allowedTypes; /** Contains list of types allowed on this particular MapShape derived class. */
 	
 	/**
 	 * List of allowed types
@@ -541,6 +540,7 @@ final class MapEllipse extends MapShape
 		allowedTypes.add( TypeOfMapObject.DESTROY );
 		allowedTypes.add( TypeOfMapObject.STOP );
 		allowedTypes.add( TypeOfMapObject.BUMP );
+		allowedTypes.add( TypeOfMapObject.WIN );
 	}
 	
 	

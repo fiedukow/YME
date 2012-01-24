@@ -20,16 +20,20 @@ import view.View;
 
 /**
  * Controller in MVC meaning.
+ * It connects View with Model.
+ * It handles any view event in blockingQueue.
+ * It connects Events with Actions.
+ * It provides necessary accessor to model, and controller structures.
  * @author fiedukow
  *
  */
 public class Controller extends Thread 
 {
-	Model model;
-	View view;
-	ViewState viewState;
-	BlockingQueue< Event > events;	
-	static final HashMap < Class < ? extends Event >, Action > actionMap = new HashMap < Class < ? extends Event >, Action >();
+	private ViewState viewState;
+	private final Model model;
+	private final View view;	
+	private final BlockingQueue< Event > events;	
+	static private final HashMap < Class < ? extends Event >, Action > actionMap = new HashMap < Class < ? extends Event >, Action >();
 	
 	/**
 	 * Connect events with concrete actions

@@ -37,7 +37,7 @@ public class MapPanel extends JPanel
 	/**
 	 * The view which created this MapPanel
 	 */
-	private View father; 
+	private final View father; 
 	
 	/**
 	 * Main constructor - creates panel with father setted
