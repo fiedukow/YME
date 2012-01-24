@@ -359,6 +359,7 @@ final class MapRectangle extends MapShape
 		allowedTypes.add( TypeOfMapObject.STOP );
 		allowedTypes.add( TypeOfMapObject.BUMP );
 		allowedTypes.add( TypeOfMapObject.QUAY );
+		allowedTypes.add( TypeOfMapObject.WIN );
 	}
 	
 	

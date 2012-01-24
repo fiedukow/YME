@@ -6,7 +6,6 @@ import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.concurrent.BlockingQueue;
 
 import controller.event.*;
@@ -17,7 +16,6 @@ import model.CommandStackEmptyException;
 import model.EditorMap;
 import model.MapShape;
 import model.Model;
-import model.TypeOfMapObject;
 import view.View;
 
 /**

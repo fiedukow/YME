@@ -47,14 +47,14 @@ abstract class XMLShape
 	public MapShape translate( Class< ? extends MapShape> classToBeCreated )
 	{		
 		MapShape result = null;
-		try
-		{
+
+		try {
 			result = classToBeCreated.newInstance();
-		}
-		catch ( Exception e )
-		{
+		} 
+		catch (InstantiationException | IllegalAccessException e1) 
+		{		
 			System.err.println("Nie udalo sie stworzyc obiektu.");
-			return result;
+			throw new RuntimeException();
 		}
 		
 		result.setTextureName(textureName);

@@ -10,7 +10,8 @@ public enum TypeOfMapObject
 	 QUAY		, /*quay, allowed for rectangle only*/
 	 DESTROY	, /*object which destroy the boat in the case of collision */
 	 STOP		, /*object which stop the boat in the case of collision */
-	 BUMP 		  /*object which bump the boat in the case of collision */
+	 BUMP 		, /*object which bump the boat in the case of collision */
+	 WIN		  /*if you are in - you have won :-)*/
 }
 
 /**
