@@ -2,6 +2,12 @@ package model;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import controller.question.DoubleIntValueQuestion;
+import controller.question.QuestionType;
+import controller.question.StringValueQuestion;
+import controller.question.ViewQuestion;
+import controller.question.WrongQuestionTypeException;
+
 /**
  * The map description for map Editor. Have some get/set function as interface.
  * @author fiedukow
@@ -93,6 +99,45 @@ public final class EditorMap implements Cloneable
 	public ArrayList<MapShape> getShapes() {
 		return shapes;
 	}
+	
+	/**
+	 * Asks question about pointed shape
+	 * @param index - id of MapShape to be asked for
+	 * @return - collection of questions ready to use
+	 */
+	public ArrayList< ViewQuestion > getShapeQuestions( int index )
+	{
+		return getShape(index).getQuestions();
+	}
+	
+	public ArrayList< ViewQuestion > getMapQuestions( )
+	{
+		 ArrayList< ViewQuestion > questions = new  ArrayList< ViewQuestion >();
+		 try {
+			questions.add( new StringValueQuestion("mapName",QuestionType.STRING, getMapName() ) );
+			questions.add( new StringValueQuestion("texture",QuestionType.STRING, getWaterTexture() ) );
+		 } 
+		 catch (WrongQuestionTypeException e) 
+		 {
+			System.err.println("Niepoprawny typ pytania.");
+			throw new RuntimeException();
+		 }	
+		 return questions;
+	}
+	
+	public ArrayList< ViewQuestion > getStartPointQuestions( )
+	{
+		ArrayList< ViewQuestion > questions = new  ArrayList< ViewQuestion >();
+		Point startPoint = this.getStartPoint();				
+		try {
+			questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, (int) startPoint.getX(), (int) startPoint.getY() ) );
+		} catch (WrongQuestionTypeException e) {
+			System.err.println("Niepoprawny typ pytania.");
+			throw new RuntimeException();
+		}	
+		return questions;
+	}
+	
 
 	/**
 	 * Shape under index
@@ -135,6 +180,7 @@ public final class EditorMap implements Cloneable
 	{
 		getShapes().remove( shape );
 	}
+		
 }
 
 

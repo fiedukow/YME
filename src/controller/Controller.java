@@ -14,6 +14,7 @@ import controller.question.*;
 
 import model.Command;
 import model.CommandStackEmptyException;
+import model.EditorMap;
 import model.MapShape;
 import model.Model;
 import model.TypeOfMapObject;
@@ -201,6 +202,11 @@ public class Controller extends Thread
 		model.newMap();	
 	}
 	
+	EditorMap getMap()
+	{
+		return model.getEditorMap();
+	}
+	
 	void createAndSetNewViewState( )
 	{
 		this.viewState = new ViewState( model.getEditorMap(), model.getToolbox() );
@@ -220,54 +226,22 @@ public class Controller extends Thread
 	/**
 	 * A little bit ugly question generator for current focus
 	 * It generates all question controller should ask view.
-	 * TODO, It's hardcoded because it's constant for every type of FocusTape
-	 * Maybe it be coded in classes like Map & Shape, and here only decide
-	 * which class will be asked for questions to ask.   
 	 * @return ArrayLisit of question for current focus - ready to set on ViewState
 	 */
 	ArrayList<ViewQuestion> generateQuestionsForCurrentFocus()
 	{
-		ArrayList<ViewQuestion> questions = new ArrayList<ViewQuestion>();
-		
-		try{			
-			switch( viewState.getFocusType() )
-			{
-				case MAP:
-					//current attributes values
-					questions.add( new StringValueQuestion("mapName",QuestionType.STRING, getMapName() ) );
-					questions.add( new StringValueQuestion("texture",QuestionType.STRING, getWaterTexture() ) );				
-					break;
-				case START_POINT:
-					//current attributes values
-					int x = getStartPointX();
-					int y = getStartPointY();				
-					questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, x,y ) );							
-					break;				
-				case SHAPE:
-					//current attributes values
-					MapShape currentShape = getShapeById( getFocusId() );
-					int pos[] = currentShape.getPosition();
-					int siz[] = currentShape.getSize();
-					TypeOfMapObject currentTOMP = currentShape.getTypeOfObject();					
-					LinkedList<TypeOfMapObject> possibleTOMP = currentShape.getAllowedTypesOfMapObject();					
-					String texture = currentShape.getTextureName();
-					
-					questions.add( new StringValueQuestion("texture",QuestionType.STRING, texture ) );
-					questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, pos[0], pos[1] ) );					
-					questions.add( new DoubleIntValueQuestion("size",QuestionType.TWICE_INT, siz[0], siz[1] ) );
-					questions.add( new TypeOfMapObjectQuestion("typeOfMapObject", QuestionType.TYPE_OF_MAP_OBJECT, currentTOMP, possibleTOMP) );
-					questions.add( new ActionQuestion("delete",QuestionType.BUTTON ) );					
-					break;
-				default:
-					break;
-			}		
+		switch( viewState.getFocusType() )
+		{
+			case MAP:
+				return getMap().getMapQuestions();
+			case START_POINT:
+				return getMap().getStartPointQuestions();								
+			case SHAPE:
+				return getMap().getShapeQuestions( getFocusId() );
+			default:
+				break;
 		}
-		catch( WrongQuestionTypeException e )
-		{			
-			System.err.println("Niemozliwy wyjatek w kontrolerze, wymagana rewizja kodu.");
-			e.printStackTrace(); /*impossible statement*/
-		}
-		return questions;
+		return null;		
 	}	
 	
 	private void refreshView()

@@ -4,7 +4,16 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
+import java.util.ArrayList;
 import java.util.LinkedList;
+
+import controller.question.ActionQuestion;
+import controller.question.DoubleIntValueQuestion;
+import controller.question.QuestionType;
+import controller.question.StringValueQuestion;
+import controller.question.TypeOfMapObjectQuestion;
+import controller.question.ViewQuestion;
+import controller.question.WrongQuestionTypeException;
 
 
 /**
@@ -108,6 +117,31 @@ public abstract class MapShape implements Cloneable
 	abstract public Shape getShapeObject();
 	
 	abstract public MapShape clone();
+	
+	public ArrayList<ViewQuestion> getQuestions()
+	{
+		ArrayList<ViewQuestion> questions = new ArrayList<ViewQuestion>();
+		int pos[] = getPosition();
+		int siz[] = getSize();
+		TypeOfMapObject currentTOMP = getTypeOfObject();					
+		LinkedList<TypeOfMapObject> possibleTOMP = getAllowedTypesOfMapObject();					
+		String texture = getTextureName();
+		
+		try {
+			questions.add( new StringValueQuestion("texture",QuestionType.STRING, texture ) );
+			questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, pos[0], pos[1] ) );					
+			questions.add( new DoubleIntValueQuestion("size",QuestionType.TWICE_INT, siz[0], siz[1] ) );
+			questions.add( new TypeOfMapObjectQuestion("typeOfMapObject", QuestionType.TYPE_OF_MAP_OBJECT, currentTOMP, possibleTOMP) );
+			questions.add( new ActionQuestion("delete",QuestionType.BUTTON ) );				
+		} 
+		catch (WrongQuestionTypeException e) 
+		{
+			System.err.println("Niepoprawny typ pytania.");
+			throw new RuntimeException();
+		}
+		
+		return questions;
+	}
 	
 }
 
@@ -291,7 +325,6 @@ final class MapPolygon extends MapShape
 			result.addPoint(shape.xpoints[i], shape.ypoints[i]);
 		return result;
 	}
-	
 	
 	/*
 	 * PROTECTED SECTION
