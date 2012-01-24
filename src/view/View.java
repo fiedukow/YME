@@ -139,7 +139,7 @@ public class View {
 		}
 		
 		{ /*set up main window*/
-			mainFrame.setPreferredSize(new Dimension(1024,768));
+			mainFrame.setPreferredSize(new Dimension(1350,850));
 			mainFrame.setJMenuBar(menuBar);
 	        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			mainFrame.pack();
@@ -180,10 +180,12 @@ public class View {
 		toolbox.repaint( );
 		navigatePanel.repaint( );
 		mainFrame.setTitle( "YME :: "+map.getMap().getMapName() );
-		//TODO, to repaint instead of new... :/
-		leftMenu.remove(questions);
-		questions = new QuestionPanel(this);		
-		leftMenu.add(questions, BorderLayout.SOUTH);
+		if( !questions.acctual( getState().getFocusType(), getState().getFocusId()) )
+		{
+			leftMenu.remove(questions);
+			questions = new QuestionPanel(this);		
+			leftMenu.add(questions, BorderLayout.SOUTH);
+		}
 	}
 	
 	/**

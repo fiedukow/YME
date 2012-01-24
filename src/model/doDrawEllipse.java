@@ -1,5 +1,6 @@
 package model;
 
+
 public class doDrawEllipse implements Command
 {	
 	MapEllipse ellipse;

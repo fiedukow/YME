@@ -6,6 +6,7 @@ import controller.question.ViewQuestion;
 
 import model.EditorMap;
 import model.EditorToolbox;
+import model.MapShape;
 
 public class ViewState 
 {
@@ -61,6 +62,16 @@ public class ViewState
 	 */
 	public EditorMap getMap() {
 		return map;
+	}
+	
+	public ArrayList<MapShape> getMapShapes()
+	{
+		return map.getShapes();
+	}
+	
+	public int getShapesCount()
+	{
+		return map.getShapes().size();
 	}
 
 	/**

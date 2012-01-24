@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Point;
 
+
 public class doSetStartPoint implements Command 
 {	
 	int x,y;

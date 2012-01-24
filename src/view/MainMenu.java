@@ -79,14 +79,14 @@ public class MainMenu extends JMenuBar
 					new ActionListener()
 					{ 
 						public void actionPerformed(ActionEvent e)
-						{
+						{							
 							int FCOption = loadFC.showOpenDialog((JMenuItem)e.getSource());
 							if (FCOption == JFileChooser.APPROVE_OPTION) {
 					            File file = loadFC.getSelectedFile();
 					            //This is where a real application would open the file.
 					            father.showInfo("Otwieram: "+file.getName()+"\n");
 					            father.pushEvent(new EventLoadMap(file.getPath()));
-					        }
+					        }												     
 						}
 					}
 				); 		

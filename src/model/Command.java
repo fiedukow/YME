@@ -1,4 +1,6 @@
 package model;
+
+
 /**
  * Base class for all commands. (Command design pattern).
  * Warning: UNDO command will work only if the map state is the same as just after using invoke!

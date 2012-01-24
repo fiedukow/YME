@@ -95,6 +95,16 @@ public final class EditorMap implements Cloneable
 	}
 
 	/**
+	 * Shape under index
+	 * @param index - which element you want to choose
+	 * @return
+	 */
+	MapShape getShape( int index )
+	{
+		return shapes.get(index);
+	}
+
+	/**
 	 * Adds polygon to the map.
 	 * @param poly
 	 */
@@ -104,12 +114,21 @@ public final class EditorMap implements Cloneable
 	}
 	
 	/**
+	 * Adds polygon to the map on selected position.
+	 * @param poly
+	 */
+	/*package*/ void addMapShape( int index, MapShape sh )
+	{
+		getShapes().add( index, sh );
+	}
+	
+	/**
 	 * Removes polygon from map.
 	 * @param id index of the one that should be removed
 	 */
 	/*package*/ void removeMapShape( int id )
 	{
-		getShapes().remove(id);
+		getShapes().remove( id );
 	}
 	
 	/*package*/ void removeMapShape( MapShape shape )

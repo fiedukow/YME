@@ -1,6 +1,7 @@
 package model;
 import java.util.Stack;
 
+
 /**
  * Main class used to change EditorMap state.
  * @author fiedukow

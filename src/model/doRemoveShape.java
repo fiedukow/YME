@@ -1,5 +1,6 @@
 package model;
 
+
 public class doRemoveShape implements Command
 {	
 	MapShape shape;
@@ -12,11 +13,11 @@ public class doRemoveShape implements Command
 	
 	public void invoke( EditorMap map ) throws CommandInvokeException
 	{
-		if( shape == null ) shape = map.getShapes().get(index);
+		shape = map.getShape(index);
 		map.removeMapShape( shape );		 
 	}
 	public void undo( EditorMap map ) throws CommandUndoException
 	{
-		map.addMapShape(shape);
+		map.addMapShape( index, shape );
 	}	
 }

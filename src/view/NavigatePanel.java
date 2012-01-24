@@ -56,7 +56,7 @@ public class NavigatePanel extends JPanel
 		shapeList.addItem(new FocusListElement("Cała mapa", FocusType.MAP, null ));
 		shapeList.addItem(new FocusListElement("Punkt startowy", FocusType.START_POINT, null));		
 		shapeList.setFont(new Font("Courier", Font.PLAIN, 12));
-		int size = father.getState().getMap().getShapes().size();
+		int size = father.getState().getShapesCount();
 		for( int i  = 0; i < size; ++i )
 			shapeList.addItem(new FocusListElement("Element # "+(i+1), FocusType.SHAPE, i ));			
 		
@@ -141,7 +141,7 @@ public class NavigatePanel extends JPanel
 		shapeList.addItem(new FocusListElement("Punkt startowy", FocusType.START_POINT, null));
 		consumeEvent = false;	
 		
-		int size = father.getState().getMap().getShapes().size();
+		int size = father.getState().getShapesCount();
 		for( int i = 0; i < size; ++i )
 			shapeList.addItem( new FocusListElement("Element # "+(i+1), FocusType.SHAPE, i ));
 			

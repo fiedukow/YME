@@ -1,5 +1,6 @@
 package model;
 
+
 public class doResizeShape implements Command
 {
 	/*TODO, it's generally bad when resize to value close to zero*/
@@ -14,19 +15,13 @@ public class doResizeShape implements Command
 	}	
 		
 	public void invoke(EditorMap map) throws CommandInvokeException {
-		MapShape shape = map.getShapes().get(whichElement);
-		int oldPosition[] = shape.getSize();		
-		shape.resize(w, h);
-		w = oldPosition[0];
-		h = oldPosition[1];
+		MapShape toChange = map.getShape( whichElement );
+		shape = toChange.clone();		
+		toChange.resize(w, h);		
 	}
 
 	public void undo(EditorMap map) throws CommandUndoException {
-		try {
-			invoke( map );
-		} catch (CommandInvokeException e) {
-			System.err.println("BLAD: Cofanie nie powiodlo sie w wyniku nieznanego bledu!");
-			throw new RuntimeException();
-		}
+		map.removeMapShape( whichElement );
+		map.addMapShape( whichElement, shape );
 	}
 }

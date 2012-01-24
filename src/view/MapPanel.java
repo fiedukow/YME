@@ -78,7 +78,7 @@ public class MapPanel extends JPanel
 
         int i = 0;
         
-        for( MapShape shape : getState().getMap().getShapes() )
+        for( MapShape shape : getState().getMapShapes() )
         {        
         	drawShape(shape, g2, getState().getFocusType() == FocusType.SHAPE && getState().getFocusId() == i);
         	++i;

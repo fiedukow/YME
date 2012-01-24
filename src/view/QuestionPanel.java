@@ -22,6 +22,7 @@ import javax.swing.border.TitledBorder;
 
 import model.TypeOfMapObject;
 
+import controller.FocusType;
 import controller.event.EventQuestionAnswered;
 import controller.question.ActionQuestion;
 import controller.question.DoubleIntValueQuestion;
@@ -43,6 +44,8 @@ public class QuestionPanel extends JPanel
 	 * UID 
 	 */
 	private static final long serialVersionUID = 1L;
+	private final FocusType myFocusType;
+	private final Integer   myFocusId;
 	
 	/**
 	 * Map which translate Controller questionName into user readable form
@@ -78,6 +81,8 @@ public class QuestionPanel extends JPanel
 	{
 		super();
 		this.father = father; 
+		this.myFocusType = father.getState().getFocusType();
+		this.myFocusId = father.getState().getFocusId();
 		this.setBorder(new TitledBorder("Atrybuty"));
 		this.setPreferredSize(new Dimension(200, 200) );
 		
@@ -90,6 +95,11 @@ public class QuestionPanel extends JPanel
 			}			
 		}	
 		this.setVisible(true);
+	}
+	
+	boolean acctual( FocusType focusType, Integer focusId )
+	{
+		return ( focusType == myFocusType && focusId == myFocusId );
 	}
 	
 	/**
@@ -195,8 +205,7 @@ abstract class QuestionComponent
 	}
 	
 	/**
-	 * Gives collection of swing components to draw on Panel
-	 * @return collection
+	 * Gives collection of swing compononents
 	 */
 	public Collection<Component> getComponents()
 	{
@@ -287,10 +296,10 @@ class QuestionStringComponent extends QuestionComponent
 {	
 	JTextField valueField;
 	
-	QuestionStringComponent( View father, String name, String value )	
+	QuestionStringComponent( View father_, String name, String value )	
 	{
-		super( father, name );
-		valueField = new JTextField(value, 11);		
+		super( father_, name );
+		valueField = new JTextField(value, 11);	
 		JLabel description = new JLabel( padding( QuestionPanel.Translate(name) , 9 )+": " );
 		description.setFont( new Font ( "Courier", Font.PLAIN, 14 ) );
 		componentsToDraw.add( description );
@@ -376,7 +385,7 @@ class QuestionTypeOfMapObjectComponent extends QuestionComponent
 	
 	QuestionTypeOfMapObjectComponent( View father, String name, TypeOfMapObject selectedValue, LinkedList<TypeOfMapObject> possibleValues )	
 	{
-		super( father, name );
+		super( father, name ); 
 		rePadMap = new HashMap<String, TypeOfMapObject>();
 						
 		JLabel description = new JLabel( padding( QuestionPanel.Translate(name) , 9 )+": " );
@@ -405,7 +414,7 @@ class QuestionTypeOfMapObjectComponent extends QuestionComponent
 		box.addItemListener( itemListener );
 	}
 	
-	void sendEvent(){
+	void sendEvent(){	
 		try
 		{
 			father.pushEvent( 

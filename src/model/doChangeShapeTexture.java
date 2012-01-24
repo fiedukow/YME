@@ -1,5 +1,6 @@
 package model;
 
+
 public class doChangeShapeTexture implements Command
 {
 	String textureName;
@@ -13,7 +14,7 @@ public class doChangeShapeTexture implements Command
 	
 	public void invoke(EditorMap map) throws CommandInvokeException 
 	{
-		MapShape shape = map.getShapes( ).get( whichElement );
+		MapShape shape = map.getShape( whichElement );
 		String oldTexture = shape.getTextureName( );		
 		shape.setTextureName( textureName );
 		textureName = oldTexture;

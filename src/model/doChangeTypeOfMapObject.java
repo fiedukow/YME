@@ -1,4 +1,6 @@
 package model;
+
+
 public class doChangeTypeOfMapObject implements Command
 {
 	int whichElement;
@@ -12,7 +14,7 @@ public class doChangeTypeOfMapObject implements Command
 	public void invoke( EditorMap map ) throws CommandInvokeException
 	{		
 		try {
-			MapShape shape = map.getShapes( ).get( whichElement );
+			MapShape shape = map.getShape( whichElement );
 			TypeOfMapObject oldType = shape.getTypeOfObject();
 			shape.setTypeOfObject( type );
 			type = oldType;

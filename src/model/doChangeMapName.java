@@ -1,5 +1,6 @@
 package model;
 
+
 public class doChangeMapName implements Command
 {
 	String mapName;

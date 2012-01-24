@@ -10,9 +10,7 @@ import java.util.ArrayList;
 abstract class XMLShape
 {	
 	private final String textureName;	
-	private final TypeOfMapObject typeOfObject; /** Current value type of map object */
-	/*TODO universal attribute collection?*/
-	
+	private final TypeOfMapObject typeOfObject; /** Current value type of map object */	
 	/**
 	 * Main constructor - do default action for all derived classes
 	 * @param shape - MapShape with informations to convert into XML format
@@ -31,7 +29,6 @@ abstract class XMLShape
 	 */
 	public static XMLShape create( MapShape shape ) throws UnrecognizedTypeOfMapShape
 	{
-		/*TODO bf factory instead of this... ekhm...*/
 		if( shape instanceof MapPolygon )
 			return new XMLPolygon( (MapPolygon) shape);
 		if( shape instanceof MapRectangle )

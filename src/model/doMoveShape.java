@@ -1,5 +1,6 @@
 package model;
 
+
 public class doMoveShape implements Command 
 {
 	int x,y,whichElement;
@@ -12,7 +13,7 @@ public class doMoveShape implements Command
 	}	
 		
 	public void invoke(EditorMap map) throws CommandInvokeException {
-		MapShape shape = map.getShapes().get(whichElement);
+		MapShape shape = map.getShape( whichElement );
 		int oldPosition[] = shape.getPosition();		
 		shape.move(x, y);
 		x = oldPosition[0];
@@ -22,7 +23,7 @@ public class doMoveShape implements Command
 	public void undo(EditorMap map) throws CommandUndoException {
 		try {
 			invoke( map );
-		} catch (CommandInvokeException e) {
+		} catch ( CommandInvokeException e ) {
 			System.err.println("BLAD: Cofanie nie powiodlo sie w wyniku nieznanego bledu!");
 			throw new RuntimeException();
 		}
