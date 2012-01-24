@@ -2,7 +2,7 @@ package model;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import controller.question.DoubleIntValueQuestion;
+import controller.question.TwiceIntValueQuestion;
 import controller.question.QuestionType;
 import controller.question.StringValueQuestion;
 import controller.question.ViewQuestion;
@@ -130,7 +130,7 @@ public final class EditorMap implements Cloneable
 		ArrayList< ViewQuestion > questions = new  ArrayList< ViewQuestion >();
 		Point startPoint = this.getStartPoint();				
 		try {
-			questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, (int) startPoint.getX(), (int) startPoint.getY() ) );
+			questions.add( new TwiceIntValueQuestion("position",QuestionType.TWICE_INT, (int) startPoint.getX(), (int) startPoint.getY() ) );
 		} catch (WrongQuestionTypeException e) {
 			System.err.println("Niepoprawny typ pytania.");
 			throw new RuntimeException();

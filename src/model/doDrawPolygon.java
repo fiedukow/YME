@@ -10,7 +10,8 @@ import java.util.ArrayList;
  */
 public class doDrawPolygon implements Command
 {	
-	private final MapPolygon polygon;
+	private MapPolygon polygon;
+	private Integer id;
 	public doDrawPolygon( String textureName, ArrayList<Point> arrayList, TypeOfMapObject type )
 	{
 		polygon = new MapPolygon( textureName, type);
@@ -19,11 +20,13 @@ public class doDrawPolygon implements Command
 	}
 	
 	public void invoke( EditorMap map ) throws CommandInvokeException
-	{
+	{		
 		map.addMapShape( polygon );
+		id = map.getShapes().size()-1;
 	} 
 	public void undo( EditorMap map ) throws CommandUndoException
 	{
-		map.removeMapShape( polygon );
+		polygon = (MapPolygon) map.getShape( id );
+		map.removeMapShape( id );
 	}
 }

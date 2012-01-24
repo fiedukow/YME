@@ -14,13 +14,12 @@ public class doResizeShape implements Command
 	}	
 		
 	public void invoke(EditorMap map) throws CommandInvokeException {
-		MapShape toChange = map.getShape( whichElement );
-		shape = toChange.clone();		
+		MapShape toChange = map.getShape( whichElement );		
+		shape = toChange.clone();	
 		toChange.resize(w, h);		
 	}
 
 	public void undo(EditorMap map) throws CommandUndoException {
-		shape = map.getShape( whichElement );
 		map.removeMapShape( whichElement );		
 		map.addMapShape( whichElement, shape );
 	}

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import controller.question.ActionQuestion;
-import controller.question.DoubleIntValueQuestion;
+import controller.question.TwiceIntValueQuestion;
 import controller.question.QuestionType;
 import controller.question.StringValueQuestion;
 import controller.question.TypeOfMapObjectQuestion;
@@ -129,8 +129,8 @@ public abstract class MapShape implements Cloneable
 		
 		try {
 			questions.add( new StringValueQuestion("texture",QuestionType.STRING, texture ) );
-			questions.add( new DoubleIntValueQuestion("position",QuestionType.TWICE_INT, pos[0], pos[1] ) );					
-			questions.add( new DoubleIntValueQuestion("size",QuestionType.TWICE_INT, siz[0], siz[1] ) );
+			questions.add( new TwiceIntValueQuestion("position",QuestionType.TWICE_INT, pos[0], pos[1] ) );					
+			questions.add( new TwiceIntValueQuestion("size",QuestionType.TWICE_INT, siz[0], siz[1] ) );
 			questions.add( new TypeOfMapObjectQuestion("typeOfMapObject", QuestionType.TYPE_OF_MAP_OBJECT, currentTOMP, possibleTOMP) );
 			questions.add( new ActionQuestion("delete",QuestionType.BUTTON ) );				
 		} 

@@ -25,7 +25,7 @@ import model.TypeOfMapObject;
 import controller.FocusType;
 import controller.event.EventQuestionAnswered;
 import controller.question.ActionQuestion;
-import controller.question.DoubleIntValueQuestion;
+import controller.question.TwiceIntValueQuestion;
 import controller.question.StringValueQuestion;
 import controller.question.QuestionType;
 import controller.question.TypeOfMapObjectQuestion;
@@ -137,7 +137,7 @@ class QuestionComponentFactory
 		switch( question.getType() )
 		{
 			case TWICE_INT:
-				int values[] = ((DoubleIntValueQuestion) question).getValue();
+				int values[] = ((TwiceIntValueQuestion) question).getValue();
 				created = new QuestionTwiceIntComponent( father, question.getName() , values[0] , values[1] ); 
 				break;
 			case STRING:
@@ -266,7 +266,7 @@ class QuestionTwiceIntComponent extends QuestionComponent
 		{
 			father.pushEvent( 
 						new EventQuestionAnswered( 
-							new DoubleIntValueQuestion( 
+							new TwiceIntValueQuestion( 
 								name, 
 								QuestionType.TWICE_INT, 
 								Integer.decode( firstTF.getText() ), 

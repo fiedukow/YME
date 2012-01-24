@@ -19,7 +19,7 @@ import model.doRemoveShape;
 import model.doResizeShape;
 import model.doSetStartPoint;
 import controller.event.*;
-import controller.question.DoubleIntValueQuestion;
+import controller.question.TwiceIntValueQuestion;
 import controller.question.StringValueQuestion;
 import controller.question.TypeOfMapObjectQuestion;
 import controller.question.ViewQuestion;
@@ -153,19 +153,19 @@ class ActionQuestionAnswer implements Action
 			case START_POINT:
 				if( answer.getName() == "position" )
 				{
-					int pos[] = ((DoubleIntValueQuestion) answer).getValue();
+					int pos[] = ((TwiceIntValueQuestion) answer).getValue();
 					father.doCommand( new doSetStartPoint( pos[0], pos[1] ) );
 				}
 				break;				
 			case SHAPE:		
 				if( answer.getName() == "position" )
 				{
-					int pos[] = ((DoubleIntValueQuestion) answer).getValue();
+					int pos[] = ((TwiceIntValueQuestion) answer).getValue();
 					father.doCommand( new doMoveShape( pos[0], pos[1], father.getFocusId() ) );
 				}
 				else if( answer.getName() == "size" )
 				{
-					int size[] = ((DoubleIntValueQuestion) answer).getValue();
+					int size[] = ((TwiceIntValueQuestion) answer).getValue();
 					father.doCommand( new doResizeShape( size[0], size[1], father.getFocusId() ) );
 				}
 				else if( answer.getName() == "texture" )

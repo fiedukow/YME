@@ -3,7 +3,8 @@ package model;
 
 public class doDrawEllipse implements Command
 {	
-	private final MapEllipse ellipse;
+	private MapEllipse ellipse;
+	Integer id;
 	
 	public doDrawEllipse( String textureName, int x, int y, int w, int h, TypeOfMapObject type )
 	{
@@ -13,9 +14,11 @@ public class doDrawEllipse implements Command
 	public void invoke( EditorMap map ) throws CommandInvokeException
 	{
 		map.addMapShape( ellipse );
+		id = map.getShapes().size()-1;
 	}
 	public void undo( EditorMap map ) throws CommandUndoException
 	{
-		map.removeMapShape( ellipse );
+		ellipse = (MapEllipse) map.getShape( id );
+		map.removeMapShape( id );
 	}
 }
